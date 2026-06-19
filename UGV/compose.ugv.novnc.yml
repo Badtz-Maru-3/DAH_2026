@@ -1,0 +1,12 @@
+services:
+  rosbot_sim_novnc:
+    build:
+      context: .
+      dockerfile: Dockerfile.ugv-novnc
+    container_name: dah-rosbot-sim-novnc
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-17}
+      - ROBOT_MODEL=${ROBOT_MODEL:-rosbot}
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}

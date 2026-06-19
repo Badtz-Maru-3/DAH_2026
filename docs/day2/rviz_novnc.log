@@ -1,0 +1,112 @@
+Openbox-Message: Unable to find a valid menu file "/var/lib/openbox/debian-menu.xml"
+19/06/2026 11:10:30 passing arg to libvncserver: -listen
+19/06/2026 11:10:30 passing arg to libvncserver: 127.0.0.1
+19/06/2026 11:10:30 passing arg to libvncserver: -rfbport
+19/06/2026 11:10:30 passing arg to libvncserver: 5902
+19/06/2026 11:10:30 x11vnc version: 0.9.16 lastmod: 2019-01-05  pid: 29
+19/06/2026 11:10:30 Using X display :3
+19/06/2026 11:10:30 rootwin: 0x50d reswin: 0x400001 dpy: 0x84f920b0
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 ------------------ USEFUL INFORMATION ------------------
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 XFIXES available on display, resetting cursor mode
+19/06/2026 11:10:30   to: '-cursor most'.
+19/06/2026 11:10:30   to disable this behavior use: '-cursor arrow'
+19/06/2026 11:10:30   or '-noxfixes'.
+19/06/2026 11:10:30 using XFIXES for cursor drawing.
+19/06/2026 11:10:30 GrabServer control via XTEST.
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 XKEYBOARD: number of keysyms per keycode 7 is greater
+19/06/2026 11:10:30   than 4 and 51 keysyms are mapped above 4.
+19/06/2026 11:10:30   Automatically switching to -xkb mode.
+19/06/2026 11:10:30   If this makes the key mapping worse you can
+19/06/2026 11:10:30   disable it with the "-noxkb" option.
+19/06/2026 11:10:30   Also, remember "-remap DEAD" for accenting characters.
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 X FBPM extension not supported.
+Xlib:  extension "DPMS" missing on display ":3".
+19/06/2026 11:10:30 X display is not capable of DPMS.
+19/06/2026 11:10:30 --------------------------------------------------------
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 Default visual ID: 0x21
+19/06/2026 11:10:30 Read initial data from X display into framebuffer.
+19/06/2026 11:10:30 initialize_screen: fb_depth/fb_bpp/fb_Bpl 24/32/5120
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 X display :3 is 32bpp depth=24 true color
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 Listening for VNC connections on TCP port 5902
+19/06/2026 11:10:30 rfbListenOnTCP6Port: error in bind IPv6 socket: Address already in use
+19/06/2026 11:10:30 Listening also on IPv6 port 5902 (socket 9)
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 Xinerama is present and active (e.g. multi-head).
+19/06/2026 11:10:30 Xinerama: number of sub-screens: 1
+19/06/2026 11:10:30 Xinerama: no blackouts needed (only one sub-screen)
+19/06/2026 11:10:30 
+19/06/2026 11:10:30 fb read rate: 1218 MB/sec
+19/06/2026 11:10:30 fast read: reset -wait  ms to: 10
+19/06/2026 11:10:30 fast read: reset -defer ms to: 10
+19/06/2026 11:10:30 The X server says there are 10 mouse buttons.
+19/06/2026 11:10:30 screen setup finished.
+19/06/2026 11:10:30 
+
+The VNC desktop is:      127.0.0.1:2
+
+******************************************************************************
+Have you tried the x11vnc '-ncache' VNC client-side pixel caching feature yet?
+
+The scheme stores pixel data offscreen on the VNC viewer side for faster
+retrieval.  It should work with any VNC viewer.  Try it by running:
+
+    x11vnc -ncache 10 ...
+
+One can also add -ncache_cr for smooth 'copyrect' window motion.
+More info: http://www.karlrunge.com/x11vnc/faq.html#faq-client-caching
+
+PORT=5902
+WebSocket server settings:
+  - Listen on 127.0.0.1:6082
+  - Web server. Web root: /usr/share/novnc
+  - No SSL/TLS support (no cert file)
+  - proxying from 127.0.0.1:6082 to 127.0.0.1:5902
+[INFO] [1781867433.115282422] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1781867433.115454889] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[INFO] [1781867433.193277544] [rviz2]: Stereo is NOT SUPPORTED
+127.0.0.1 - - [19/Jun/2026 11:10:38] code 404, message File not found
+127.0.0.1 - - [19/Jun/2026 11:10:46] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:10:46] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:10:46] connecting to: 127.0.0.1:5902
+19/06/2026 11:10:46 Got connection from client 127.0.0.1
+19/06/2026 11:10:46   0 other clients
+19/06/2026 11:10:46 Normal socket connection
+19/06/2026 11:10:46 Disabled X server key autorepeat.
+19/06/2026 11:10:46   to force back on run: 'xset r on' (3 times)
+19/06/2026 11:10:46 incr accepted_client=1 for 127.0.0.1:56322  sock=10
+19/06/2026 11:10:46 Client Protocol Version 3.8
+19/06/2026 11:10:46 Protocol version sent 3.8, using 3.8
+19/06/2026 11:10:46 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:10:46 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:10:46 Pixel format for client 127.0.0.1:
+19/06/2026 11:10:46   32 bpp, depth 24, little endian
+19/06/2026 11:10:46   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:10:46 no translation needed
+19/06/2026 11:10:46 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:10:46 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:10:46 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:10:46 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:10:46 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:10:46 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:10:46 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:10:46 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:10:46 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:10:46 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:10:46 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:10:46 Using tight encoding for client 127.0.0.1
+19/06/2026 11:10:46 Sending rfbEncodingExtDesktopSize for size (1280x800) 
+19/06/2026 11:10:46 client 1 network rate 905.2 KB/sec (47701.8 eff KB/sec)
+19/06/2026 11:10:46 client 1 latency:  1.5 ms
+19/06/2026 11:10:46 dt1: 0.0115, dt2: 0.0752 dt3: 0.0015 bytes: 77784
+19/06/2026 11:10:46 link_rate: LR_LAN - 1 ms, 905 KB/s
+19/06/2026 11:10:46 copy_tiles: allocating first_line at size 41
+19/06/2026 11:10:46 client_set_net: 127.0.0.1  0.0003
+19/06/2026 11:10:56 created selwin: 0x40002c
+19/06/2026 11:10:56 called initialize_xfixes()

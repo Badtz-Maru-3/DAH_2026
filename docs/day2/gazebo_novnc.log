@@ -1,0 +1,200 @@
+[ign gazebo-1] [INFO] [1781867401.926436455] [gz_ros2_control]: 	Command:
+[ign gazebo-1] [INFO] [1781867401.926439661] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926458697] [gz_ros2_control]: Loading joint: fr_wheel_joint
+[ign gazebo-1] [INFO] [1781867401.926461985] [gz_ros2_control]: 	State:
+[ign gazebo-1] [INFO] [1781867401.926465053] [gz_ros2_control]: 		 position
+[ign gazebo-1] [INFO] [1781867401.926523378] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926542372] [gz_ros2_control]: 	Command:
+[ign gazebo-1] [INFO] [1781867401.926552079] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926584424] [gz_ros2_control]: Loading joint: rl_wheel_joint
+[ign gazebo-1] [INFO] [1781867401.926595452] [gz_ros2_control]: 	State:
+[ign gazebo-1] [INFO] [1781867401.926604593] [gz_ros2_control]: 		 position
+[ign gazebo-1] [INFO] [1781867401.926613501] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926621535] [gz_ros2_control]: 	Command:
+[ign gazebo-1] [INFO] [1781867401.926629774] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926644677] [gz_ros2_control]: Loading joint: rr_wheel_joint
+[ign gazebo-1] [INFO] [1781867401.926654002] [gz_ros2_control]: 	State:
+[ign gazebo-1] [INFO] [1781867401.926662867] [gz_ros2_control]: 		 position
+[ign gazebo-1] [INFO] [1781867401.926671091] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926679126] [gz_ros2_control]: 	Command:
+[ign gazebo-1] [INFO] [1781867401.926687274] [gz_ros2_control]: 		 velocity
+[ign gazebo-1] [INFO] [1781867401.926767591] [gz_ros2_control]: Loading sensor: imu
+[ign gazebo-1] [INFO] [1781867401.926779048] [gz_ros2_control]: 	State:
+[ign gazebo-1] [INFO] [1781867401.926796792] [gz_ros2_control]: 		 orientation.x
+[ign gazebo-1] [INFO] [1781867401.926807322] [gz_ros2_control]: 		 orientation.y
+[ign gazebo-1] [INFO] [1781867401.926815918] [gz_ros2_control]: 		 orientation.z
+[ign gazebo-1] [INFO] [1781867401.926824273] [gz_ros2_control]: 		 orientation.w
+[ign gazebo-1] [INFO] [1781867401.926832573] [gz_ros2_control]: 		 angular_velocity.x
+[ign gazebo-1] [INFO] [1781867401.926840875] [gz_ros2_control]: 		 angular_velocity.y
+[ign gazebo-1] [INFO] [1781867401.926849023] [gz_ros2_control]: 		 angular_velocity.z
+[ign gazebo-1] [INFO] [1781867401.926857633] [gz_ros2_control]: 		 linear_acceleration.x
+[ign gazebo-1] [INFO] [1781867401.926866456] [gz_ros2_control]: 		 linear_acceleration.y
+[ign gazebo-1] [INFO] [1781867401.926875754] [gz_ros2_control]: 		 linear_acceleration.z
+[ign gazebo-1] [INFO] [1781867401.926934440] [resource_manager]: Initialize hardware 'rosbot_system' 
+[ign gazebo-1] [INFO] [1781867401.927023197] [resource_manager]: Successful initialization of hardware 'rosbot_system'
+[ign gazebo-1] [INFO] [1781867401.927068504] [resource_manager]: 'configure' hardware 'rosbot_system' 
+[ign gazebo-1] [INFO] [1781867401.927072427] [gz_ros2_control]: System Successfully configured!
+[ign gazebo-1] [INFO] [1781867401.927086190] [resource_manager]: Successful 'configure' of hardware 'rosbot_system'
+[ign gazebo-1] [INFO] [1781867401.927090853] [resource_manager]: 'activate' hardware 'rosbot_system' 
+[ign gazebo-1] [INFO] [1781867401.927094145] [resource_manager]: Successful 'activate' of hardware 'rosbot_system'
+[ign gazebo-1] [INFO] [1781867401.927098424] [gz_ros2_control]: Loading controller_manager
+[ign gazebo-1] [WARN] [1781867401.985122275] [gz_ros2_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[ign gazebo-1] [INFO] [1781867402.685363999] [gz_ros2_control]: IMU imu has a topic name: imu/data_raw
+[INFO] [spawner-11]: process started with pid [574]
+[INFO] [spawner-12]: process started with pid [576]
+[INFO] [spawner-13]: process started with pid [578]
+[scan_to_scan_filter_chain-9] [WARN] [1781867404.044621107] [laser_filter]: diagnostic_updater: No HW_ID was set. This is probably a bug. Please report it. For devices that do not have a HW_ID, set this value to 'none'. This warning only occurs once all diagnostics are OK. It is okay to wait until the device is open before calling setHardwareID.
+[ign gazebo-1] [INFO] [1781867404.099939646] [controller_manager]: Loading controller 'drive_controller'
+[ign gazebo-1] [INFO] [1781867404.169533581] [controller_manager]: Loading controller 'imu_broadcaster'
+[spawner-13] [INFO] [1781867404.186611579] [spawner_drive_controller]: [94mLoaded [1mdrive_controller[0m
+[ign gazebo-1] [INFO] [1781867404.204527074] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-12] [INFO] [1781867404.228385297] [spawner_imu_broadcaster]: [94mLoaded [1mimu_broadcaster[0m
+[ign gazebo-1] [INFO] [1781867404.240308310] [controller_manager]: Configuring controller 'drive_controller'
+[ign gazebo-1] [INFO] [1781867404.256872331] [controller_manager]: Configuring controller 'imu_broadcaster'
+[spawner-11] [INFO] [1781867404.266295473] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[ign gazebo-1] [INFO] [1781867404.275111324] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[ign gazebo-1] [INFO] [1781867404.275309373] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[spawner-13] [INFO] [1781867404.328538698] [spawner_drive_controller]: [92mConfigured and activated [1mdrive_controller[0m
+[spawner-12] [INFO] [1781867404.355708390] [spawner_imu_broadcaster]: [92mConfigured and activated [1mimu_broadcaster[0m
+[spawner-11] [INFO] [1781867404.381229666] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[INFO] [spawner-13]: process has finished cleanly [pid 578]
+[INFO] [spawner-12]: process has finished cleanly [pid 576]
+[INFO] [spawner-11]: process has finished cleanly [pid 574]
+127.0.0.1 - - [19/Jun/2026 11:10:35] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:10:35] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:10:35] connecting to: 127.0.0.1:5901
+19/06/2026 11:10:35 Got connection from client 127.0.0.1
+19/06/2026 11:10:35   0 other clients
+19/06/2026 11:10:35 Normal socket connection
+19/06/2026 11:10:35 Disabled X server key autorepeat.
+19/06/2026 11:10:35   to force back on run: 'xset r on' (3 times)
+19/06/2026 11:10:35 incr accepted_client=1 for 127.0.0.1:55814  sock=11
+19/06/2026 11:10:35 Client Protocol Version 3.8
+19/06/2026 11:10:35 Protocol version sent 3.8, using 3.8
+19/06/2026 11:10:35 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:10:35 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:10:35 Pixel format for client 127.0.0.1:
+19/06/2026 11:10:35   32 bpp, depth 24, little endian
+19/06/2026 11:10:35   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:10:35 no translation needed
+19/06/2026 11:10:35 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:10:35 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:10:35 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:10:35 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:10:35 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:10:35 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:10:35 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:10:35 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:10:35 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:10:35 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:10:35 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:10:35 Using tight encoding for client 127.0.0.1
+19/06/2026 11:10:35 Sending rfbEncodingExtDesktopSize for size (1280x800) 
+19/06/2026 11:10:35 client 1 network rate 1192.1 KB/sec (104468.5 eff KB/sec)
+19/06/2026 11:10:35 client 1 latency:  1.8 ms
+19/06/2026 11:10:35 dt1: 0.0075, dt2: 0.0327 dt3: 0.0018 bytes: 46768
+19/06/2026 11:10:35 link_rate: LR_LAN - 1 ms, 1192 KB/s
+19/06/2026 11:10:35 client_set_net: 127.0.0.1  0.0002
+19/06/2026 11:10:35 created   xdamage object: 0x40002c
+19/06/2026 11:10:35 copy_tiles: allocating first_line at size 41
+19/06/2026 11:10:44 created selwin: 0x40002d
+19/06/2026 11:10:44 called initialize_xfixes()
+
+(openbox:13): GLib-CRITICAL **: 11:11:33.701: Source ID 52 was not found when attempting to remove it
+
+(openbox:13): GLib-CRITICAL **: 11:13:09.450: Source ID 116 was not found when attempting to remove it
+19/06/2026 11:13:18 client_count: 0
+19/06/2026 11:13:18 Restored X server key autorepeat to: 1
+19/06/2026 11:13:18 Client 127.0.0.1 gone
+19/06/2026 11:13:18 Statistics             events    Transmit/ RawEquiv ( saved)
+19/06/2026 11:13:18  ServerCutText       :      1 |         8/        8 (  0.0%)
+19/06/2026 11:13:18  FramebufferUpdate   :    586 |         0/        0 (  0.0%)
+19/06/2026 11:13:18  copyRect            :      9 |       144/ 23924052 (100.0%)
+19/06/2026 11:13:18  LastRect            :    125 |      1500/     1500 (  0.0%)
+19/06/2026 11:13:18  tight               :   4021 |   2236343/ 94794384 ( 97.6%)
+19/06/2026 11:13:18  RichCursor          :     69 |     65374/    65374 (  0.0%)
+19/06/2026 11:13:18  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+19/06/2026 11:13:18  TOTALS              :   4812 |   2303401/118785350 ( 98.1%)
+19/06/2026 11:13:18 Statistics             events    Received/ RawEquiv ( saved)
+19/06/2026 11:13:18  KeyEvent            :      2 |        16/       16 (  0.0%)
+19/06/2026 11:13:18  PointerEvent        :   3548 |     21288/    21288 (  0.0%)
+19/06/2026 11:13:18  FramebufferUpdate   :    597 |      5970/     5970 (  0.0%)
+19/06/2026 11:13:18  SetEncodings        :      1 |        68/       68 (  0.0%)
+19/06/2026 11:13:18  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+19/06/2026 11:13:18  TOTALS              :   4149 |     27362/    27362 (  0.0%)
+19/06/2026 11:13:18 destroyed xdamage object: 0x40002c
+127.0.0.1 - - [19/Jun/2026 11:13:22] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:13:22] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:13:22] connecting to: 127.0.0.1:5901
+19/06/2026 11:13:22 Got connection from client 127.0.0.1
+19/06/2026 11:13:22   0 other clients
+19/06/2026 11:13:22 Normal socket connection
+19/06/2026 11:13:22 Disabled X server key autorepeat.
+19/06/2026 11:13:22   to force back on run: 'xset r on' (3 times)
+19/06/2026 11:13:22 incr accepted_client=2 for 127.0.0.1:59142  sock=11
+19/06/2026 11:13:22 Client Protocol Version 3.8
+19/06/2026 11:13:22 Protocol version sent 3.8, using 3.8
+19/06/2026 11:13:22 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:13:22 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:13:22 Pixel format for client 127.0.0.1:
+19/06/2026 11:13:22   32 bpp, depth 24, little endian
+19/06/2026 11:13:22   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:13:22 no translation needed
+19/06/2026 11:13:22 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:13:22 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:13:22 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:13:22 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:13:22 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:13:22 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:13:22 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:13:22 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:13:22 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:13:22 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:13:22 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:13:22 Using tight encoding for client 127.0.0.1
+19/06/2026 11:13:22 Sending rfbEncodingExtDesktopSize for size (1280x800) 
+19/06/2026 11:13:23 client_set_net: 127.0.0.1  0.0001
+19/06/2026 11:13:23 created   xdamage object: 0x40002e
+127.0.0.1 - - [19/Jun/2026 11:17:12] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:17:12] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:17:12] connecting to: 127.0.0.1:5901
+19/06/2026 11:17:12 Got connection from client 127.0.0.1
+19/06/2026 11:17:12   1 other clients
+19/06/2026 11:17:11 Normal socket connection
+19/06/2026 11:17:11 incr accepted_client=3 for 127.0.0.1:51374  sock=12
+19/06/2026 11:17:11 client_count: 1
+19/06/2026 11:17:11 Client 127.0.0.1 gone
+19/06/2026 11:17:11 Statistics             events    Transmit/ RawEquiv ( saved)
+19/06/2026 11:17:11  FramebufferUpdate   :      5 |         0/        0 (  0.0%)
+19/06/2026 11:17:11  LastRect            :      5 |        60/       60 (  0.0%)
+19/06/2026 11:17:11  tight               :      7 |     13241/  4495444 ( 99.7%)
+19/06/2026 11:17:11  RichCursor          :      1 |       696/      696 (  0.0%)
+19/06/2026 11:17:11  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+19/06/2026 11:17:11  TOTALS              :     19 |     14029/  4496232 ( 99.7%)
+19/06/2026 11:17:11 Statistics             events    Received/ RawEquiv ( saved)
+19/06/2026 11:17:11  PointerEvent        :    273 |      1638/     1638 (  0.0%)
+19/06/2026 11:17:11  FramebufferUpdate   :      7 |        70/       70 (  0.0%)
+19/06/2026 11:17:11  SetEncodings        :      1 |        68/       68 (  0.0%)
+19/06/2026 11:17:11  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+19/06/2026 11:17:11  TOTALS              :    282 |      1796/     1796 (  0.0%)
+19/06/2026 11:17:12 Client Protocol Version 3.8
+19/06/2026 11:17:12 Protocol version sent 3.8, using 3.8
+19/06/2026 11:17:12 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:17:12 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:17:12 Pixel format for client 127.0.0.1:
+19/06/2026 11:17:12   32 bpp, depth 24, little endian
+19/06/2026 11:17:12   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:17:12 no translation needed
+19/06/2026 11:17:13 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:17:13 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:17:13 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:17:13 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:17:13 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:17:13 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:17:13 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:17:13 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:17:13 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:17:13 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:17:13 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:17:13 Using tight encoding for client 127.0.0.1
+19/06/2026 11:17:13 Sending rfbEncodingExtDesktopSize for size (1280x800) 

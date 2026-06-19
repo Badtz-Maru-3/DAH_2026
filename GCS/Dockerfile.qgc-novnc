@@ -1,0 +1,48 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV QGC_APPIMAGE_URL=https://github.com/mavlink/qgroundcontrol/releases/download/v5.0.8/QGroundControl-x86_64.AppImage
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget \
+    fuse \
+    libfuse2 \
+    xvfb \
+    x11vnc \
+    novnc \
+    websockify \
+    openbox \
+    dbus-x11 \
+    libxcb-xinerama0 \
+    libxkbcommon-x11-0 \
+    libxcb-cursor0 \
+    libgl1 \
+    libopengl0 \
+    libegl1 \
+    libglu1-mesa \
+    libglib2.0-0 \
+    libfontconfig1 \
+    libdbus-1-3 \
+    libpulse0 \
+    libsdl2-2.0-0 \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-libav \
+    gstreamer1.0-gl \
+    python3-gi \
+    python3-gst-1.0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash qgc \
+    && mkdir -p /opt/qgc \
+    && wget -O /opt/qgc/QGroundControl.AppImage "$QGC_APPIMAGE_URL" \
+    && chmod +x /opt/qgc/QGroundControl.AppImage \
+    && chown -R qgc:qgc /opt/qgc /home/qgc
+
+COPY entrypoint-novnc.sh /entrypoint-novnc.sh
+RUN chmod +x /entrypoint-novnc.sh
+
+USER qgc
+WORKDIR /home/qgc
+
+ENTRYPOINT ["/entrypoint-novnc.sh"]

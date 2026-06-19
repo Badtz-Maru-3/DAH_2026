@@ -1,0 +1,17 @@
+FROM husarion/rosbot-gazebo:humble
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xvfb \
+    x11vnc \
+    novnc \
+    websockify \
+    openbox \
+    dbus-x11 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY entrypoint-ugv-novnc.sh /entrypoint-ugv-novnc.sh
+RUN chmod +x /entrypoint-ugv-novnc.sh
+
+ENTRYPOINT ["/entrypoint-ugv-novnc.sh"]

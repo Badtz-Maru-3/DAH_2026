@@ -1,0 +1,3 @@
+NAMES                  STATUS         IMAGE
+dah-rviz-novnc         Up 8 minutes   ugv-rviz_novnc
+dah-rosbot-sim-novnc   Up 8 minutes   ugv-rosbot_sim_novnc

@@ -1,0 +1,12 @@
+services:
+  qgroundcontrol_novnc:
+    build:
+      context: .
+      dockerfile: Dockerfile.qgc-novnc
+    container_name: dah-qgc-novnc
+    network_mode: host
+    ipc: host
+    environment:
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+    volumes:
+      - ./data:/home/qgc/.config/QGroundControl.org:rw

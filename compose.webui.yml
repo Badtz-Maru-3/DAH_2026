@@ -1,0 +1,35 @@
+services:
+  qgroundcontrol_novnc:
+    build:
+      context: ./GCS
+      dockerfile: Dockerfile.qgc-novnc
+    container_name: dah-qgc-novnc
+    network_mode: host
+    ipc: host
+    environment:
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+    volumes:
+      - ./GCS/data:/home/qgc/.config/QGroundControl.org:rw
+
+  rosbot_sim_novnc:
+    build:
+      context: ./UGV
+      dockerfile: Dockerfile.ugv-novnc
+    container_name: dah-rosbot-sim-novnc
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-17}
+      - ROBOT_MODEL=${ROBOT_MODEL:-rosbot}
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+
+  rviz_novnc:
+    build:
+      context: ./UGV
+      dockerfile: Dockerfile.rviz-novnc
+    container_name: dah-rviz-novnc
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-17}
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}

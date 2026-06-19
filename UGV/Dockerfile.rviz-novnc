@@ -1,0 +1,18 @@
+FROM husarion/rosbot-gazebo:humble
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xvfb \
+    x11vnc \
+    novnc \
+    websockify \
+    openbox \
+    dbus-x11 \
+    ros-humble-rviz2 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY entrypoint-rviz-novnc.sh /entrypoint-rviz-novnc.sh
+RUN chmod +x /entrypoint-rviz-novnc.sh
+
+ENTRYPOINT ["/entrypoint-rviz-novnc.sh"]

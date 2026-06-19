@@ -1,0 +1,200 @@
+19/06/2026 11:02:28  tight               :     36 |     31427/  4114916 ( 99.2%)
+19/06/2026 11:02:28  RichCursor          :     16 |     11456/    11456 (  0.0%)
+19/06/2026 11:02:28  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+19/06/2026 11:02:28  TOTALS              :     73 |     42927/  4126416 ( 99.0%)
+19/06/2026 11:02:28 Statistics             events    Received/ RawEquiv ( saved)
+19/06/2026 11:02:28  PointerEvent        :    255 |      1530/     1530 (  0.0%)
+19/06/2026 11:02:28  FramebufferUpdate   :     21 |       210/      210 (  0.0%)
+19/06/2026 11:02:28  SetEncodings        :      1 |        68/       68 (  0.0%)
+19/06/2026 11:02:28  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+19/06/2026 11:02:28  TOTALS              :    278 |      1828/     1828 (  0.0%)
+127.0.0.1 - - [19/Jun/2026 11:02:29] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:02:29] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:02:29] connecting to: 127.0.0.1:5900
+19/06/2026 11:02:29 Got connection from client 127.0.0.1
+19/06/2026 11:02:29   1 other clients
+19/06/2026 11:02:29 Normal socket connection
+19/06/2026 11:02:29 incr accepted_client=7 for 127.0.0.1:54206  sock=11
+19/06/2026 11:02:29 Client Protocol Version 3.8
+19/06/2026 11:02:29 Protocol version sent 3.8, using 3.8
+19/06/2026 11:02:29 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:02:29 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:02:29 Pixel format for client 127.0.0.1:
+19/06/2026 11:02:29   32 bpp, depth 24, little endian
+19/06/2026 11:02:29   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:02:29 no translation needed
+19/06/2026 11:02:29 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:02:29 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:02:29 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:02:29 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:02:29 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:02:29 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:02:29 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:02:29 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:02:29 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:02:29 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:02:29 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:02:29 Using tight encoding for client 127.0.0.1
+19/06/2026 11:02:29 Sending rfbEncodingExtDesktopSize for size (1280x800) 
+19/06/2026 11:02:30 client_set_net: 127.0.0.1  0.0001
+19/06/2026 11:02:31 client_count: 1
+19/06/2026 11:02:31 Client 127.0.0.1 gone
+19/06/2026 11:02:31 Statistics             events    Transmit/ RawEquiv ( saved)
+19/06/2026 11:02:31  FramebufferUpdate   :      7 |         0/        0 (  0.0%)
+19/06/2026 11:02:31  LastRect            :      1 |        12/       12 (  0.0%)
+19/06/2026 11:02:31  tight               :     27 |     31354/  4114772 ( 99.2%)
+19/06/2026 11:02:31  RichCursor          :      5 |      3480/     3480 (  0.0%)
+19/06/2026 11:02:31  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+19/06/2026 11:02:31  TOTALS              :     41 |     34878/  4118296 ( 99.2%)
+19/06/2026 11:02:31 Statistics             events    Received/ RawEquiv ( saved)
+19/06/2026 11:02:31  PointerEvent        :     54 |       324/      324 (  0.0%)
+19/06/2026 11:02:31  FramebufferUpdate   :      9 |        90/       90 (  0.0%)
+19/06/2026 11:02:31  SetEncodings        :      1 |        68/       68 (  0.0%)
+19/06/2026 11:02:31  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+19/06/2026 11:02:31  TOTALS              :     65 |       502/      502 (  0.0%)
+19/06/2026 11:02:34 client_count: 0
+19/06/2026 11:02:34 Restored X server key autorepeat to: 1
+19/06/2026 11:02:34 Client 127.0.0.1 gone
+19/06/2026 11:02:34 Statistics             events    Transmit/ RawEquiv ( saved)
+19/06/2026 11:02:34  FramebufferUpdate   :    155 |         0/        0 (  0.0%)
+19/06/2026 11:02:34  copyRect            :     10 |       160/ 22339800 (100.0%)
+19/06/2026 11:02:34  LastRect            :     40 |       480/      480 (  0.0%)
+19/06/2026 11:02:34  tight               :    762 |   2383510/ 57618736 ( 95.9%)
+19/06/2026 11:02:34  RichCursor          :     66 |     47854/    47854 (  0.0%)
+19/06/2026 11:02:34  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+19/06/2026 11:02:34  TOTALS              :   1034 |   2432036/ 80006902 ( 97.0%)
+19/06/2026 11:02:34 Statistics             events    Received/ RawEquiv ( saved)
+19/06/2026 11:02:34  KeyEvent            :      4 |        32/       32 (  0.0%)
+19/06/2026 11:02:34  PointerEvent        :   2140 |     12840/    12840 (  0.0%)
+19/06/2026 11:02:34  FramebufferUpdate   :    167 |      1670/     1670 (  0.0%)
+19/06/2026 11:02:34  SetEncodings        :      1 |        68/       68 (  0.0%)
+19/06/2026 11:02:34  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+19/06/2026 11:02:34  TOTALS              :   2313 |     14630/    14630 (  0.0%)
+19/06/2026 11:02:34 destroyed xdamage object: 0x40002e
+127.0.0.1 - - [19/Jun/2026 11:02:36] 127.0.0.1: Plain non-SSL (ws://) WebSocket connection
+127.0.0.1 - - [19/Jun/2026 11:02:36] 127.0.0.1: Path: '/websockify'
+127.0.0.1 - - [19/Jun/2026 11:02:36] connecting to: 127.0.0.1:5900
+19/06/2026 11:02:36 Got connection from client 127.0.0.1
+19/06/2026 11:02:36   0 other clients
+19/06/2026 11:02:36 Normal socket connection
+19/06/2026 11:02:36 Disabled X server key autorepeat.
+19/06/2026 11:02:36   to force back on run: 'xset r on' (3 times)
+19/06/2026 11:02:36 incr accepted_client=8 for 127.0.0.1:54208  sock=10
+19/06/2026 11:02:36 Client Protocol Version 3.8
+19/06/2026 11:02:36 Protocol version sent 3.8, using 3.8
+19/06/2026 11:02:36 rfbProcessClientSecurityType: executing handler for type 1
+19/06/2026 11:02:36 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+19/06/2026 11:02:36 Pixel format for client 127.0.0.1:
+19/06/2026 11:02:36   32 bpp, depth 24, little endian
+19/06/2026 11:02:36   true colour: max r 255 g 255 b 255, shift r 16 g 8 b 0
+19/06/2026 11:02:36 no translation needed
+19/06/2026 11:02:36 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+19/06/2026 11:02:36 Using image quality level 6 for client 127.0.0.1
+19/06/2026 11:02:36 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+19/06/2026 11:02:36 Using compression level 2 for client 127.0.0.1
+19/06/2026 11:02:36 Enabling NewFBSize protocol extension for client 127.0.0.1
+19/06/2026 11:02:36 Enabling LastRect protocol extension for client 127.0.0.1
+19/06/2026 11:02:36 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+19/06/2026 11:02:36 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+19/06/2026 11:02:36 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+19/06/2026 11:02:36 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+19/06/2026 11:02:36 Enabling full-color cursor updates for client 127.0.0.1
+19/06/2026 11:02:36 Using tight encoding for client 127.0.0.1
+19/06/2026 11:02:36 Sending rfbEncodingExtDesktopSize for size (1280x800) 
+19/06/2026 11:02:36 client_set_net: 127.0.0.1  0.0001
+19/06/2026 11:02:36 created   xdamage object: 0x40002f
+19/06/2026 11:02:39 client 8 network rate 1830.0 KB/sec (35628.3 eff KB/sec)
+19/06/2026 11:02:39 client 8 latency:  1.9 ms
+19/06/2026 11:02:39 dt1: 0.0037, dt2: 0.0533 dt3: 0.0019 bytes: 102681
+19/06/2026 11:02:39 link_rate: LR_LAN - 1 ms, 1830 KB/s
+19/06/2026 11:07:39 idle keyboard:   turning X autorepeat back on.
+(EE) 
+Fatal server error:
+(EE) Server is already active for display 1
+	If this server is no longer running, remove /tmp/.X1-lock
+	and start again.
+(EE) 
+Openbox-Message: Failed to open the display from the DISPLAY environment variable.
+19/06/2026 11:09:45 passing arg to libvncserver: -listen
+19/06/2026 11:09:45 passing arg to libvncserver: 127.0.0.1
+19/06/2026 11:09:45 passing arg to libvncserver: -rfbport
+19/06/2026 11:09:45 passing arg to libvncserver: 5900
+19/06/2026 11:09:45 x11vnc version: 0.9.16 lastmod: 2019-01-05  pid: 13
+19/06/2026 11:09:45 XOpenDisplay(":1") failed.
+19/06/2026 11:09:45 Trying again with XAUTHLOCALHOSTNAME=localhost ...
+
+19/06/2026 11:09:45 ***************************************
+19/06/2026 11:09:45 *** XOpenDisplay failed (:1)
+
+*** x11vnc was unable to open the X DISPLAY: ":1", it cannot continue.
+*** There may be "Xlib:" error messages above with details about the failure.
+
+Some tips and guidelines:
+
+** An X server (the one you wish to view) must be running before x11vnc is
+   started: x11vnc does not start the X server.  (however, see the -create
+   option if that is what you really want).
+
+** You must use -display <disp>, -OR- set and export your $DISPLAY
+   environment variable to refer to the display of the desired X server.
+ - Usually the display is simply ":0" (in fact x11vnc uses this if you forget
+   to specify it), but in some multi-user situations it could be ":1", ":2",
+   or even ":137".  Ask your administrator or a guru if you are having
+   difficulty determining what your X DISPLAY is.
+
+** Next, you need to have sufficient permissions (Xauthority) 
+   to connect to the X DISPLAY.   Here are some Tips:
+
+ - Often, you just need to run x11vnc as the user logged into the X session.
+   So make sure to be that user when you type x11vnc.
+ - Being root is usually not enough because the incorrect MIT-MAGIC-COOKIE
+   file may be accessed.  The cookie file contains the secret key that
+   allows x11vnc to connect to the desired X DISPLAY.
+ - You can explicitly indicate which MIT-MAGIC-COOKIE file should be used
+   by the -auth option, e.g.:
+       x11vnc -auth /home/someuser/.Xauthority -display :0
+       x11vnc -auth /tmp/.gdmzndVlR -display :0
+   you must have read permission for the auth file.
+   See also '-auth guess' and '-findauth' discussed below.
+
+** If NO ONE is logged into an X session yet, but there is a greeter login
+   program like "gdm", "kdm", "xdm", or "dtlogin" running, you will need
+   to find and use the raw display manager MIT-MAGIC-COOKIE file.
+   Some examples for various display managers:
+
+     gdm:     -auth /var/gdm/:0.Xauth
+              -auth /var/lib/gdm/:0.Xauth
+     kdm:     -auth /var/lib/kdm/A:0-crWk72
+              -auth /var/run/xauth/A:0-crWk72
+     xdm:     -auth /var/lib/xdm/authdir/authfiles/A:0-XQvaJk
+     dtlogin: -auth /var/dt/A:0-UgaaXa
+
+   Sometimes the command "ps wwwwaux | grep auth" can reveal the file location.
+
+   Starting with x11vnc 0.9.9 you can have it try to guess by using:
+
+              -auth guess
+
+   (see also the x11vnc -findauth option.)
+
+   Only root will have read permission for the file, and so x11vnc must be run
+   as root (or copy it).  The random characters in the filenames will of course
+   change and the directory the cookie file resides in is system dependent.
+
+See also: http://www.karlrunge.com/x11vnc/faq.html
+WebSocket server settings:
+  - Listen on 127.0.0.1:6080
+  - Web server. Web root: /usr/share/novnc
+  - No SSL/TLS support (no cert file)
+  - proxying from 127.0.0.1:6080 to 127.0.0.1:5900
+qt.multimedia.symbolsresolver: Couldn't load pipewire-0.3 library
+qt.multimedia.symbolsresolver: Couldn't resolve pipewire-0.3 symbols
+QObject::startTimer: Timers can only be used with threads started with QThread
+     0.000 - warning: Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
+Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
+If this causes problems, reconfigure your locale. See the locale(1) manual
+for more information. (default:unknown:0)
+     0.002 - fatal: This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: xcb, wayland-egl, eglfs, wayland.
+ (default:unknown:0)
