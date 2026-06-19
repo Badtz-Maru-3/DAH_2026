@@ -35,7 +35,7 @@ QGroundControl noVNC
 
 ## Services Under Test
 
-The current default runtime path is the integrated `compose.webui.yml`, which launches all four services together.
+The current default runtime path is the integrated `compose.webui.yml`, which launches all four services together. Use this path for the Day3 baseline unless you are intentionally debugging only the bridge.
 
 | Container | Role |
 | --- | --- |
@@ -46,9 +46,35 @@ The current default runtime path is the integrated `compose.webui.yml`, which la
 
 The integrated stack uses host networking and `restart: unless-stopped`. The bridge service depends on QGroundControl and ROSbot simulation, so the intended Day3 baseline can be launched from the root compose file.
 
-`Bridge/compose.bridge.yml` remains available for bridge-only debugging, but the baseline stack now lives in the root compose file. Do not run both bridge paths at once because both use the `dah-bridge` container name.
+`Bridge/compose.bridge.yml` remains available for bridge-only debugging, but the baseline stack now lives in the root compose file. Do not run both bridge paths at once because both use the `dah-bridge` container name. If `docker compose -f Bridge/compose.bridge.yml up -d` reports `Conflict. The container name "/dah-bridge" is already in use`, remove the integrated bridge container first:
 
-Robot model selection is controlled by `ROBOT_MODEL` in `.env`. If it is omitted, the stack launches `rosbot`; setting `ROBOT_MODEL=rosbot_xl` launches `rosbot_xl`.
+```bash
+docker compose --env-file .env -f compose.webui.yml stop bridge
+docker compose --env-file .env -f compose.webui.yml rm -f bridge
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+For a clean switch from the integrated baseline to bridge-only debugging:
+
+```bash
+docker compose --env-file .env -f compose.webui.yml down
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+To return from bridge-only debugging to the integrated baseline:
+
+```bash
+docker compose --env-file .env -f Bridge/compose.bridge.yml down
+docker compose --env-file .env -f compose.webui.yml up -d
+```
+
+Robot model selection is controlled by `ROBOT_MODEL` in `.env`. If it is omitted, the stack launches `rosbot`. To use the XL model, add or edit this line in `.env` before starting the stack:
+
+```bash
+ROBOT_MODEL=rosbot_xl
+```
+
+To return to the default model, set `ROBOT_MODEL=rosbot` or remove the `ROBOT_MODEL` line from `.env`.
 
 ## Bridge Behavior
 

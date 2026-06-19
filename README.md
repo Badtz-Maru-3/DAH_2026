@@ -106,25 +106,46 @@ Copy the example environment file if needed:
 cp .env.example .env
 ```
 
-Robot model selection:
+Robot model selection is configured in `.env`. The default model is `rosbot`; to launch `rosbot_xl`, add or edit this line in `.env` before running `docker compose up`:
 
 ```bash
-# Default: ROBOT_MODEL is omitted, so rosbot is used.
-
-# Optional:
 ROBOT_MODEL=rosbot_xl
 ```
 
-Start the integrated testbed stack:
+To switch back to the default model, either set `ROBOT_MODEL=rosbot` or remove the `ROBOT_MODEL` line from `.env`. `.env.example` includes the default line as a template.
+
+Start the integrated testbed stack. This is the normal path and already includes `dah-bridge`:
 
 ```bash
 docker compose --env-file .env -f compose.webui.yml up -d
 ```
 
-Bridge-only debugging path, only when the integrated bridge is not already running:
+Bridge-only debugging is an alternative path, not an extra step after the integrated stack. Use it only when QGroundControl and the simulation are already running some other way, or after removing the integrated bridge service container:
+
+```bash
+docker compose --env-file .env -f compose.webui.yml stop bridge
+docker compose --env-file .env -f compose.webui.yml rm -f bridge
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+If Docker reports `Conflict. The container name "/dah-bridge" is already in use`, the integrated bridge container is still present. Stop it through the compose file that created it before starting the bridge-only compose file:
+
+```bash
+docker compose --env-file .env -f compose.webui.yml down
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+If you already know the integrated bridge is not running, the bridge-only command is:
 
 ```bash
 docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+To switch back from bridge-only debugging to the integrated stack, remove the bridge-only container first:
+
+```bash
+docker compose --env-file .env -f Bridge/compose.bridge.yml down
+docker compose --env-file .env -f compose.webui.yml up -d
 ```
 
 Open the web UIs:
@@ -186,6 +207,38 @@ See `docs/day3/README.md` and `docs/day3/evidence_summary.md` for the detailed M
 | `docs/day2/README.md` | noVNC web UI integration evidence. |
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP result. |
 | `docs/day3/evidence_summary.md` | File-by-file Day3 evidence interpretation. |
+
+## References
+
+Official and technical documentation:
+
+- DAH 2026 Preliminary Guide, 2026-06-15.
+- MAVLink Developer Guide, Common Message Set.
+- MAVLink Developer Guide, Mission Protocol.
+- QGroundControl User Guide, Download and Install.
+- Husarion Documentation, How to use Husarion Docker images.
+- Docker Documentation, Compose file services reference.
+- noVNC GitHub Repository, HTML VNC client library and application.
+
+Project internal materials:
+
+- Badtz-Maru-3/DAH_2026, `README.md`.
+- Badtz-Maru-3/DAH_2026, `compose.webui.yml`.
+- Badtz-Maru-3/DAH_2026, `Bridge/ros2_mavlink_bridge.py`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/evidence_summary.md`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/odom_delta.md`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/bridge_clean.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/cmd_vel_info.txt`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/ros2_topics.txt`.
+
+Research literature:
+
+- Mayoral Vilches, V. et al., SROS2: Usable Cyber Security Tools for ROS 2, arXiv:2208.02615.
+- Choton, J. C. et al., Formal Modeling and Verification of Publisher-Subscriber Paradigm in ROS 2, arXiv:2412.16186.
+- Macenski, S. et al., Impact of ROS 2 Node Composition in Robotic Systems, arXiv:2305.09933.
+- Clements, Z., Yoder, J. E., Humphreys, T. E., Carrier-phase and IMU based GNSS Spoofing Detection for Ground Vehicles, arXiv:2203.00140.
+- Johansson, T., Spanghero, M., Papadimitratos, P., Consumer INS Coupled with Carrier Phase Measurements for GNSS Spoofing Detection, arXiv:2502.03870.
+- Park, S., Cho, D. J., Son, P. W., Wide-Area GNSS Spoofing and Jamming Detection Using AIS-Derived Spatiotemporal Integrity Monitoring, arXiv:2603.11055.
 
 ## Current Status
 

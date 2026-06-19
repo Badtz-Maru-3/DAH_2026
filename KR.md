@@ -132,25 +132,46 @@ QGroundControl noVNC
 cp .env.example .env
 ```
 
-로봇 모델 선택:
+로봇 모델은 `.env`에서 선택합니다. 기본 모델은 `rosbot`이고, `rosbot_xl`로 실행하려면 `docker compose up` 전에 `.env`에 아래 줄을 추가하거나 기존 값을 수정합니다.
 
 ```bash
-# 기본값: ROBOT_MODEL을 쓰지 않으면 rosbot 사용
-
-# 선택값:
 ROBOT_MODEL=rosbot_xl
 ```
 
-통합 testbed stack을 실행합니다.
+기본 모델로 되돌리려면 `.env`에서 `ROBOT_MODEL=rosbot`으로 설정하거나 `ROBOT_MODEL` 줄을 삭제하면 됩니다. `.env.example`에는 기본값 예시가 들어 있습니다.
+
+통합 testbed stack을 실행합니다. 이 경로가 기본 실행 경로이며, 이미 `dah-bridge`를 포함합니다.
 
 ```bash
 docker compose --env-file .env -f compose.webui.yml up -d
 ```
 
-통합 bridge가 실행 중이 아닐 때, bridge만 따로 디버깅하려면 다음 경로를 사용할 수 있습니다.
+bridge 단독 디버깅은 통합 stack 실행 뒤에 추가로 실행하는 단계가 아니라 대체 경로입니다. QGroundControl과 simulation을 다른 방식으로 이미 띄워 둔 상태이거나, 통합 bridge 컨테이너를 먼저 제거한 뒤에만 사용합니다.
+
+```bash
+docker compose --env-file .env -f compose.webui.yml stop bridge
+docker compose --env-file .env -f compose.webui.yml rm -f bridge
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+Docker가 `Conflict. The container name "/dah-bridge" is already in use`를 출력하면 통합 bridge 컨테이너가 아직 남아 있는 상태입니다. 이때는 해당 컨테이너를 만든 compose 경로로 먼저 내린 뒤 bridge 단독 경로를 실행합니다.
+
+```bash
+docker compose --env-file .env -f compose.webui.yml down
+docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+통합 bridge가 실행 중이 아닌 것이 확실할 때의 bridge 단독 실행 명령은 다음과 같습니다.
 
 ```bash
 docker compose --env-file .env -f Bridge/compose.bridge.yml up -d
+```
+
+bridge 단독 디버깅에서 다시 통합 stack으로 돌아갈 때는 bridge 단독 컨테이너를 먼저 제거합니다.
+
+```bash
+docker compose --env-file .env -f Bridge/compose.bridge.yml down
+docker compose --env-file .env -f compose.webui.yml up -d
 ```
 
 웹 UI에 접속합니다.
@@ -219,13 +240,37 @@ docker logs dah-bridge
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP 결과입니다. |
 | `docs/day3/evidence_summary.md` | Day3 evidence 파일별 해석입니다. |
 
-## 참고한 공개 기술 문서
+## 참고자료
 
-웹에서 `DAH 2026`이라는 이름의 공식 요구사항 문서는 확인하지 못했습니다. 따라서 현재 문서는 저장소의 구현 상태와 testbed 목적을 기준으로 작성했고, 기술적 방향성은 다음 공개 문서를 참고했습니다.
+공식 문서 및 기술 문서:
 
-- MAVLink `MANUAL_CONTROL`은 joystick 축을 `[-1000, 1000]` 범위로 표현하는 수동 조종 메시지입니다.
-- QGroundControl은 MAVLink 설정에서 ground station system ID, heartbeat, link quality 등을 다룹니다.
-- Gazebo는 ROS2와 topic bridge를 통해 센서 데이터와 명령을 주고받을 수 있습니다.
+- DAH 2026 예선 안내서, 2026.06.15.
+- MAVLink Developer Guide, Common Message Set.
+- MAVLink Developer Guide, Mission Protocol.
+- QGroundControl User Guide, Download and Install.
+- Husarion Documentation, How to use Husarion Docker images.
+- Docker Documentation, Compose file services reference.
+- noVNC GitHub Repository, HTML VNC client library and application.
+
+프로젝트 내부 자료:
+
+- Badtz-Maru-3/DAH_2026, `README.md`.
+- Badtz-Maru-3/DAH_2026, `compose.webui.yml`.
+- Badtz-Maru-3/DAH_2026, `Bridge/ros2_mavlink_bridge.py`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/evidence_summary.md`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/odom_delta.md`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/bridge_clean.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/cmd_vel_info.txt`.
+- Badtz-Maru-3/DAH_2026, `docs/day3/ros2_topics.txt`.
+
+논문 및 연구자료:
+
+- Mayoral Vilches, V. et al., SROS2: Usable Cyber Security Tools for ROS 2, arXiv:2208.02615.
+- Choton, J. C. et al., Formal Modeling and Verification of Publisher-Subscriber Paradigm in ROS 2, arXiv:2412.16186.
+- Macenski, S. et al., Impact of ROS 2 Node Composition in Robotic Systems, arXiv:2305.09933.
+- Clements, Z., Yoder, J. E., Humphreys, T. E., Carrier-phase and IMU based GNSS Spoofing Detection for Ground Vehicles, arXiv:2203.00140.
+- Johansson, T., Spanghero, M., Papadimitratos, P., Consumer INS Coupled with Carrier Phase Measurements for GNSS Spoofing Detection, arXiv:2502.03870.
+- Park, S., Cho, D. J., Son, P. W., Wide-Area GNSS Spoofing and Jamming Detection Using AIS-Derived Spatiotemporal Integrity Monitoring, arXiv:2603.11055.
 
 ## 현재 상태
 
