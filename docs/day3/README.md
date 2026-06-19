@@ -4,6 +4,8 @@ Day3 validates the first end-to-end control loop between QGroundControl and the 
 
 The goal was to prove that a custom bridge can receive MAVLink joystick/control input from QGroundControl, publish ROS2 `/cmd_vel`, move the simulated ROSbot, and send odometry-derived telemetry back to QGroundControl.
 
+In the DAH 2026 plan, this is the first validated attack surface: a C2-like control-command path. It is not the final defense system yet, but it proves that injected or abnormal MAVLink control input can reach the simulated UGV and that resulting movement can be captured as evidence.
+
 ## Result
 
 MVP validation passed.
@@ -125,4 +127,17 @@ From `odom_delta.md`:
 
 Day3 demonstrates a working bridge MVP. QGroundControl input reaches the ROSbot simulation through MAVLink and ROS2, and the robot's resulting odometry confirms actual movement.
 
-This is not yet a production autopilot replacement. It is a successful prototype bridge that proves the integration path and gives the project a solid base for repeatable tests, richer telemetry, and better QGroundControl vehicle behavior.
+This is not yet a production autopilot replacement or the final AI defense orchestrator. It is a successful prototype bridge that proves the integration path and gives the project a solid base for command-attack injection, mission audit mode, GNSS integrity checks, correlation logic, and report-ready evidence logs.
+
+## Next Step Alignment
+
+The next planned implementation is mission audit mode:
+
+- Receive `MISSION_COUNT` from QGroundControl.
+- Request mission items with `MISSION_REQUEST_INT`.
+- Store `MISSION_ITEM_INT` fields for audit.
+- Check geofence, waypoint jump distance, uploader sysid, and sequence integrity.
+- Accept normal missions and reject malicious missions with `MISSION_ACK`.
+- Write a mission audit log containing received waypoints, verdict, reason, and recovery action.
+
+The Day3 bridge path must remain stable while this is added. In particular, `MANUAL_CONTROL -> /cmd_vel`, odometry telemetry, and the `CMD_TIMEOUT` watchdog are existing evidence-backed behavior.

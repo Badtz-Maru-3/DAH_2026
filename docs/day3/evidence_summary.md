@@ -2,6 +2,8 @@
 
 Day3 proves that the custom ROS2-MAVLink bridge can connect QGroundControl control input to the ROSbot Gazebo simulation.
 
+For the DAH 2026 plan, this evidence validates the first attack-defense surface: the command channel. A future attack adapter can inject or mutate this command path, and a future defense layer can use the same logs/topics to prove detection, blocking, or recovery.
+
 ## Verdict
 
 The bridge MVP is validated.
@@ -117,16 +119,19 @@ The current evidence does not yet prove:
 - Long-duration stability.
 - Full QGroundControl vehicle setup compatibility.
 - Complete MAVLink parameter coverage.
-- Mission upload/execution behavior.
-- Robust handling of network loss or container restarts.
-- Automated regression coverage.
+- Mission upload/execution behavior or mission audit rejection.
+- GNSS spoofing, jump, drift, or fix-quality monitoring.
+- Correlation between command, mission, and GNSS anomalies.
+- Robust handling of network loss or container restarts beyond the current command timeout watchdog.
+- Automated regression coverage or evidence collection scripts.
 
 ## Recommended Next Evidence
 
 Add these when moving beyond MVP:
 
-- A repeatable shell script that captures all Day3 evidence from a fresh start.
-- QGroundControl screenshots showing vehicle connection and HUD/map behavior.
-- A short recorded movement test.
-- Bridge unit tests for `MANUAL_CONTROL`, `RC_CHANNELS_OVERRIDE`, and odometry-to-telemetry conversion.
+- `mission_audit.log` showing normal mission accepted and malicious mission rejected.
+- QGroundControl screenshots for mission upload, rejection, and operator-visible state.
+- GNSS integrity logs showing normal position accepted, jump spoofing detected, and trust downgraded.
+- Correlation logs showing combined command/mission/GNSS anomalies.
+- A repeatable script that captures container state, ROS2 topics, bridge logs, odometry deltas, and audit logs from a fresh run.
 - A failure-mode test for command timeout and zero `/cmd_vel` publishing.

@@ -1,10 +1,10 @@
 # DAH 2026
 
-DAH 2026 is a Docker-based unmanned-systems testbed for rapidly configuring and validating QGroundControl, MAVLink, ROS2, and Gazebo workflows.
+DAH 2026 is a Docker-based unmanned-systems cyber-defense testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
 
-The current ROSbot UGV scenario is the first baseline test case for this testbed. QGroundControl sends MAVLink manual-control messages, the bridge converts them to ROS2 `/cmd_vel`, Gazebo moves the simulated ROSbot, and odometry is sent back to QGroundControl as MAVLink telemetry.
+The current ROSbot UGV scenario is the first validated baseline. QGroundControl sends MAVLink manual-control messages, the bridge converts them to ROS2 `/cmd_vel`, Gazebo moves the simulated ROSbot, and odometry is sent back to QGroundControl as MAVLink telemetry.
 
-The long-term goal is not just to move one robot in simulation. This repository is intended to support repeatable experiments for autonomy logic, mission control, sensor processing, multi-agent setups, GCS integration, and failure-mode validation.
+The goal is not just to move one robot in simulation. This repository is intended to support repeatable evidence for the attack-defense loop: attack injection, abnormal behavior, AI-assisted detection, blocking, recovery, and logs that can be used as report evidence.
 
 ## Baseline Architecture
 
@@ -33,9 +33,33 @@ QGroundControl noVNC
 
 - Keep GCS, simulation, robotics middleware, and communication bridge setup reproducible with Docker.
 - Validate the control and telemetry loop between QGroundControl and ROS2/Gazebo.
-- Provide a safe simulation layer before moving to a real robot or a more complex simulator.
+- Provide a safe simulation layer for UGV mission-command, control-command, and position-input attack experiments.
 - Store evidence in `docs/` so experiments remain reviewable and repeatable.
-- Leave room to swap in new UGV/UAV models, sensors, mission logic, and autonomy modules as DAH 2026 requirements become more concrete.
+- Implement each attack surface as an evidence-producing tuple: injection point, abnormal symptom, detection/blocking/recovery response, and log proof.
+
+## Target Defense Scenario
+
+The planned defense scenario is an AI-assisted orchestrator for complex UGV operation attacks. The testbed should eventually correlate multiple surfaces instead of treating each event in isolation:
+
+```text
+Command injection
+  + unauthorized mission / waypoint change
+  + suspicious GNSS jump or drift
+  -> correlated anomaly
+  -> hold / zero cmd_vel / reject mission / operator alert
+  -> evidence log
+```
+
+Current validated surface:
+
+- C2-like command injection path through MAVLink `MANUAL_CONTROL` and `RC_CHANNELS_OVERRIDE`.
+- Telemetry conversion path from ROS2 odometry to MAVLink local/global position messages.
+
+Planned surfaces:
+
+- Mission audit mode for waypoint/geofence validation.
+- GNSS integrity monitoring using short-term residuals between odometry and position input.
+- Correlation engine that combines command, mission, and GNSS symptoms.
 
 ## Runtime Services
 
@@ -169,8 +193,8 @@ The system is at a strong testbed MVP stage. The main control loop is demonstrat
 
 Recommended next steps:
 
-- Add a repeatable test script for bridge validation.
-- Capture QGroundControl connection settings and screenshots.
-- Add bridge unit tests for MAVLink message handling and odometry conversion.
-- Define the mission/waypoint handling scope.
-- Add failure-mode evidence for command timeout, link loss, and container restarts.
+- Implement mission audit mode for `MISSION_COUNT` and `MISSION_ITEM_INT`.
+- Log normal mission acceptance and malicious mission rejection evidence.
+- Add GNSS integrity monitoring after the mission audit path is stable.
+- Add correlation logic that links command, mission, and GNSS anomalies.
+- Keep the existing Day3 `MANUAL_CONTROL -> /cmd_vel` and `CMD_TIMEOUT` watchdog behavior intact.

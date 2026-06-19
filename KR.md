@@ -1,8 +1,8 @@
 # DAH 2026 Testbed
 
-DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **QGroundControl, MAVLink, ROS2, Gazebo 기반 무인 시스템 실험을 빠르게 구성하고 검증하기 위한 testbed**입니다.
+DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **방산 AI 사이버 공방 해커톤 예선 보고서의 부가자료(src + docs)를 구성하기 위한 무인 시스템 사이버 방어 testbed**입니다.
 
-현재 구현된 ROSbot UGV 시뮬레이션과 ROS2-MAVLink 브리지는 이 testbed의 첫 번째 기준 시나리오입니다. 목표는 “QGroundControl로 ROSbot을 움직였다”에서 끝나는 것이 아니라, 이후 자율주행 로직, 임무 제어, 센서 처리, 다중 에이전트, GCS 연동, 실패 상황 대응을 반복 실험할 수 있는 기반을 만드는 것입니다.
+현재 구현된 ROSbot UGV 시뮬레이션과 ROS2-MAVLink 브리지는 이 testbed의 첫 번째 검증 기준 시나리오입니다. 목표는 “QGroundControl로 ROSbot을 움직였다”에서 끝나는 것이 아니라, **공격 주입 -> 이상 징후 -> AI 기반 탐지·차단·복구 -> 로그 evidence** 흐름을 반복 실험할 수 있는 기반을 만드는 것입니다.
 
 ## 프로젝트 목적
 
@@ -10,9 +10,9 @@ DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **QGroundC
 
 - GCS, 시뮬레이터, 로봇 미들웨어, 통신 브리지를 Docker로 재현 가능하게 구성합니다.
 - QGroundControl과 ROS2/Gazebo 사이의 제어 및 telemetry 흐름을 검증합니다.
-- 실제 로봇 또는 더 복잡한 시뮬레이션으로 확장하기 전, 안전한 가상 환경에서 control loop를 검증합니다.
-- 실험 결과를 `docs/`에 evidence로 남겨 재현성과 설명 가능성을 확보합니다.
-- 향후 DAH 2026 본 과제/시나리오에 맞춰 UGV, UAV, 센서, 임무 로직을 교체하거나 추가할 수 있게 합니다.
+- 실제 로봇 또는 더 복잡한 시뮬레이션으로 확장하기 전, 안전한 가상 환경에서 공격·방어 루프를 검증합니다.
+- 실험 결과를 `docs/`에 evidence로 남겨 보고서 본문에서 설명 가능한 근거를 확보합니다.
+- 제어명령, 임무명령, 위치입력의 상관관계를 이용해 UGV 운용 이상을 탐지하는 구조로 확장합니다.
 
 ## Testbed 관점의 핵심 아이디어
 
@@ -29,6 +29,30 @@ Operator / Autonomy Logic
 ```
 
 즉, 특정 로봇 하나를 움직이는 것이 아니라 **제어 입력, 상태 피드백, 시각화, 검증 자료 수집이 모두 연결되는 실험 루프**를 만드는 것이 핵심입니다.
+
+## 목표 방어 시나리오
+
+이 testbed가 최종적으로 뒷받침해야 하는 시나리오는 **UGV 임무명령·위치입력 복합 공격에 대한 AI 기반 탐지·차단·복구 오케스트레이터**입니다. 단일 공격 표면만 보는 것이 아니라, 서로 다른 이상 징후가 같은 방향을 가리킬 때 복합 공격 가능성을 높게 판단하는 구조가 목표입니다.
+
+```text
+제어명령 주입
+  + 비인가 mission / waypoint 변경
+  + GNSS 좌표 jump 또는 drift
+  -> 상관관계 기반 이상 탐지
+  -> hold / zero cmd_vel / mission reject / operator alert
+  -> evidence log
+```
+
+현재 검증된 공격 표면:
+
+- MAVLink `MANUAL_CONTROL`, `RC_CHANNELS_OVERRIDE` 기반 C2 analog 명령 주입 경로
+- ROS2 odometry를 MAVLink local/global position telemetry로 변환하는 telemetry 경로
+
+다음 구현 표면:
+
+- Mission audit mode: waypoint, geofence, mission sequence 검증
+- GNSS integrity monitor: odometry와 위치입력의 단기 변화율 잔차 검사
+- Correlation engine: 명령, 임무, 위치 이상을 함께 판단하는 상위 방어 로직
 
 ## 현재 기준 시나리오
 
@@ -172,17 +196,16 @@ docker logs dah-bridge
 
 ## 확장 방향
 
-이 testbed는 다음 방향으로 확장할 수 있습니다.
+이 testbed는 다음 공격·방어 표면으로 확장할 수 있습니다.
 
 | 확장 방향 | 설명 |
 | --- | --- |
-| 자율주행 노드 추가 | joystick 입력 대신 planner/controller가 `/cmd_vel`을 생성하도록 확장합니다. |
-| 임무 제어 | QGroundControl mission, waypoint, command handling을 bridge에 추가합니다. |
-| 센서 처리 | `/scan`, camera, point cloud 기반 인식/회피 로직을 추가합니다. |
-| UAV/UGV 전환 | 현재 ROSbot UGV를 다른 로봇 모델 또는 UAV 시뮬레이터로 교체합니다. |
-| 다중 에이전트 | ROS_DOMAIN_ID, namespace, MAV_SYS_ID를 분리해 여러 vehicle을 실험합니다. |
-| 장애 상황 실험 | 통신 지연, packet loss, command timeout, container restart를 테스트합니다. |
-| 자동 evidence 수집 | 컨테이너 상태, ROS2 topic, odometry delta, bridge log를 스크립트로 수집합니다. |
+| Mission audit mode | `MISSION_COUNT`, `MISSION_ITEM_INT`를 수신해 waypoint, geofence, sequence 무결성을 검사합니다. |
+| GNSS integrity monitor | odometry 단기 이동량과 GNSS 변화량의 잔차로 jump, drift, fix quality 이상을 탐지합니다. |
+| Correlation engine | 제어명령, mission, GNSS 이상을 함께 판단해 복합 공격 가능성을 산출합니다. |
+| Stability manager | AIxCC 교훈에 맞춰 탐지뿐 아니라 hold, zero `/cmd_vel`, rollback 같은 안정적 복구를 담당합니다. |
+| 자동 evidence 수집 | 컨테이너 상태, ROS2 topic, odometry delta, bridge log, audit log를 스크립트로 수집합니다. |
+| 모델 교체 | `ROBOT_MODEL`로 `rosbot`, `rosbot_xl`을 선택하고 이후 다른 UGV/UAV 시뮬레이터로 확장합니다. |
 
 ## 문서 구조
 
@@ -208,11 +231,10 @@ docker logs dah-bridge
 
 이 시스템은 강한 testbed MVP 단계에 있습니다. 주요 제어 루프가 end-to-end로 입증되었고, 컨테이너 상태, ROS2 토픽, 브리지 로그, `/cmd_vel` 연결, odometry 이동량에 대한 evidence가 확보되어 있습니다.
 
-다음 단계는 “더 멋진 데모”보다 **반복 가능한 실험 환경**을 만드는 쪽이 좋습니다.
+다음 단계는 “더 멋진 데모”보다 **공격·방어 1:1 매핑과 evidence 로그**를 만드는 쪽이 좋습니다.
 
-- bridge 검증 자동화 스크립트
-- QGroundControl 연결 설정 문서화
-- bridge unit test
-- mission/waypoint 처리 범위 정의
-- 장애 상황 evidence 추가
-- 실제 DAH 2026 요구사항이 정리되면 이 testbed 목적과 시나리오에 반영
+- Mission audit mode 구현
+- 정상 mission accepted / 악성 mission rejected evidence 확보
+- GNSS integrity monitor 설계값을 환경변수로 노출
+- command, mission, GNSS 이상 징후를 연결하는 correlation log 추가
+- 기존 Day3 `MANUAL_CONTROL -> /cmd_vel` 및 `CMD_TIMEOUT` watchdog 경로 유지

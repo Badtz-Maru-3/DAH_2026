@@ -23,3 +23,5 @@
 
 The ROSbot position changed after QGroundControl joystick input.
 This indicates that MAVLink manual control was translated into ROS2 `/cmd_vel` and applied to the simulated UGV.
+
+For the DAH 2026 testbed, this file is the motion proof for the command-control baseline. It does not prove attack detection by itself. It proves that the command path is live, measurable, and suitable for later command-injection and blocking experiments.
