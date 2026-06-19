@@ -1,0 +1,23 @@
+services:
+  bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.bridge
+    container_name: dah-bridge
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-17}
+      - QGC_IP=${QGC_IP:-127.0.0.1}
+      - QGC_PORT=${QGC_PORT:-14550}
+      - BRIDGE_LOCAL_PORT=${BRIDGE_LOCAL_PORT:-14551}
+      - MAV_SYS_ID=${MAV_SYS_ID:-1}
+      - MAV_COMP_ID=${MAV_COMP_ID:-1}
+      - MAX_LINEAR=${MAX_LINEAR:-0.5}
+      - MAX_ANGULAR=${MAX_ANGULAR:-1.2}
+      - CMD_TIMEOUT=${CMD_TIMEOUT:-0.6}
+      - BASE_LAT=${BASE_LAT:-37.5665}
+      - BASE_LON=${BASE_LON:-126.9780}
+      - BASE_ALT=${BASE_ALT:-50.0}
+    volumes:
+      - .:/app:ro

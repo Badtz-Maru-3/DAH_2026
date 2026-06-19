@@ -1,0 +1,20 @@
+FROM ros:humble-ros-base
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    ros-humble-geometry-msgs \
+    ros-humble-nav-msgs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip3 install --no-cache-dir -r /app/requirements.txt
+
+COPY ros2_mavlink_bridge.py /app/ros2_mavlink_bridge.py
+RUN chmod +x /app/ros2_mavlink_bridge.py
+
+ENTRYPOINT ["/bin/bash", "-lc", "source /opt/ros/humble/setup.bash && exec python3 /app/ros2_mavlink_bridge.py"]
