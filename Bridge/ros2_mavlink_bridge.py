@@ -82,6 +82,7 @@ class Ros2MavlinkBridge(Node):
         self.base_lat = env_float("BASE_LAT", 37.5665)
         self.base_lon = env_float("BASE_LON", 126.9780)
         self.base_alt = env_float("BASE_ALT", 50.0)
+        self.mavlink_debug = env_int("MAVLINK_DEBUG", 0) == 1
 
         self.transport = UdpMavlinkEndpoint(
             local_ip="0.0.0.0",
@@ -317,12 +318,13 @@ class Ros2MavlinkBridge(Node):
         while True:
             try:
                 data, _addr = self.transport.recv_packet()
-                now = time.monotonic()
-                if not hasattr(self, "_last_raw_udp_log"):
-                    self._last_raw_udp_log = 0.0
-                if now - self._last_raw_udp_log > 1.0:
-                    self.get_logger().info(f"RAW UDP RX: {len(data)} bytes from {_addr}")
-                    self._last_raw_udp_log = now
+                if self.mavlink_debug:
+                    now = time.monotonic()
+                    if not hasattr(self, "_last_raw_udp_log"):
+                        self._last_raw_udp_log = 0.0
+                    if now - self._last_raw_udp_log > 1.0:
+                        self.get_logger().info(f"RAW UDP RX: {len(data)} bytes from {_addr}")
+                        self._last_raw_udp_log = now
             except BlockingIOError:
                 break
             except Exception as exc:
@@ -341,12 +343,13 @@ class Ros2MavlinkBridge(Node):
     def handle_mavlink_msg(self, msg):
         msg_type = msg.get_type()
 
-        now = time.monotonic()
-        if not hasattr(self, "_last_rx_type_log"):
-            self._last_rx_type_log = {}
-        if now - self._last_rx_type_log.get(msg_type, 0.0) > 1.0:
-            self.get_logger().info(f"MAVLink RX: {msg_type}")
-            self._last_rx_type_log[msg_type] = now
+        if self.mavlink_debug:
+            now = time.monotonic()
+            if not hasattr(self, "_last_rx_type_log"):
+                self._last_rx_type_log = {}
+            if now - self._last_rx_type_log.get(msg_type, 0.0) > 1.0:
+                self.get_logger().info(f"MAVLink RX: {msg_type}")
+                self._last_rx_type_log[msg_type] = now
 
         if msg_type == "MISSION_REQUEST_LIST":
             self.send_empty_mission_count(msg)

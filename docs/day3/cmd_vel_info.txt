@@ -6,7 +6,7 @@ Node name: ros2_mavlink_bridge
 Node namespace: /
 Topic type: geometry_msgs/msg/Twist
 Endpoint type: PUBLISHER
-GID: 01.0f.f0.8e.01.00.fc.42.00.00.00.00.00.00.11.03.00.00.00.00.00.00.00.00
+GID: 01.0f.f0.8e.01.00.65.df.00.00.00.00.00.00.11.03.00.00.00.00.00.00.00.00
 QoS profile:
   Reliability: RELIABLE
   History (Depth): UNKNOWN

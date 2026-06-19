@@ -1,0 +1,245 @@
+[INFO] [1781873033.231819491] [ros2_mavlink_bridge]: Bridge up: ROS_DOMAIN_ID=17, MAVLink 0.0.0.0:14551 -> 127.0.0.1:14550, ROS /cmd_vel <-> /odometry/filtered
+[INFO] [1781873033.233458939] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873033.234297948] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873033.235137321] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873033.272870763] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873033.322401163] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873033.323682754] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873033.423078272] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873034.242618018] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873034.243379607] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873034.244750749] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873034.322381393] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873034.785218708] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873035.245213119] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873035.246424948] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873035.247516256] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873035.322809045] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873035.422751955] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873035.785026956] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873036.282229770] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873036.282954792] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873036.284205958] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873036.288478677] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873036.342365539] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873037.325020507] [ros2_mavlink_bridge]: RAW UDP RX: 21 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873037.326036350] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873037.327121838] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873037.328117688] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873038.323295444] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873038.362338371] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873038.364911380] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873038.369161625] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873038.782275793] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873039.323738332] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873039.402910365] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873039.403589982] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873039.404787620] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873039.802602827] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873040.322447000] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873040.442539749] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873040.443637427] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873040.444999412] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873041.322587537] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873041.323627684] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873041.442482562] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873041.482693440] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873041.484059836] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873042.325428451] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873042.326463352] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873042.412703617] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873042.482609819] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873042.484641565] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873042.485985469] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873043.522569582] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873043.524360911] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873043.525488986] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873043.782562502] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873044.022786313] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873044.322348968] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873044.531117966] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873044.532405749] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873044.534223468] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873045.322746744] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873045.324010199] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873045.496804856] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873045.562397265] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873045.563331574] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873045.564852322] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873046.562671884] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873046.563538673] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873046.602911937] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873046.782237207] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873047.282211455] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873047.282879947] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873047.283506956] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873047.284115191] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873047.284703926] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873047.855818918] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873048.303429151] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873048.304359590] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873048.305917782] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873048.622821653] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873048.623948397] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873049.322139613] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873049.323056673] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873049.323918220] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873050.082218171] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873050.342092674] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873050.343993289] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873050.344791049] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873050.622613816] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873050.904720824] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873051.082509351] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873051.342034630] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873051.363007223] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873051.364012297] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873052.362190277] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873052.363130704] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873052.363836649] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873052.603047165] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873052.603950401] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873053.382126219] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873053.383309239] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873053.384120368] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873053.624289653] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873053.625310106] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873053.985329208] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873054.422507370] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873054.423751649] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873054.424422820] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873055.002677713] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873055.082875472] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873055.442582035] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873055.444179192] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873055.446204258] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873055.622027300] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873056.502192269] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873056.502975527] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873056.503709558] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873056.602661135] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873057.038706229] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873057.502160705] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873057.523191225] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873057.524349186] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873057.602939743] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873057.603615702] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873058.542043102] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873058.542864354] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873058.544232034] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873058.622839835] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873058.623947535] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873059.562197846] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873059.564178566] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873059.565141529] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873060.082319208] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873060.110270744] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873060.582198771] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873060.583035276] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873060.583749109] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873060.623620701] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873061.082380885] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873061.622849978] [ros2_mavlink_bridge]: RAW UDP RX: 21 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873061.627117858] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873061.628515006] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873061.629391233] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.302, angular.z=0.000
+[INFO] [1781873062.082405424] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873062.622411489] [ros2_mavlink_bridge]: RAW UDP RX: 18 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873062.661994545] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873062.662641695] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.000
+[INFO] [1781873063.169788024] [ros2_mavlink_bridge]: odom received: x=3.03, y=-0.58, z=0.00
+[INFO] [1781873063.623231925] [ros2_mavlink_bridge]: RAW UDP RX: 21 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873063.624096098] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873063.624718504] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873063.662956116] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873063.664695632] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.049
+[INFO] [1781873064.662045859] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873064.663054040] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873064.702723445] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.150
+[INFO] [1781873065.082433395] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873065.624258567] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873065.687457277] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873065.688369773] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873065.742922310] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873066.003150943] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873066.083569656] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873066.223801750] [ros2_mavlink_bridge]: odom received: x=3.73, y=-0.89, z=0.00
+[INFO] [1781873066.702224763] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873066.703938467] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873066.783464224] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873067.622170621] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873067.622974877] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873067.702332229] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873067.705475099] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873067.804908312] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873068.742238558] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873068.743484156] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873068.842740595] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873069.082906229] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873069.263631820] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873069.622867008] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873069.783054431] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873069.783943807] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873069.844711507] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873070.623854497] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873070.624700744] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873070.804771393] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873070.805840762] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873070.862979680] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873071.842031697] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873071.842820183] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873071.882716717] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873072.083079424] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873072.334397888] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873072.602857308] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873072.861936404] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873072.862726329] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873072.882916863] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873073.622493911] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873073.623339692] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873073.862211917] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873073.863403503] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873073.903243986] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873074.624658072] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873074.625277313] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873074.903776569] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873074.904460035] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873074.905147008] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873075.441947272] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873075.643329871] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873075.644409404] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873075.942095176] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873075.942977736] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873075.943719197] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873076.944502862] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873076.945593885] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873076.946439012] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873077.003183609] [ros2_mavlink_bridge]: MAVLink RX: COMMAND_LONG
+[INFO] [1781873077.082096142] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873077.622998760] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873077.962186313] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873077.963195694] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873077.964375389] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873078.089189365] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873078.514160825] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873078.983374581] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873078.984759356] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873078.988039944] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873079.064622413] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873079.074819095] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873079.323704508] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873079.362473793] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873079.364352580] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873080.363706390] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873080.364994871] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873080.366716688] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873080.422196915] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873080.911289529] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873080.962711435] [ros2_mavlink_bridge]: MAVLink RX: HEARTBEAT
+[INFO] [1781873081.364867058] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873081.365749444] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873081.366567737] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000
+[INFO] [1781873081.942314055] [ros2_mavlink_bridge]: MAVLink RX: REQUEST_DATA_STREAM
+[INFO] [1781873082.402674813] [ros2_mavlink_bridge]: RAW UDP RX: 23 bytes from ('127.0.0.1', 14550)
+[INFO] [1781873082.403604131] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873082.404259500] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.000, angular.z=0.000

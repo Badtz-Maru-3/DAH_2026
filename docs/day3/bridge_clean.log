@@ -1,0 +1,72 @@
+[INFO] [1781873033.231819491] [ros2_mavlink_bridge]: Bridge up: ROS_DOMAIN_ID=17, MAVLink 0.0.0.0:14551 -> 127.0.0.1:14550, ROS /cmd_vel <-> /odometry/filtered
+[INFO] [1781873033.234297948] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873033.272870763] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873034.243379607] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873035.246424948] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873036.282954792] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873036.288478677] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873037.327121838] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873038.364911380] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873039.323738332] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873039.403589982] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873040.443637427] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873041.482693440] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873042.412703617] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873042.484641565] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873043.524360911] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873044.532405749] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873045.496804856] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873045.563331574] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873046.563538673] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873047.282879947] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873047.855818918] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873048.304359590] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873049.323056673] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873050.343993289] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873050.904720824] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873051.363007223] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873052.363130704] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873053.383309239] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873053.985329208] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873054.423751649] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873055.444179192] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873056.502975527] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873057.038706229] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873057.523191225] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873058.542864354] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873059.564178566] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873060.110270744] [ros2_mavlink_bridge]: odom received: x=2.77, y=-0.44, z=0.00
+[INFO] [1781873060.583035276] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873061.628515006] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873061.629391233] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.302, angular.z=0.000
+[INFO] [1781873062.661994545] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873062.662641695] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.000
+[INFO] [1781873063.169788024] [ros2_mavlink_bridge]: odom received: x=3.03, y=-0.58, z=0.00
+[INFO] [1781873063.662956116] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873063.664695632] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.049
+[INFO] [1781873064.663054040] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873064.702723445] [ros2_mavlink_bridge]: MANUAL_CONTROL -> /cmd_vel linear.x=0.500, angular.z=0.150
+[INFO] [1781873065.688369773] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873066.223801750] [ros2_mavlink_bridge]: odom received: x=3.73, y=-0.89, z=0.00
+[INFO] [1781873066.703938467] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873067.705475099] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873068.743484156] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873069.263631820] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873069.783943807] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873070.805840762] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873071.842820183] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873072.334397888] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873072.862726329] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873073.863403503] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873074.904460035] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873075.441947272] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873075.942977736] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873076.945593885] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873077.963195694] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873078.514160825] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873078.984759356] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873079.362473793] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873080.364994871] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873080.911289529] [ros2_mavlink_bridge]: odom received: x=3.74, y=-0.90, z=0.00
+[INFO] [1781873081.365749444] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL
+[INFO] [1781873082.403604131] [ros2_mavlink_bridge]: MAVLink RX: MANUAL_CONTROL

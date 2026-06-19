@@ -19,5 +19,6 @@ services:
       - BASE_LAT=${BASE_LAT:-37.5665}
       - BASE_LON=${BASE_LON:-126.9780}
       - BASE_ALT=${BASE_ALT:-50.0}
+      - MAVLINK_DEBUG=${MAVLINK_DEBUG:-0}
     volumes:
       - .:/app:ro
