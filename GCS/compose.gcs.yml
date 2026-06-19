@@ -1,0 +1,18 @@
+services:
+  qgroundcontrol:
+    build:
+      context: .
+      dockerfile: Dockerfile.qgc
+    container_name: dah-qgc
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - QT_QPA_PLATFORM=xcb
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+      - XDG_RUNTIME_DIR=/tmp/runtime-qgc
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./data:/home/qgc/.config/QGroundControl.org:rw
