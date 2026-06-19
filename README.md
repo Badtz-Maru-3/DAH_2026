@@ -1,5 +1,7 @@
+```markdown
 # DAH_2026
 
+```text
 DAH_2026
 └── Docker Container
     ├── UGV simulation
@@ -7,8 +9,8 @@ DAH_2026
     │       └── Gazebo + ROSbot + ROS2 topic (cmd_vel, odom, battery) [ROS2 (DDS, same Network)]
     │
     ├── Bridge
-    │   └── ros:humble + pymavlink  *(오타 수정: hunle -> humble)*
-    │       └── husarion_qgc_bridge Node  *(오타 수정: Nood -> Node)*
+    │   └── ros:humble + pymavlink
+    │       └── husarion_qgc_bridge Node
     │           ├── Up_link: odom/battery -> MAVLink(heartbeat/pos/status)
     │           └── Down_link: MANUAL_CONTROL -> cmd_vel [MAVLink over UDP 14550]
     │
