@@ -1,0 +1,5 @@
+NAMES                  STATUS              IMAGE
+dah-bridge             Up About a minute   dah_2026-bridge
+dah-rviz-novnc         Up About a minute   dah_2026-rviz_novnc
+dah-rosbot-sim-novnc   Up About a minute   dah_2026-rosbot_sim_novnc
+dah-qgc-novnc          Up About a minute   dah_2026-qgroundcontrol_novnc

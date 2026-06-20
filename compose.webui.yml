@@ -60,8 +60,16 @@ services:
       - BASE_LON=${BASE_LON:-126.9780}
       - BASE_ALT=${BASE_ALT:-50.0}
       - MAVLINK_DEBUG=${MAVLINK_DEBUG:-0}
+      - MISSION_ALLOWED_COMMANDS=${MISSION_ALLOWED_COMMANDS:-16,20}
+      - MISSION_MAX_ALT_M=${MISSION_MAX_ALT_M:-200}
+      - MISSION_MIN_ALT_M=${MISSION_MIN_ALT_M:--20}
+      - MISSION_MAX_JUMP_M=${MISSION_MAX_JUMP_M:-120}
+      - MISSION_GEOFENCE_RADIUS_M=${MISSION_GEOFENCE_RADIUS_M:-300}
+      - MISSION_MAX_ITEMS=${MISSION_MAX_ITEMS:-20}
+      - MISSION_AUDIT_LOG=${MISSION_AUDIT_LOG:-/logs/mission_audit.log}
     volumes:
       - ./Bridge:/app:ro
+      - ./Bridge/logs:/logs:rw
     depends_on:
       - qgroundcontrol_novnc
       - rosbot_sim_novnc
