@@ -317,5 +317,15 @@ class MissionAudit:
         with self.log_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+        corr = getattr(self.node, "correlation_engine", None)
+        if corr is not None and event == "mission_audit_result":
+            if fields.get("result") == "rejected":
+                corr.record_signal(
+                    source="mission_audit",
+                    kind="rejected",
+                    severity=1.0,
+                    detail=fields,
+                )
+
         if event in {"mission_upload_start", "mission_audit_result", "mission_item"}:
             self.node.get_logger().info(f"[mission_audit] {json.dumps(record, ensure_ascii=False)}")

@@ -1,0 +1,1 @@
+{"ts": "2026-06-20T04:51:57Z", "event": "gps_input", "result": "accepted", "lat": 37.56652, "lon": 126.97801, "alt": 50.0, "expected_lat": 37.5665, "expected_lon": 126.978, "residual_m": 2.3921871668825445, "fix_type": 3, "satellites_visible": 12, "horiz_accuracy": 1.5, "reasons": []}

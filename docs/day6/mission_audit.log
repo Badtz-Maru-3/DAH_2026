@@ -1,0 +1,4 @@
+{"ts": "2026-06-20T04:45:06Z", "event": "mission_upload_start", "result": "pending", "count": 1}
+{"ts": "2026-06-20T04:45:06Z", "event": "mission_request_int", "seq": 0}
+{"ts": "2026-06-20T04:45:07Z", "event": "mission_item", "result": "received", "seq": 0, "command": 16, "lat": 37.5865, "lon": 126.998, "alt": 50.0}
+{"ts": "2026-06-20T04:45:07Z", "event": "mission_audit_result", "result": "rejected", "count": 1, "reasons": ["seq=0: geofence violation distance=2837.65m limit=300.00m", "seq=0: waypoint jump=2837.65m limit=120.00m"]}

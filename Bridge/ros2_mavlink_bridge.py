@@ -14,6 +14,7 @@ from nav_msgs.msg import Odometry
 from pymavlink.dialects.v20 import common as mavlink2
 from mission_audit import MissionAudit
 from gnss_integrity import GnssIntegrity
+from correlation_engine import CorrelationEngine
 
 
 def env_int(name: str, default: int) -> int:
@@ -101,6 +102,7 @@ class Ros2MavlinkBridge(Node):
         self.mav.robust_parsing = True
 
         self.cmd_pub = self.create_publisher(Twist, "/cmd_vel", 10)
+        self.correlation_engine = CorrelationEngine(self)
         self.odom_sub = self.create_subscription(
             Odometry,
             "/odometry/filtered",
@@ -418,6 +420,24 @@ class Ros2MavlinkBridge(Node):
         return clamp((float(value) - 1500.0) / 500.0, -1.0, 1.0)
 
     def publish_cmd_vel(self, linear: float, angular: float, source: str):
+        if hasattr(self, "correlation_engine"):
+            allowed, score, reasons = self.correlation_engine.evaluate_command(
+                float(linear),
+                float(angular),
+                source,
+            )
+
+            if not allowed:
+                cmd = Twist()
+                self.cmd_pub.publish(cmd)
+                self.last_cmd_time = time.monotonic()
+                self.sent_idle_stop = True
+                self.get_logger().warn(
+                    f"{source} blocked by correlation engine: "
+                    f"risk_score={score:.2f}, reasons={reasons}"
+                )
+                return
+
         cmd = Twist()
         cmd.linear.x = float(linear)
         cmd.angular.z = float(angular)

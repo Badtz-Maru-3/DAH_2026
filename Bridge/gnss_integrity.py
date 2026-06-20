@@ -152,3 +152,13 @@ class GnssIntegrity:
 
         with self.log_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+        corr = getattr(self.node, "correlation_engine", None)
+        if corr is not None and event == "gps_input":
+            if fields.get("result") == "rejected":
+                corr.record_signal(
+                    source="gnss_integrity",
+                    kind="rejected",
+                    severity=1.0,
+                    detail=fields,
+                )

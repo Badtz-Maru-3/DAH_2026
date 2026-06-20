@@ -1,0 +1,27 @@
+{"ts": "2026-06-20T04:51:45Z", "event": "signal_recorded", "source": "mission_audit", "kind": "rejected", "severity": 1.0, "weight": 0.75, "risk_score": 0.75, "active_signals": [{"source": "mission_audit", "kind": "rejected", "severity": 1.0, "weight": 0.75}], "detail": {"result": "rejected", "count": 1, "reasons": ["seq=0: geofence violation distance=2837.65m limit=300.00m", "seq=0: waypoint jump=2837.65m limit=120.00m"]}}
+{"ts": "2026-06-20T04:51:45Z", "event": "hold_engaged", "reason": "risk_score 0.75 >= threshold 0.75", "risk_score": 0.75, "hold_seconds": 5.0, "active_signals": [{"source": "mission_audit", "kind": "rejected", "severity": 1.0, "weight": 0.75}]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:47Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:48Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.45, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:49Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.0, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:49Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.0, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:49Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.0, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:49Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.0, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
+{"ts": "2026-06-20T04:51:49Z", "event": "command_blocked", "source": "MANUAL_CONTROL", "linear": 0.0, "angular": 0.0, "risk_score": 0.75, "reasons": ["correlation hold active"]}
