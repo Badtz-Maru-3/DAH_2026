@@ -12,6 +12,8 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 
 from pymavlink.dialects.v20 import common as mavlink2
+from mission_audit import MissionAudit
+from gnss_integrity import GnssIntegrity
 
 
 def env_int(name: str, default: int) -> int:
@@ -113,6 +115,8 @@ class Ros2MavlinkBridge(Node):
         self.last_cmd_log = 0.0
         self.last_odom_log = 0.0
         self.last_statustext = 0.0
+        self.mission_audit = MissionAudit(self)
+        self.gnss_integrity = GnssIntegrity(self)
 
         self.params = [
             ("SYSID_THISMAV", float(self.system_id), mavlink2.MAV_PARAM_TYPE_INT32),
@@ -350,6 +354,12 @@ class Ros2MavlinkBridge(Node):
             if now - self._last_rx_type_log.get(msg_type, 0.0) > 1.0:
                 self.get_logger().info(f"MAVLink RX: {msg_type}")
                 self._last_rx_type_log[msg_type] = now
+
+        if self.mission_audit.handle(msg):
+            return
+
+        if self.gnss_integrity.handle(msg):
+            return
 
         if msg_type == "MISSION_REQUEST_LIST":
             self.send_empty_mission_count(msg)

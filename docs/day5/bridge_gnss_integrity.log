@@ -1,0 +1,93 @@
+[INFO] [1781930048.896359567] [ros2_mavlink_bridge]: Bridge up: ROS_DOMAIN_ID=17, MAVLink 0.0.0.0:14551 -> 127.0.0.1:14550, ROS /cmd_vel <-> /odometry/filtered
+[INFO] [1781930057.401774788] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930060.471897086] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930063.497392754] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930066.533559002] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930069.622008661] [ros2_mavlink_bridge]: odom received: x=0.00, y=-0.00, z=0.00
+[INFO] [1781930072.628032508] [ros2_mavlink_bridge]: odom received: x=0.00, y=-0.00, z=0.00
+[INFO] [1781930075.703735378] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930076.745635811] [ros2_mavlink_bridge]: PARAM_REQUEST_LIST -> sending minimal parameter set
+[INFO] [1781930076.746538903] [ros2_mavlink_bridge]: PARAM_VALUE 1/46: SYSID_THISMAV=1.0
+[INFO] [1781930076.747372057] [ros2_mavlink_bridge]: PARAM_VALUE 2/46: SYSID_MYGCS=255.0
+[INFO] [1781930076.747986510] [ros2_mavlink_bridge]: PARAM_VALUE 3/46: MAV_TYPE=10.0
+[INFO] [1781930076.748619674] [ros2_mavlink_bridge]: PARAM_VALUE 4/46: FRAME_CLASS=1.0
+[INFO] [1781930076.749262421] [ros2_mavlink_bridge]: PARAM_VALUE 5/46: ARMING_CHECK=0.0
+[INFO] [1781930076.749753855] [ros2_mavlink_bridge]: PARAM_VALUE 6/46: FS_GCS_ENABLE=0.0
+[INFO] [1781930076.750474684] [ros2_mavlink_bridge]: PARAM_VALUE 7/46: INITIAL_MODE=0.0
+[INFO] [1781930076.751022950] [ros2_mavlink_bridge]: PARAM_VALUE 8/46: RCMAP_ROLL=1.0
+[INFO] [1781930076.751587992] [ros2_mavlink_bridge]: PARAM_VALUE 9/46: RCMAP_PITCH=2.0
+[INFO] [1781930076.752141814] [ros2_mavlink_bridge]: PARAM_VALUE 10/46: RCMAP_THROTTLE=3.0
+[INFO] [1781930076.752569265] [ros2_mavlink_bridge]: PARAM_VALUE 11/46: RCMAP_YAW=4.0
+[INFO] [1781930076.753372794] [ros2_mavlink_bridge]: PARAM_VALUE 12/46: RC1_MIN=1000.0
+[INFO] [1781930076.753910446] [ros2_mavlink_bridge]: PARAM_VALUE 13/46: RC1_MAX=2000.0
+[INFO] [1781930076.754454002] [ros2_mavlink_bridge]: PARAM_VALUE 14/46: RC1_TRIM=1500.0
+[INFO] [1781930076.755071124] [ros2_mavlink_bridge]: PARAM_VALUE 15/46: RC2_MIN=1000.0
+[INFO] [1781930076.755523071] [ros2_mavlink_bridge]: PARAM_VALUE 16/46: RC2_MAX=2000.0
+[INFO] [1781930076.756534381] [ros2_mavlink_bridge]: PARAM_VALUE 17/46: RC2_TRIM=1500.0
+[INFO] [1781930076.757751695] [ros2_mavlink_bridge]: PARAM_VALUE 18/46: RC3_MIN=1000.0
+[INFO] [1781930076.758699758] [ros2_mavlink_bridge]: PARAM_VALUE 19/46: RC3_MAX=2000.0
+[INFO] [1781930076.759268205] [ros2_mavlink_bridge]: PARAM_VALUE 20/46: RC3_TRIM=1500.0
+[INFO] [1781930076.759829497] [ros2_mavlink_bridge]: PARAM_VALUE 21/46: RC4_MIN=1000.0
+[INFO] [1781930076.760716223] [ros2_mavlink_bridge]: PARAM_VALUE 22/46: RC4_MAX=2000.0
+[INFO] [1781930076.761796699] [ros2_mavlink_bridge]: PARAM_VALUE 23/46: RC4_TRIM=1500.0
+[INFO] [1781930076.762378998] [ros2_mavlink_bridge]: PARAM_VALUE 24/46: FLTMODE1=0.0
+[INFO] [1781930076.762843460] [ros2_mavlink_bridge]: PARAM_VALUE 25/46: FLTMODE2=0.0
+[INFO] [1781930076.763448143] [ros2_mavlink_bridge]: PARAM_VALUE 26/46: FLTMODE3=0.0
+[INFO] [1781930076.763990111] [ros2_mavlink_bridge]: PARAM_VALUE 27/46: FLTMODE4=0.0
+[INFO] [1781930076.764658747] [ros2_mavlink_bridge]: PARAM_VALUE 28/46: FLTMODE5=0.0
+[INFO] [1781930076.765361390] [ros2_mavlink_bridge]: PARAM_VALUE 29/46: FLTMODE6=0.0
+[INFO] [1781930076.766198973] [ros2_mavlink_bridge]: PARAM_VALUE 30/46: COMPASS_DEV_ID=0.0
+[INFO] [1781930076.766937669] [ros2_mavlink_bridge]: PARAM_VALUE 31/46: COMPASS_DEV_ID2=0.0
+[INFO] [1781930076.767558741] [ros2_mavlink_bridge]: PARAM_VALUE 32/46: COMPASS_DEV_ID3=0.0
+[INFO] [1781930076.768209321] [ros2_mavlink_bridge]: PARAM_VALUE 33/46: COMPASS_DEC=0.0
+[INFO] [1781930076.768832369] [ros2_mavlink_bridge]: PARAM_VALUE 34/46: COMPASS_OFS_X=0.0
+[INFO] [1781930076.769469719] [ros2_mavlink_bridge]: PARAM_VALUE 35/46: COMPASS_OFS_Y=0.0
+[INFO] [1781930076.770039486] [ros2_mavlink_bridge]: PARAM_VALUE 36/46: COMPASS_OFS_Z=0.0
+[INFO] [1781930076.770837342] [ros2_mavlink_bridge]: PARAM_VALUE 37/46: COMPASS_OFS2_X=0.0
+[INFO] [1781930076.771476488] [ros2_mavlink_bridge]: PARAM_VALUE 38/46: COMPASS_OFS2_Y=0.0
+[INFO] [1781930076.773051925] [ros2_mavlink_bridge]: PARAM_VALUE 39/46: COMPASS_OFS2_Z=0.0
+[INFO] [1781930076.773865398] [ros2_mavlink_bridge]: PARAM_VALUE 40/46: COMPASS_OFS3_X=0.0
+[INFO] [1781930076.774580491] [ros2_mavlink_bridge]: PARAM_VALUE 41/46: COMPASS_OFS3_Y=0.0
+[INFO] [1781930076.775176423] [ros2_mavlink_bridge]: PARAM_VALUE 42/46: COMPASS_OFS3_Z=0.0
+[INFO] [1781930076.775879801] [ros2_mavlink_bridge]: PARAM_VALUE 43/46: INS_ACCOFFS_X=0.0
+[INFO] [1781930076.776674240] [ros2_mavlink_bridge]: PARAM_VALUE 44/46: INS_ACCOFFS_Y=0.0
+[INFO] [1781930076.777443851] [ros2_mavlink_bridge]: PARAM_VALUE 45/46: INS_ACCOFFS_Z=0.0
+[INFO] [1781930076.778563953] [ros2_mavlink_bridge]: PARAM_VALUE 46/46: BATT_MONITOR=0.0
+[INFO] [1781930078.734488504] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930081.750980218] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930083.111067284] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930086.148018060] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930089.214968182] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930092.249894525] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930095.264554813] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930098.268083469] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930101.280021050] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930104.291548476] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930107.299027861] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930110.318386322] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930113.367870413] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930114.948901374] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930117.953477374] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930120.995919610] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930124.055665573] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930127.064066812] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930127.986758231] [ros2_mavlink_bridge]: [gnss_integrity] result=accepted, residual_m=2.3921871668825445, fix_type=3, sats=12, reasons=[]
+[INFO] [1781930129.747499800] [ros2_mavlink_bridge]: [gnss_integrity] result=rejected, residual_m=2837.645170222998, fix_type=3, sats=12, reasons=['position residual 2837.65m > limit 30.00m']
+[INFO] [1781930130.152305138] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930131.506894647] [ros2_mavlink_bridge]: [gnss_integrity] result=rejected, residual_m=2.3921871668825445, fix_type=1, sats=3, reasons=['fix_type 1 < required 3', 'satellites 3 < required 6', 'horiz_accuracy 50.00m > limit 15.00m']
+[INFO] [1781930133.161995247] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930136.208361385] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930139.257708025] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930142.291409781] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930143.882079435] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930146.931889737] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930149.992877311] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930153.045222510] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930156.070905695] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930159.101604788] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930162.190526161] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930165.261313043] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930168.260979710] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930171.286522070] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930174.287759554] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
+[INFO] [1781930175.870597620] [ros2_mavlink_bridge]: odom received: x=0.00, y=0.00, z=0.00
