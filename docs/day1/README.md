@@ -34,6 +34,8 @@ ROSbot Gazebo
 
 For the attack-defense plan, Day1 matters because every later anomaly must eventually be observed against this baseline. Mission audit, GNSS integrity checks, and command injection tests all need a known-good simulation state before abnormal behavior can be interpreted.
 
+This also makes Day1 the fallback check when later Day4-Day6 defense tests fail: first confirm that ROS2 discovery, odometry, scan, TF, and command topics still match the baseline before debugging MAVLink mission, GNSS, or correlation handling.
+
 Baseline assumptions captured by Day1:
 
 - ROSbot simulation can run in Docker.
@@ -43,4 +45,4 @@ Baseline assumptions captured by Day1:
 
 ## Limitations
 
-Day1 does not prove QGroundControl connectivity, MAVLink handling, attack injection, or defense behavior. It only proves that the simulated UGV layer is available and observable. Those higher layers are added in Day2 and Day3.
+Day1 does not prove QGroundControl connectivity, MAVLink handling, mission upload, attack injection, or defense behavior. It only proves that the simulated UGV layer is available and observable. Those higher layers are added in Day2 through Day6.

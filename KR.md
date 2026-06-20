@@ -2,7 +2,7 @@
 
 DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **방산 AI 사이버 공방 해커톤 예선 보고서의 부가자료(src + docs)를 구성하기 위한 무인 시스템 사이버 방어 testbed**입니다.
 
-현재 구현된 ROSbot UGV 시뮬레이션과 ROS2-MAVLink 브리지는 이 testbed의 첫 번째 검증 기준 시나리오입니다. 목표는 “QGroundControl로 ROSbot을 움직였다”에서 끝나는 것이 아니라, **공격 주입 -> 이상 징후 -> AI 기반 탐지·차단·복구 -> 로그 evidence** 흐름을 반복 실험할 수 있는 기반을 만드는 것입니다.
+현재 구현된 ROSbot UGV 시뮬레이션과 ROS2-MAVLink 브리지는 command, mission audit, GNSS integrity, correlation response까지 포함한 검증 기준 시나리오입니다. 목표는 “QGroundControl로 ROSbot을 움직였다”에서 끝나는 것이 아니라, **공격 주입 -> 이상 징후 -> AI 기반 탐지·차단·복구 -> 로그 evidence** 흐름을 반복 실험할 수 있는 기반을 만드는 것입니다.
 
 ## 프로젝트 목적
 
@@ -46,13 +46,17 @@ Operator / Autonomy Logic
 현재 검증된 공격 표면:
 
 - MAVLink `MANUAL_CONTROL`, `RC_CHANNELS_OVERRIDE` 기반 C2 analog 명령 주입 경로
+- `MISSION_COUNT`, `MISSION_REQUEST_INT`, `MISSION_ITEM_INT` 기반 mission upload audit 경로
+- `GPS_INPUT` 기반 GNSS position-input integrity 경로
+- mission/GNSS reject 이후 correlation hold 및 manual command block 경로
 - ROS2 odometry를 MAVLink local/global position telemetry로 변환하는 telemetry 경로
 
-다음 구현 표면:
+남은 보강 표면:
 
-- Mission audit mode: waypoint, geofence, mission sequence 검증
-- GNSS integrity monitor: odometry와 위치입력의 단기 변화율 잔차 검사
-- Correlation engine: 명령, 임무, 위치 이상을 함께 판단하는 상위 방어 로직
+- QGroundControl 화면에서 mission rejection / warning 상태를 보여주는 operator evidence
+- 장시간 안정성, 재시작, 반복 regression evidence
+- audit/reject를 넘어선 실제 mission execution/autopilot 동작
+- GNSS trust downgrade와 dead-reckoning fallback의 장시간 운용
 
 ## 현재 기준 시나리오
 
@@ -98,7 +102,34 @@ QGroundControl noVNC
 | RViz | `http://localhost:6082/vnc_auto.html` | `dah-rviz-novnc` | ROS2 토픽/TF 시각화 화면입니다. |
 | Bridge | 없음 | `dah-bridge` | MAVLink/ROS2 제어 및 telemetry 브리지입니다. |
 
-통합 서비스들은 host network를 사용합니다. QGroundControl 설정은 `GCS/data`에 유지되고, RViz는 ROSbot simulation 이후에, bridge는 QGroundControl과 ROSbot simulation 이후에 실행되도록 구성되어 있습니다. 루트 stack의 장기 실행 서비스들은 `restart: unless-stopped` 정책을 사용합니다.
+통합 서비스들은 현재 host network를 사용합니다. QGroundControl 설정은 `GCS/data`에 유지되고, RViz는 ROSbot simulation 이후에, bridge는 QGroundControl과 ROSbot simulation 이후에 실행되도록 구성되어 있습니다. 루트 stack의 장기 실행 서비스들은 `restart: unless-stopped` 정책을 사용합니다.
+
+### Windows Docker Desktop noVNC 접속 주의
+
+현재 통합 stack은 host networking 동작을 기준으로 검증되어 있습니다. Windows Docker Desktop에서는 `network_mode: host`가 Linux/WSL과 다르게 동작할 수 있어서, 컨테이너는 정상 실행되고 내부 통신도 되지만 Windows 본체 브라우저에서 아래 URL이 열리지 않을 수 있습니다.
+
+- `http://localhost:6080/vnc.html`
+- `http://localhost:6081/vnc_auto.html`
+- `http://localhost:6082/vnc_auto.html`
+
+이 증상이 나오면 먼저 noVNC entrypoint의 `websockify` bind 주소를 확인합니다. 현재는 컨테이너 내부 loopback에 묶여 있습니다.
+
+| 파일 | 현재 bind | Windows 접속 후보 수정 |
+| --- | --- | --- |
+| `GCS/entrypoint-novnc.sh` | `127.0.0.1:6080` | `0.0.0.0:6080` |
+| `UGV/entrypoint-ugv-novnc.sh` | `127.0.0.1:6081` | `0.0.0.0:6081` |
+| `UGV/entrypoint-rviz-novnc.sh` | `127.0.0.1:6082` | `0.0.0.0:6082` |
+
+compose 쪽 후보 수정은 noVNC 서비스에서 `network_mode: host`를 제거하고 명시적인 `ports:`를 여는 방식입니다.
+
+```yaml
+ports:
+  - "6080:6080"  # QGroundControl
+  - "6081:6081"  # Gazebo
+  - "6082:6082"  # RViz
+```
+
+단, 이것은 아직 기본 stack을 대체하는 검증 완료 변경이 아닙니다. `network_mode: host`를 제거하면 ROS2 DDS discovery와 MAVLink 주소 가정이 달라질 수 있으므로, Windows 전용 compose 경로를 만들 경우 QGC, ROSbot, RViz, bridge, mission audit, GNSS integrity, correlation evidence를 다시 검증해야 합니다.
 
 `Bridge/compose.bridge.yml`은 QGroundControl과 simulation을 별도 compose로 띄운 상태에서 bridge만 확인하기 위한 단독 디버깅 경로입니다. `compose.webui.yml` 안의 bridge와 동시에 실행하면 둘 다 `dah-bridge` 컨테이너 이름을 쓰기 때문에 충돌합니다.
 
@@ -123,6 +154,17 @@ QGroundControl noVNC
 | `BASE_LAT`, `BASE_LON`, `BASE_ALT` | 서울 기본값 | local odometry를 MAVLink global position telemetry로 바꿀 때 쓰는 원점입니다. |
 | `LIBGL_ALWAYS_SOFTWARE` | `1` | Gazebo/QGC 안정성을 위해 소프트웨어 렌더링을 우선 사용합니다. |
 | `MAVLINK_DEBUG` | `0` | `1`로 설정하면 자세한 MAVLink 수신 로그를 출력합니다. |
+| `MISSION_MAX_ITEMS` | `20` | mission audit이 허용하는 최대 mission item 수입니다. |
+| `MISSION_GEOFENCE_RADIUS_M` | `300` | `BASE_LAT`/`BASE_LON` 중심 mission geofence 반경입니다. |
+| `MISSION_MAX_JUMP_M` | `120` | waypoint 간 허용 최대 jump 거리입니다. |
+| `MISSION_MIN_ALT_M`, `MISSION_MAX_ALT_M` | `-20`, `200` | mission altitude 허용 범위입니다. |
+| `MISSION_ALLOWED_COMMANDS` | `16,20` | audit v1에서 허용하는 MAVLink mission command입니다. |
+| `GNSS_MAX_RESIDUAL_M` | `30` | odometry 기준 expected position과 GPS_INPUT 사이의 허용 잔차입니다. |
+| `GNSS_MIN_FIX_TYPE` | `3` | 허용하는 최소 GPS fix type입니다. |
+| `GNSS_MIN_SATELLITES` | `6` | 허용하는 최소 위성 수입니다. |
+| `GNSS_MAX_HACC_M` | `15` | 허용하는 최대 수평 정확도 값입니다. |
+| `CORRELATION_RISK_THRESHOLD` | `0.75` | hold를 걸기 위한 risk score 기준입니다. |
+| `CORRELATION_HOLD_SECONDS` | `5` | threshold 초과 뒤 command를 차단하는 hold 시간입니다. |
 
 ## 빠른 실행
 
@@ -215,15 +257,21 @@ docker logs dah-bridge
 
 자세한 MVP evidence는 `docs/day3/README.md`와 `docs/day3/evidence_summary.md`에 정리되어 있습니다.
 
+이후 evidence가 추가로 보여주는 내용:
+
+- Day4: 정상 mission accepted, 악성 geofence/jump mission rejected, `MISSION_ACK` 송신
+- Day5: 정상 `GPS_INPUT` accepted, spoof jump 및 poor fix rejected
+- Day6: mission/GNSS reject가 correlation risk로 기록되고, hold 중 `MANUAL_CONTROL` block
+
 ## 확장 방향
 
 이 testbed는 다음 공격·방어 표면으로 확장할 수 있습니다.
 
 | 확장 방향 | 설명 |
 | --- | --- |
-| Mission audit mode | `MISSION_COUNT`, `MISSION_ITEM_INT`를 수신해 waypoint, geofence, sequence 무결성을 검사합니다. |
-| GNSS integrity monitor | odometry 단기 이동량과 GNSS 변화량의 잔차로 jump, drift, fix quality 이상을 탐지합니다. |
-| Correlation engine | 제어명령, mission, GNSS 이상을 함께 판단해 복합 공격 가능성을 산출합니다. |
+| Mission audit mode | `MISSION_COUNT` 수신 후 `MISSION_REQUEST_INT`로 항목을 요청하고, `MISSION_ITEM_INT`의 waypoint, geofence, sequence 무결성을 검사합니다. 구현 및 Day4 검증 완료. |
+| GNSS integrity monitor | odometry 기준 expected position과 GNSS 입력의 잔차로 jump, fix quality 이상을 탐지합니다. 구현 및 Day5 검증 완료. |
+| Correlation engine | 제어명령, mission, GNSS 이상을 함께 판단해 risk score를 만들고 hold/zero `/cmd_vel`을 수행합니다. 구현 및 Day6 검증 완료. |
 | Stability manager | AIxCC 교훈에 맞춰 탐지뿐 아니라 hold, zero `/cmd_vel`, rollback 같은 안정적 복구를 담당합니다. |
 | 자동 evidence 수집 | 컨테이너 상태, ROS2 topic, odometry delta, bridge log, audit log를 스크립트로 수집합니다. |
 | 모델 교체 | `ROBOT_MODEL`로 `rosbot`, `rosbot_xl`을 선택하고 이후 다른 UGV/UAV 시뮬레이터로 확장합니다. |
@@ -239,6 +287,10 @@ docker logs dah-bridge
 | `docs/day2/README.md` | noVNC web UI integration evidence입니다. |
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP 결과입니다. |
 | `docs/day3/evidence_summary.md` | Day3 evidence 파일별 해석입니다. |
+| `docs/day3/odom_delta.md` | command path가 실제 이동을 만들었는지 계산한 odometry delta입니다. |
+| `docs/day4/README.md` | Mission audit 구현과 accepted/rejected evidence입니다. |
+| `docs/day5/README.md` | GNSS integrity 구현과 GPS_INPUT evidence입니다. |
+| `docs/day6/README.md` | Correlation engine hold/blocking evidence입니다. |
 
 ## 참고자료
 
@@ -257,11 +309,18 @@ docker logs dah-bridge
 - Badtz-Maru-3/DAH_2026, `README.md`.
 - Badtz-Maru-3/DAH_2026, `compose.webui.yml`.
 - Badtz-Maru-3/DAH_2026, `Bridge/ros2_mavlink_bridge.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/mission_audit.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/gnss_integrity.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/correlation_engine.py`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/evidence_summary.md`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/odom_delta.md`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/bridge_clean.log`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/cmd_vel_info.txt`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/ros2_topics.txt`.
+- Badtz-Maru-3/DAH_2026, `docs/day4/mission_audit.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day5/gnss_integrity.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_mission_malicious.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_gnss_spoof.log`.
 
 논문 및 연구자료:
 
@@ -274,12 +333,12 @@ docker logs dah-bridge
 
 ## 현재 상태
 
-이 시스템은 강한 testbed MVP 단계에 있습니다. 주요 제어 루프가 end-to-end로 입증되었고, 컨테이너 상태, ROS2 토픽, 브리지 로그, `/cmd_vel` 연결, odometry 이동량에 대한 evidence가 확보되어 있습니다.
+이 시스템은 bridge-only MVP 단계를 넘어섰습니다. 주요 제어 루프, mission audit, GNSS integrity, correlation hold 경로가 구현되었고 Day3-Day6 evidence로 입증되어 있습니다.
 
 다음 단계는 “더 멋진 데모”보다 **공격·방어 1:1 매핑과 evidence 로그**를 만드는 쪽이 좋습니다.
 
-- Mission audit mode 구현
-- 정상 mission accepted / 악성 mission rejected evidence 확보
-- GNSS integrity monitor 설계값을 환경변수로 노출
-- command, mission, GNSS 이상 징후를 연결하는 correlation log 추가
+- QGroundControl mission upload/rejection 및 warning 상태 스크린샷 확보
+- Day3-Day6 로그를 한 번에 수집하는 repeatable evidence script 추가
+- `MANUAL_CONTROL -> /cmd_vel`, mission audit, GNSS reject, correlation hold를 지키는 regression test 추가
+- GNSS rejection/warning 이후 trust downgrade와 fallback 동작을 더 명확히 구현
 - 기존 Day3 `MANUAL_CONTROL -> /cmd_vel` 및 `CMD_TIMEOUT` watchdog 경로 유지

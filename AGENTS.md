@@ -15,17 +15,28 @@ testbed이며, 그 위에서 **공격 주입 → 이상 징후 → AI 기반 탐
 > 단일 공격 표면 탐지가 아니라, 제어명령·임무명령·위치입력의 상관관계를 이용해
 > UGV 운용 이상을 탐지한다.
 
-## 2. 현재 구현 상태 (Day3까지, 검증 완료)
+## 2. 현재 구현 상태 (Day6까지, 검증 완료)
 
 - `Bridge/ros2_mavlink_bridge.py`: MAVLink ⇄ ROS2 브리지
   - 수신 처리: MANUAL_CONTROL, RC_CHANNELS_OVERRIDE → `/cmd_vel`(Twist)
   - 송신: odometry(`/odometry/filtered`) → MAVLink LOCAL_POSITION_NED / GLOBAL_POSITION_INT
-  - 부가: heartbeat, statustext, 최소 파라미터 세트 응답, MISSION_REQUEST_LIST에 빈 count(0) 응답
+  - 부가: heartbeat, statustext, 최소 파라미터 세트 응답
+  - Mission: MISSION_REQUEST_LIST, MISSION_CLEAR_ALL, MISSION_COUNT, MISSION_ITEM_INT/MISSION_ITEM 처리
+  - GNSS: GPS_INPUT 수신 후 odometry 기준 위치 잔차, fix type, 위성 수, 수평 정확도 검사
+  - Correlation: mission/GNSS reject 및 high manual command 신호를 risk score로 결합하고 hold 시 zero `/cmd_vel` 발행
   - 안전: `CMD_TIMEOUT` 경과 시 zero `/cmd_vel` 발행(watchdog)
+- `Bridge/mission_audit.py`: mission upload audit 및 JSONL evidence 기록
+- `Bridge/gnss_integrity.py`: GPS_INPUT integrity check 및 JSONL evidence 기록
+- `Bridge/correlation_engine.py`: 상관 신호 기반 hold/command block 및 JSONL evidence 기록
 - `compose.webui.yml`: QGC(noVNC) + ROSbot sim + RViz + bridge 통합 실행
+  - 현재 기본 경로는 `network_mode: host` 기반이다. Linux/WSL에서는 단순하지만, Windows Docker Desktop에서는 브라우저에서 `6080/6081/6082` noVNC 접속이 막힐 수 있다.
+  - Windows 접속 문제를 문서화할 때는 코드 전체를 바로 덮어쓰지 말고, `websockify` bind 주소(`127.0.0.1:608x` → `0.0.0.0:608x`)와 compose `ports:` 전환이 필요한 후보 workaround임을 명시한다.
 - `docs/day3/`: end-to-end 입증 evidence (조이스틱 입력 → UGV 1.078m 이동)
+- `docs/day4/`: MISSION audit evidence (정상 mission accepted, 악성 mission rejected)
+- `docs/day5/`: GNSS integrity evidence (정상 GPS_INPUT accepted, spoof/poor fix rejected)
+- `docs/day6/`: Correlation evidence (mission/GNSS reject → hold, MANUAL_CONTROL block)
 
-검증된 공격 표면: 명령주입(C2 analog), telemetry 변환부. 미구현: MISSION 실행, GNSS 입력.
+검증된 공격 표면: 명령주입(C2 analog), mission upload audit, GNSS 입력 무결성, telemetry 변환부, correlation hold. 미구현: 실제 mission execution/autopilot, 장시간 GNSS dead-reckoning 운용, 실제 QGC operator alert 화면 캡처.
 
 ## 3. 목표 아키텍처
 
@@ -48,50 +59,50 @@ Defense Agent
 
 ## 4. 구현 순서 및 작업 정의
 
-### Step 1 — MISSION audit mode  [다음 작업 / 최우선]
+### Step 1 — MISSION audit mode  [구현·검증 완료]
 
 위치: `Bridge/ros2_mavlink_bridge.py`의 `handle_mavlink_msg` elif 체인 확장.
 
 구현:
-- [ ] MISSION_COUNT 수신 → 항목 수 파악, MISSION_REQUEST_INT로 항목 요청
-- [ ] MISSION_ITEM_INT 수신 → `self.mission` 리스트에 (seq, lat, lon, alt, command) 저장
-- [ ] geofence 경계 검사 (중심 BASE_LAT/BASE_LON 기준 반경 — 값은 TODO)
-- [ ] waypoint 간 비현실적 jump 거리 검사 (임계값 TODO)
-- [ ] 업로드 sysid / 시퀀스 무결성 검사
-- [ ] 정상이면 MISSION_ACK(accepted), 위반이면 reject + 이전 유효 mission 롤백
-- [ ] `docs/dayN/mission_audit.log`에 (수신 waypoint, 판정, 사유, 복구조치) 기록
+- [x] MISSION_COUNT 수신 → 항목 수 파악, MISSION_REQUEST_INT로 항목 요청
+- [x] MISSION_ITEM_INT/MISSION_ITEM 수신 → pending items에 (seq, lat, lon, alt, command) 저장
+- [x] geofence 경계 검사 (중심 BASE_LAT/BASE_LON 기준 반경)
+- [x] waypoint 간 비현실적 jump 거리 검사
+- [x] 업로드 sysid / 시퀀스 무결성 검사
+- [x] 정상이면 MISSION_ACK accepted, 위반이면 denied + active_mission 유지
+- [x] `docs/day4/mission_audit.log`에 수신 waypoint, 판정, 사유 기록
 
 성공 증거(보고서용):
 - 정상 mission accepted / 악성 mission rejected 로그
 - mission_audit.log
-- QGC mission upload 화면 스크린샷
+- bridge_mission_audit_clean.log
 
 주의:
 - MISSION_ITEM_INT 필드 순서·MAV_FRAME 처리가 QGC 버전별로 민감.
-  구현 전 `MAVLINK_DEBUG=1`로 실제 QGC 패킷을 덤프해 필드를 확인할 것.
+  QGC 버전이 바뀌면 `MAVLINK_DEBUG=1`로 실제 QGC 패킷을 다시 덤프해 필드를 확인할 것.
 - pymavlink dialect: `pymavlink.dialects.v20.common` 사용(기존 코드와 동일).
 
-### Step 2 — GNSS integrity adapter
+### Step 2 — GNSS integrity adapter  [구현·검증 완료]
 
 위치: bridge에 GNSS 입력 수신부 신설 + odometry 교차검증 로직.
 
 구현:
-- [ ] GPS_INPUT(MAVLink) 또는 ROS 토픽 `/gps/fix` 입력 수신
-- [ ] odometry 단기 이동량 vs GNSS 변화량 비교 (절대 위치가 아닌 **단기 변화율** 잔차)
-- [ ] 잔차 임계 초과 / 속도한계 초과 jump / fix quality 급락 탐지
-- [ ] 스푸핑 의심 시 GNSS 신뢰 강등 → dead-reckoning(odometry) fallback
-- [ ] `docs/dayN/gnss_integrity.log`에 잔차·판정·전환 기록
+- [x] GPS_INPUT(MAVLink) 입력 수신
+- [x] odometry 기반 expected lat/lon과 GPS_INPUT 좌표 잔차 비교
+- [x] 잔차 임계 초과 / fix type 저하 / 위성 수 부족 / 수평 정확도 악화 탐지
+- [x] reject 시 MAVLink STATUSTEXT warning 송신
+- [x] `docs/day5/gnss_integrity.log`에 잔차·판정 기록
 
 성공 증거:
-- 정상 GNSS accepted / jump spoofing detected / trust downgraded / fallback 로그
+- 정상 GNSS accepted / jump spoofing rejected / poor fix rejected 로그
 
 주의:
 - odometry도 `/cmd_vel` 적분 기반이라 장시간 드리프트 존재 → 단기 변화율로 판정.
 - 잔차 임계값은 EKF/RAIM/센서융합 문헌 교차검증으로 보강(보고서 신뢰도 상승).
 
-### Step 3 — Correlation Engine
+### Step 3 — Correlation Engine  [구현·검증 완료]
 
-위치: Mission Guard + GNSS Monitor의 출력을 받는 상위 모듈(신규).
+위치: `Bridge/correlation_engine.py`, `Bridge/mission_audit.py`, `Bridge/gnss_integrity.py`, `Bridge/ros2_mavlink_bridge.py`.
 
 로직 예시:
 ```text
@@ -103,6 +114,13 @@ MISSION waypoint가 geofence 바깥으로 변경됨
 
 이 단계가 AI 에이전트 항목(25점)의 구체성·혁신성을 뒷받침하는 핵심.
 
+구현 상태:
+- mission audit reject, GNSS integrity reject, high manual command를 signal로 기록
+- signal TTL 내 risk score 계산
+- threshold 이상이면 hold engaged, zero `/cmd_vel`, STATUSTEXT warning
+- hold 중 MANUAL_CONTROL/RC override는 `/cmd_vel` 대신 zero command로 차단
+- `docs/day6/`에 mission malicious, GNSS spoof, command block 로그 저장
+
 ## 5. 향후 확장 (예선 범위 밖)
 
 펌웨어 업데이트 트랜잭션 시뮬레이터: manifest hash, version rollback,
@@ -113,9 +131,9 @@ signature verification 기반 업데이트 무결성 검증. **실제 부트로�
 
 | 값 | 현재 | 근거 |
 | --- | --- | --- |
-| geofence 반경 | 미정 | [추론] 팀 설계값, 실험 로그로 조정 |
-| waypoint jump 거리 임계 | 미정 | [추론] 동상 |
-| GNSS-odometry 잔차 임계 | 미정 | [추론] EKF/RAIM 문헌 교차검증 필요 |
+| geofence 반경 | `MISSION_GEOFENCE_RADIUS_M=300` | 현재 실험값, `.env`/compose로 조정 |
+| waypoint jump 거리 임계 | `MISSION_MAX_JUMP_M=120` | 현재 실험값, `.env`/compose로 조정 |
+| GNSS-odometry 잔차 임계 | `GNSS_MAX_RESIDUAL_M=30` | 현재 실험값, EKF/RAIM 문헌으로 보강 필요 |
 
 위 값들은 실제 실험 로그를 보고 확정한다. 현 상태에서 임의 하드코딩 금지, 환경변수로 노출 권장.
 
@@ -134,6 +152,8 @@ signature verification 기반 업데이트 무결성 검증. **실제 부트로�
 
 - 코드 수정 전 `docs/day3/README.md`와 `evidence_summary.md`를 읽어 기존 검증 경로를 깨지 말 것.
 - bridge 수정 시 기존 MANUAL_CONTROL → /cmd_vel 경로와 CMD_TIMEOUT watchdog 동작 유지.
+- compose/network 수정 시 Windows noVNC 접속 개선과 ROS2 DDS/MAVLink 통신 안정성을 함께 재검증한다. `network_mode: host` 제거는 브라우저 포트 노출에는 유리하지만 ROS2 discovery 및 bridge 통신 동작이 달라질 수 있다.
 - 새 핸들러는 기존 `handle_mavlink_msg` 패턴(elif + 로그 throttle)을 따를 것.
 - 모든 공격/방어 동작은 `docs/dayN/`에 로그 evidence를 남기는 것을 완료 조건으로 한다.
+- Mission audit mode는 `docs/day4/`, GNSS integrity는 `docs/day5/`, correlation은 `docs/day6/`를 기본 evidence 위치로 사용한다.
 - 임계값·좌표 원점 등은 하드코딩 대신 환경변수(`.env`)로 노출.

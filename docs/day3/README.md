@@ -46,6 +46,8 @@ The current default runtime path is the integrated `compose.webui.yml`, which la
 
 The integrated stack uses host networking and `restart: unless-stopped`. The bridge service depends on QGroundControl and ROSbot simulation, so the intended Day3 baseline can be launched from the root compose file.
 
+Windows Docker Desktop note: host networking and `websockify 127.0.0.1:608x` can prevent noVNC from opening in the Windows host browser even when containers are healthy. See `docs/day2/README.md` before changing `compose.webui.yml`; a port-published Windows compose path must be revalidated against this Day3 command path.
+
 `Bridge/compose.bridge.yml` remains available for bridge-only debugging, but the baseline stack now lives in the root compose file. Do not run both bridge paths at once because both use the `dah-bridge` container name. If `docker compose -f Bridge/compose.bridge.yml up -d` reports `Conflict. The container name "/dah-bridge" is already in use`, remove the integrated bridge container first:
 
 ```bash
@@ -90,7 +92,7 @@ MAVLink side:
 - Listens on `BRIDGE_LOCAL_PORT`, default `14551`.
 - Sends telemetry to `QGC_IP:QGC_PORT`, default `127.0.0.1:14550`.
 - Sends heartbeat and periodic status text to QGroundControl.
-- Handles `MANUAL_CONTROL`, `RC_CHANNELS_OVERRIDE`, `COMMAND_LONG`, `PING`, `MISSION_REQUEST_LIST`, `PARAM_REQUEST_LIST`, and `PARAM_REQUEST_READ`.
+- Handles `MANUAL_CONTROL`, `RC_CHANNELS_OVERRIDE`, `COMMAND_LONG`, `PING`, mission audit messages, `GPS_INPUT`, `PARAM_REQUEST_LIST`, and `PARAM_REQUEST_READ`.
 - Responds with a minimal rover-like parameter set so QGroundControl can complete basic parameter discovery.
 
 Control mapping:
@@ -155,15 +157,12 @@ Day3 demonstrates a working bridge MVP. QGroundControl input reaches the ROSbot 
 
 This is not yet a production autopilot replacement or the final AI defense orchestrator. It is a successful prototype bridge that proves the integration path and gives the project a solid base for command-attack injection, mission audit mode, GNSS integrity checks, correlation logic, and report-ready evidence logs.
 
-## Next Step Alignment
+## Follow-on Alignment
 
-The next planned implementation is mission audit mode:
+After Day3, the bridge was extended with mission audit, GNSS integrity, and correlation hold:
 
-- Receive `MISSION_COUNT` from QGroundControl.
-- Request mission items with `MISSION_REQUEST_INT`.
-- Store `MISSION_ITEM_INT` fields for audit.
-- Check geofence, waypoint jump distance, uploader sysid, and sequence integrity.
-- Accept normal missions and reject malicious missions with `MISSION_ACK`.
-- Write a mission audit log containing received waypoints, verdict, reason, and recovery action.
+- Day4 receives `MISSION_COUNT`, requests items with `MISSION_REQUEST_INT`, audits `MISSION_ITEM_INT`, and accepts/rejects with `MISSION_ACK`.
+- Day5 receives `GPS_INPUT` and rejects spoofed or low-quality position input.
+- Day6 converts mission/GNSS rejection into correlation hold and blocks manual commands during hold.
 
-The Day3 bridge path must remain stable while this is added. In particular, `MANUAL_CONTROL -> /cmd_vel`, odometry telemetry, and the `CMD_TIMEOUT` watchdog are existing evidence-backed behavior.
+The Day3 bridge path must remain stable as those layers evolve. In particular, `MANUAL_CONTROL -> /cmd_vel`, odometry telemetry, and the `CMD_TIMEOUT` watchdog are existing evidence-backed behavior.

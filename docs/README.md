@@ -17,6 +17,9 @@ The evidence is meant to answer five questions:
 | `day1/` | ROSbot Gazebo simulation baseline. | Captured container, ROS2 topic, and simulation logs. |
 | `day2/` | Web UI stack with QGroundControl, Gazebo, and RViz through noVNC. | Captured service logs and ROS2 topic state. |
 | `day3/` | ROS2-MAVLink bridge MVP. | Captured end-to-end QGC-to-ROSbot control evidence. |
+| `day4/` | Mission audit mode. | Captured normal mission accepted and malicious mission rejected evidence. |
+| `day5/` | GNSS integrity adapter. | Captured normal GPS_INPUT accepted and spoof/poor-fix rejected evidence. |
+| `day6/` | Correlation engine. | Captured hold engagement and MANUAL_CONTROL blocking after mission/GNSS anomalies. |
 
 ## Day Roles
 
@@ -27,6 +30,9 @@ The day folders are cumulative rather than independent.
 | Day1 | Establishes a known-good simulation and ROS2 topic baseline. Later attack evidence should be compared against this normal state. |
 | Day2 | Establishes the operator and visualization layer. Future mission upload, alert, and screenshot evidence should be captured through this layer. |
 | Day3 | Establishes the first active command path. Future C2-style command injection, blocking, and recovery experiments should preserve this baseline path. |
+| Day4 | Establishes mission upload audit: normal mission accepted and malicious geofence/jump mission rejected. |
+| Day5 | Establishes GNSS integrity: normal GPS_INPUT accepted and spoof/poor-fix inputs rejected. |
+| Day6 | Establishes correlation response: mission/GNSS rejection produces hold and blocks manual-control commands. |
 
 ## Evidence Model
 
@@ -48,6 +54,9 @@ This convention keeps the repository aligned with the report goal: the report bo
 3. Read `day2/README.md` for the web UI integration layer.
 4. Read `day3/README.md` for the bridge MVP result.
 5. Read `day3/evidence_summary.md` for the detailed Day3 evidence interpretation.
+6. Read `day4/README.md` for mission audit implementation and evidence.
+7. Read `day5/README.md` for GNSS integrity implementation and evidence.
+8. Read `day6/README.md` for correlation hold/blocking evidence.
 
 ## Evidence Policy
 

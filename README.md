@@ -2,7 +2,7 @@
 
 DAH 2026 is a Docker-based unmanned-systems cyber-defense testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
 
-The current ROSbot UGV scenario is the first validated baseline. QGroundControl sends MAVLink manual-control messages, the bridge converts them to ROS2 `/cmd_vel`, Gazebo moves the simulated ROSbot, and odometry is sent back to QGroundControl as MAVLink telemetry.
+The current ROSbot UGV scenario now includes the validated command, mission-audit, GNSS-integrity, and correlation-response layers. QGroundControl or MAVLink test tools send control, mission, and GPS_INPUT messages; the bridge converts or audits them; Gazebo/ROS2 provide odometry; and defense decisions are written as evidence logs.
 
 The goal is not just to move one robot in simulation. This repository is intended to support repeatable evidence for the attack-defense loop: attack injection, abnormal behavior, AI-assisted detection, blocking, recovery, and logs that can be used as report evidence.
 
@@ -53,13 +53,17 @@ Command injection
 Current validated surface:
 
 - C2-like command injection path through MAVLink `MANUAL_CONTROL` and `RC_CHANNELS_OVERRIDE`.
+- Mission upload audit through `MISSION_COUNT`, `MISSION_REQUEST_INT`, and `MISSION_ITEM_INT`.
+- GNSS position-input integrity checks through `GPS_INPUT`.
+- Correlation hold that blocks manual commands after mission or GNSS rejection.
 - Telemetry conversion path from ROS2 odometry to MAVLink local/global position messages.
 
-Planned surfaces:
+Remaining planned/hardening surfaces:
 
-- Mission audit mode for waypoint/geofence validation.
-- GNSS integrity monitoring using short-term residuals between odometry and position input.
-- Correlation engine that combines command, mission, and GNSS symptoms.
+- QGroundControl operator-facing screenshots for mission rejection and warning state.
+- Longer-duration stability, restart, and regression evidence collection.
+- Full mission execution/autopilot behavior beyond audit-and-reject.
+- More advanced GNSS fallback/dead-reckoning behavior.
 
 ## Runtime Services
 
@@ -72,7 +76,34 @@ Planned surfaces:
 | RViz | `http://localhost:6082/vnc_auto.html` | `dah-rviz-novnc` | ROS2 visualization UI. |
 | Bridge | N/A | `dah-bridge` | MAVLink/ROS2 control and telemetry bridge. |
 
-Integrated services use host networking. QGroundControl persists its configuration under `GCS/data`, RViz waits for the ROSbot simulation service, and the bridge waits for QGroundControl and ROSbot simulation. The root stack uses `restart: unless-stopped` for the long-running services.
+Integrated services currently use host networking. QGroundControl persists its configuration under `GCS/data`, RViz waits for the ROSbot simulation service, and the bridge waits for QGroundControl and ROSbot simulation. The root stack uses `restart: unless-stopped` for the long-running services.
+
+### Windows Docker Desktop noVNC note
+
+The current integrated stack was validated with host networking semantics. On Windows Docker Desktop, `network_mode: host` may not expose the noVNC browser ports to the Windows host in the same way it does on Linux/WSL. A symptom is that containers appear healthy and can communicate internally, but these URLs do not open from the Windows browser:
+
+- `http://localhost:6080/vnc.html`
+- `http://localhost:6081/vnc_auto.html`
+- `http://localhost:6082/vnc_auto.html`
+
+If that happens, check the noVNC entrypoints first. They currently bind `websockify` to loopback inside the container:
+
+| File | Current bind | Windows access candidate |
+| --- | --- | --- |
+| `GCS/entrypoint-novnc.sh` | `127.0.0.1:6080` | `0.0.0.0:6080` |
+| `UGV/entrypoint-ugv-novnc.sh` | `127.0.0.1:6081` | `0.0.0.0:6081` |
+| `UGV/entrypoint-rviz-novnc.sh` | `127.0.0.1:6082` | `0.0.0.0:6082` |
+
+The matching Windows compose candidate is to replace host networking for the noVNC services with explicit port publishing:
+
+```yaml
+ports:
+  - "6080:6080"  # QGroundControl
+  - "6081:6081"  # Gazebo
+  - "6082:6082"  # RViz
+```
+
+Do not treat this as a fully validated replacement for the default stack yet. Removing `network_mode: host` changes ROS2 DDS discovery and MAVLink addressing assumptions, so a Windows-specific compose path should be tested again for QGC, ROSbot, RViz, bridge, mission audit, GNSS integrity, and correlation evidence before replacing `compose.webui.yml`.
 
 `Bridge/compose.bridge.yml` is kept for bridge-only debugging when QGroundControl and the simulation are started separately. Do not run it at the same time as the bridge service in `compose.webui.yml`, because both paths use the `dah-bridge` container name:
 
@@ -97,6 +128,17 @@ The project uses `.env` or `.env.example` for shared configuration.
 | `BASE_LAT`, `BASE_LON`, `BASE_ALT` | Seoul defaults | Origin used to convert local odometry into MAVLink global position telemetry. |
 | `LIBGL_ALWAYS_SOFTWARE` | `1` | Prefers software rendering for Gazebo/QGC stability. |
 | `MAVLINK_DEBUG` | `0` | Enables verbose MAVLink receive logs when set to `1`. |
+| `MISSION_MAX_ITEMS` | `20` | Maximum mission item count accepted by mission audit. |
+| `MISSION_GEOFENCE_RADIUS_M` | `300` | Mission waypoint geofence radius around `BASE_LAT`/`BASE_LON`. |
+| `MISSION_MAX_JUMP_M` | `120` | Maximum allowed waypoint-to-waypoint jump distance. |
+| `MISSION_MIN_ALT_M`, `MISSION_MAX_ALT_M` | `-20`, `200` | Accepted mission altitude range. |
+| `MISSION_ALLOWED_COMMANDS` | `16,20` | Allowed MAVLink mission commands in audit v1. |
+| `GNSS_MAX_RESIDUAL_M` | `30` | Maximum GNSS-to-odometry position residual. |
+| `GNSS_MIN_FIX_TYPE` | `3` | Minimum accepted GPS fix type. |
+| `GNSS_MIN_SATELLITES` | `6` | Minimum accepted visible satellite count. |
+| `GNSS_MAX_HACC_M` | `15` | Maximum accepted horizontal accuracy in meters. |
+| `CORRELATION_RISK_THRESHOLD` | `0.75` | Risk score required to engage hold. |
+| `CORRELATION_HOLD_SECONDS` | `5` | Duration of hold/command blocking after threshold crossing. |
 
 ## Quick Start
 
@@ -198,6 +240,12 @@ The Day3 evidence currently shows:
 
 See `docs/day3/README.md` and `docs/day3/evidence_summary.md` for the detailed MVP evidence.
 
+Later evidence shows:
+
+- Day4: normal mission accepted, malicious geofence/jump missions rejected, and `MISSION_ACK` emitted.
+- Day5: normal `GPS_INPUT` accepted, spoof jump and poor fix rejected.
+- Day6: mission/GNSS rejection converted into correlation risk, hold engaged, and `MANUAL_CONTROL` blocked during hold.
+
 ## Documentation Map
 
 | Document | Purpose |
@@ -207,6 +255,10 @@ See `docs/day3/README.md` and `docs/day3/evidence_summary.md` for the detailed M
 | `docs/day2/README.md` | noVNC web UI integration evidence. |
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP result. |
 | `docs/day3/evidence_summary.md` | File-by-file Day3 evidence interpretation. |
+| `docs/day3/odom_delta.md` | Odometry movement calculation proving the command path. |
+| `docs/day4/README.md` | Mission audit implementation and accepted/rejected evidence. |
+| `docs/day5/README.md` | GNSS integrity implementation and GPS_INPUT evidence. |
+| `docs/day6/README.md` | Correlation engine hold/blocking evidence. |
 
 ## References
 
@@ -225,11 +277,18 @@ Project internal materials:
 - Badtz-Maru-3/DAH_2026, `README.md`.
 - Badtz-Maru-3/DAH_2026, `compose.webui.yml`.
 - Badtz-Maru-3/DAH_2026, `Bridge/ros2_mavlink_bridge.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/mission_audit.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/gnss_integrity.py`.
+- Badtz-Maru-3/DAH_2026, `Bridge/correlation_engine.py`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/evidence_summary.md`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/odom_delta.md`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/bridge_clean.log`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/cmd_vel_info.txt`.
 - Badtz-Maru-3/DAH_2026, `docs/day3/ros2_topics.txt`.
+- Badtz-Maru-3/DAH_2026, `docs/day4/mission_audit.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day5/gnss_integrity.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_mission_malicious.log`.
+- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_gnss_spoof.log`.
 
 Research literature:
 
@@ -242,12 +301,12 @@ Research literature:
 
 ## Current Status
 
-The system is at a strong testbed MVP stage. The main control loop is demonstrated end to end, and evidence has been captured for container status, ROS2 topics, bridge logs, `/cmd_vel` wiring, and odometry movement.
+The system is past the bridge-only MVP stage. The main control loop, mission audit, GNSS integrity, and correlation hold path are implemented and backed by Day3-Day6 evidence.
 
 Recommended next steps:
 
-- Implement mission audit mode for `MISSION_COUNT` and `MISSION_ITEM_INT`.
-- Log normal mission acceptance and malicious mission rejection evidence.
-- Add GNSS integrity monitoring after the mission audit path is stable.
-- Add correlation logic that links command, mission, and GNSS anomalies.
+- Capture QGroundControl screenshots for mission upload/rejection and operator-visible warning state.
+- Add a repeatable evidence collection script for Day3-Day6 logs.
+- Add regression tests that protect `MANUAL_CONTROL -> /cmd_vel`, mission audit, GNSS reject, and correlation hold.
+- Extend GNSS response from rejection/warning to explicit trust downgrade and fallback behavior.
 - Keep the existing Day3 `MANUAL_CONTROL -> /cmd_vel` and `CMD_TIMEOUT` watchdog behavior intact.

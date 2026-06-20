@@ -2,7 +2,7 @@
 
 Day3 proves that the custom ROS2-MAVLink bridge can connect QGroundControl control input to the ROSbot Gazebo simulation.
 
-For the DAH 2026 plan, this evidence validates the first attack-defense surface: the command channel. A future attack adapter can inject or mutate this command path, and a future defense layer can use the same logs/topics to prove detection, blocking, or recovery.
+For the DAH 2026 plan, this evidence validates the first attack-defense surface: the command channel. Later Day4-Day6 evidence adds mission audit, GNSS integrity, and correlation blocking on top of this baseline.
 
 ## Verdict
 
@@ -119,19 +119,22 @@ The current evidence does not yet prove:
 - Long-duration stability.
 - Full QGroundControl vehicle setup compatibility.
 - Complete MAVLink parameter coverage.
-- Mission upload/execution behavior or mission audit rejection.
-- GNSS spoofing, jump, drift, or fix-quality monitoring.
-- Correlation between command, mission, and GNSS anomalies.
+- Mission execution by an autopilot.
+- Long-duration GNSS fallback/dead-reckoning.
+- Learned AI model behavior beyond the current rule/score-based correlation engine.
 - Robust handling of network loss or container restarts beyond the current command timeout watchdog.
 - Automated regression coverage or evidence collection scripts.
 
-## Recommended Next Evidence
+## Follow-on Evidence
 
-Add these when moving beyond MVP:
+Captured after Day3:
 
-- `mission_audit.log` showing normal mission accepted and malicious mission rejected.
-- QGroundControl screenshots for mission upload, rejection, and operator-visible state.
-- GNSS integrity logs showing normal position accepted, jump spoofing detected, and trust downgraded.
-- Correlation logs showing combined command/mission/GNSS anomalies.
+- `docs/day4/mission_audit.log` shows normal mission accepted and malicious mission rejected.
+- `docs/day5/gnss_integrity.log` shows normal GPS_INPUT accepted and spoof/poor-fix inputs rejected.
+- `docs/day6/correlation_mission_malicious.log` and `docs/day6/correlation_gnss_spoof.log` show hold engagement and command blocking.
+
+Still useful to add:
+
+- QGroundControl screenshots for mission upload, rejection, and operator-visible warning state.
 - A repeatable script that captures container state, ROS2 topics, bridge logs, odometry deltas, and audit logs from a fresh run.
 - A failure-mode test for command timeout and zero `/cmd_vel` publishing.
