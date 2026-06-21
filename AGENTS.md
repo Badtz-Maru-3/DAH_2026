@@ -10,6 +10,10 @@ QGroundControl ⇄ MAVLink ⇄ ROS2 ⇄ Gazebo(ROSbot UGV) 제어 루프를 재�
 testbed이며, 그 위에서 **공격 주입 → 이상 징후 → AI 기반 탐지·차단·복구**를 실증하고
 로그로 남기는 것이 목표다.
 
+이 testbed는 실제 군용 UGV 플랫폼의 복제물이 아니다. defense UGV 환경의 핵심 운용 흐름인
+GCS 제어, mission upload, GNSS/location input, telemetry feedback, anomaly correlation,
+command hold/block response를 추상화한 software-defined UGV/GCS cybersecurity testbed다.
+
 핵심 시나리오:
 > UGV 임무명령·위치입력 복합 공격에 대한 AI 기반 탐지·차단·복구 오케스트레이터.
 > 단일 공격 표면 탐지가 아니라, 제어명령·임무명령·위치입력의 상관관계를 이용해
@@ -38,7 +42,25 @@ testbed이며, 그 위에서 **공격 주입 → 이상 징후 → AI 기반 탐
 
 검증된 공격 표면: 명령주입(C2 analog), mission upload audit, GNSS 입력 무결성, telemetry 변환부, correlation hold. 미구현: 실제 mission execution/autopilot, 장시간 GNSS dead-reckoning 운용, 실제 QGC operator alert 화면 캡처.
 
-## 3. 목표 아키텍처
+## 3. Logical Two-Layer Testbed Architecture
+
+```text
+[Simulation Layer]
+QGC 화면 / Gazebo / RViz / ROSbot 이동 / odometry
+
+[Software-Defined UGV Security Layer]
+MAVLink Bridge
+Mission Audit
+GNSS Integrity
+Correlation Engine
+Command Hold / Block
+```
+
+이 구분은 논리 아키텍처다. Docker runtime이 두 개의 물리적으로 격리된 network zone으로
+분리되어 있다는 뜻이 아니라, simulation/visualization 구성요소와 software-defined security
+validation layer의 책임을 구분하기 위한 설명이다.
+
+## 4. 목표 공격·방어 구성
 
 ```text
 Attack Agent
@@ -57,7 +79,7 @@ Defense Agent
 설계 원칙: 각 공격 표면은 **①주입점 ②이상 징후 ③탐지·차단·복구 ④로그 증거**의
 4-튜플로 구현한다. 이는 DAH REQ의 D2(공방 1:1 매핑)·AI5(본문 자체 입증)를 충족하기 위함.
 
-## 4. 구현 순서 및 작업 정의
+## 5. 구현 순서 및 작업 정의
 
 ### Step 1 — MISSION audit mode  [구현·검증 완료]
 
@@ -121,13 +143,13 @@ MISSION waypoint가 geofence 바깥으로 변경됨
 - hold 중 MANUAL_CONTROL/RC override는 `/cmd_vel` 대신 zero command로 차단
 - `docs/day6/`에 mission malicious, GNSS spoof, command block 로그 저장
 
-## 5. 향후 확장 (예선 범위 밖)
+## 6. 향후 확장 (예선 범위 밖)
 
 펌웨어 업데이트 트랜잭션 시뮬레이터: manifest hash, version rollback,
 signature verification 기반 업데이트 무결성 검증. **실제 부트로더/OTA는 구현하지 않음.**
 보고서의 "결론 및 향후 계획"에 확장 항목으로 기재.
 
-## 6. 미확정 설계값 (TODO / 실험으로 조정)
+## 7. 미확정 설계값 (TODO / 실험으로 조정)
 
 | 값 | 현재 | 근거 |
 | --- | --- | --- |
@@ -137,7 +159,7 @@ signature verification 기반 업데이트 무결성 검증. **실제 부트로�
 
 위 값들은 실제 실험 로그를 보고 확정한다. 현 상태에서 임의 하드코딩 금지, 환경변수로 노출 권장.
 
-## 7. 일정
+## 8. 일정
 
 | 단계 | 기한 |
 | --- | --- |
@@ -148,7 +170,7 @@ signature verification 기반 업데이트 무결성 검증. **실제 부트로�
 평가 배점: 공격 시나리오 30 / 방어 전략 25 / AI 에이전트 25 / 팀 역량 10 / 문서 완성도 10.
 부가자료는 외부 클라우드 링크로 제출(필수), 외부 링크는 보조 참고 → **입증은 보고서 본문 우선(AI5).**
 
-## 8. 코딩 에이전트 작업 규칙
+## 9. 코딩 에이전트 작업 규칙
 
 - 코드 수정 전 `docs/day3/README.md`와 `evidence_summary.md`를 읽어 기존 검증 경로를 깨지 말 것.
 - bridge 수정 시 기존 MANUAL_CONTROL → /cmd_vel 경로와 CMD_TIMEOUT watchdog 동작 유지.

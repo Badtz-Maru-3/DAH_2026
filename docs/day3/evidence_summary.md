@@ -4,6 +4,11 @@ Day3 proves that the custom ROS2-MAVLink bridge can connect QGroundControl contr
 
 For the DAH 2026 plan, this evidence validates the first attack-defense surface: the command channel. Later Day4-Day6 evidence adds mission audit, GNSS integrity, and correlation blocking on top of this baseline.
 
+## Layer Mapping
+
+- Simulation Layer: QGroundControl noVNC, Gazebo/ROSbot, RViz, `/odometry/filtered`
+- Software-Defined UGV Security Layer: MAVLink Bridge, MANUAL_CONTROL to `/cmd_vel` translation, telemetry feedback
+
 ## Verdict
 
 The bridge MVP is validated.

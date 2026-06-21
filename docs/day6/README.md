@@ -16,6 +16,11 @@ The captured evidence shows:
 - The correlation engine engaged hold for `5` seconds.
 - `MANUAL_CONTROL` inputs during hold were blocked and logged as `command_blocked`.
 
+## Layer Mapping
+
+- Simulation Layer: simulated command execution target and odometry feedback
+- Software-Defined UGV Security Layer: Correlation Engine, risk score calculation, hold engagement, command block
+
 ## Implementation
 
 | File | Role |

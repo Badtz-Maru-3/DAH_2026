@@ -1,6 +1,6 @@
 # DAH 2026 Testbed
 
-DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **방산 AI 사이버 공방 해커톤 예선 보고서의 부가자료(src + docs)를 구성하기 위한 무인 시스템 사이버 방어 testbed**입니다.
+DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **방산 AI 사이버 공방 해커톤 예선 보고서의 부가자료(src + docs)를 구성하기 위한 software-defined UGV/GCS cybersecurity testbed**입니다.
 
 현재 구현된 ROSbot UGV 시뮬레이션과 ROS2-MAVLink 브리지는 command, mission audit, GNSS integrity, correlation response까지 포함한 검증 기준 시나리오입니다. 목표는 “QGroundControl로 ROSbot을 움직였다”에서 끝나는 것이 아니라, **공격 주입 -> 이상 징후 -> AI 기반 탐지·차단·복구 -> 로그 evidence** 흐름을 반복 실험할 수 있는 기반을 만드는 것입니다.
 
@@ -10,25 +10,43 @@ DAH 2026은 단일 데모를 만들기 위한 저장소가 아니라, **방산 A
 
 - GCS, 시뮬레이터, 로봇 미들웨어, 통신 브리지를 Docker로 재현 가능하게 구성합니다.
 - QGroundControl과 ROS2/Gazebo 사이의 제어 및 telemetry 흐름을 검증합니다.
-- 실제 로봇 또는 더 복잡한 시뮬레이션으로 확장하기 전, 안전한 가상 환경에서 공격·방어 루프를 검증합니다.
+- 실제 로봇 또는 더 복잡한 시뮬레이션으로 확장하기 전, ROSbot-based surrogate platform에서 defense UGV operational flow를 검증합니다.
 - 실험 결과를 `docs/`에 evidence로 남겨 보고서 본문에서 설명 가능한 근거를 확보합니다.
 - 제어명령, 임무명령, 위치입력의 상관관계를 이용해 UGV 운용 이상을 탐지하는 구조로 확장합니다.
 
-## Testbed 관점의 핵심 아이디어
+## Logical Two-Layer Testbed Architecture
 
-현재 시스템은 “완성품”이라기보다 다음을 검증하는 실험 플랫폼입니다.
+이 testbed는 실제 군용 UGV 플랫폼의 복제물이 아닙니다. defense UGV 환경에서 중요한 GCS 제어, mission upload, GNSS/location input, telemetry feedback, anomaly correlation, command hold/block response 흐름을 추상화한 software-defined UGV/GCS cybersecurity testbed입니다.
+
+아키텍처는 두 개의 논리 계층으로 설명합니다.
+
+### Simulation Layer
+
+- QGroundControl noVNC: GCS 화면, Fly View, virtual joystick, vehicle marker
+- Gazebo / ROSbot: simulated UGV movement
+- RViz: ROS2 topic, TF, scan, odometry visualization
+- `/odometry/filtered`: simulated UGV state feedback
+
+### Software-Defined UGV Security Layer
+
+- MAVLink Bridge: QGC-MAVLink messages to ROS2 and back
+- Mission Audit: mission upload validation, geofence check, waypoint jump check
+- GNSS Integrity: `GPS_INPUT` validation, spoof jump detection, poor-fix detection
+- Correlation Engine: Mission/GNSS/Command anomaly signal을 risk score로 결합
+- Command Hold / Block: risk threshold 도달 시 command output을 block 또는 zero 처리
+
+### Inter-Layer Data Flow
 
 ```text
-Operator / Autonomy Logic
-  -> GCS or Mission Interface
-  -> MAVLink / ROS2 Bridge
-  -> ROS2 Control Topics
-  -> Gazebo Robot Simulation
-  -> Sensor / Odometry Feedback
-  -> Logging / Evidence
+QGC joystick input is sent as MAVLink MANUAL_CONTROL to the Bridge.
+The Bridge converts it into ROS2 /cmd_vel for the simulated ROSbot.
+The simulated UGV publishes /odometry/filtered.
+The Bridge uses odometry for telemetry feedback and as a reference for GNSS integrity validation.
+Mission, GNSS, and command anomalies are evaluated in the Software-Defined UGV Security Layer.
+When correlation risk reaches the threshold, Command Hold / Block prevents unsafe command execution.
 ```
 
-즉, 특정 로봇 하나를 움직이는 것이 아니라 **제어 입력, 상태 피드백, 시각화, 검증 자료 수집이 모두 연결되는 실험 루프**를 만드는 것이 핵심입니다.
+즉, 특정 로봇 하나를 움직이는 것이 아니라 **제어 입력, 상태 피드백, 시각화, 검증 자료 수집, 탐지·차단 evidence가 연결되는 logical two-layer architecture**를 만드는 것이 핵심입니다.
 
 ## 목표 방어 시나리오
 
@@ -60,7 +78,7 @@ Operator / Autonomy Logic
 
 ## 현재 기준 시나리오
 
-현재 구현된 기준 시나리오는 다음과 같습니다.
+현재 구현된 기준 시나리오는 위 2계층 구조에서 Day3 evidence로 검증된 inter-layer command/telemetry 흐름입니다.
 
 ```text
 QGroundControl noVNC
@@ -283,6 +301,7 @@ docker logs dah-bridge
 | `README.md` | 영문 프로젝트 개요입니다. |
 | `KR.md` | 한국어 testbed 중심 프로젝트 개요입니다. |
 | `docs/README.md` | evidence 폴더 전체 안내입니다. |
+| `docs/architecture/two_layer_architecture.md` | 논리적 2계층 아키텍처, 책임, evidence mapping, 한계 설명입니다. |
 | `docs/day1/README.md` | ROSbot simulation baseline evidence입니다. |
 | `docs/day2/README.md` | noVNC web UI integration evidence입니다. |
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP 결과입니다. |

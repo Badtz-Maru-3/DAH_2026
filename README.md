@@ -1,23 +1,41 @@
 # DAH 2026
 
-DAH 2026 is a Docker-based unmanned-systems cyber-defense testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
+DAH 2026 is a Docker-based software-defined UGV/GCS cybersecurity testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
 
 The current ROSbot UGV scenario now includes the validated command, mission-audit, GNSS-integrity, and correlation-response layers. QGroundControl or MAVLink test tools send control, mission, and GPS_INPUT messages; the bridge converts or audits them; Gazebo/ROS2 provide odometry; and defense decisions are written as evidence logs.
 
 The goal is not just to move one robot in simulation. This repository is intended to support repeatable evidence for the attack-defense loop: attack injection, abnormal behavior, AI-assisted detection, blocking, recovery, and logs that can be used as report evidence.
 
-## Baseline Architecture
+This testbed is not a replica of an actual military UGV platform. It is a software-defined UGV/GCS cybersecurity testbed that abstracts key operational flows found in defense UGV environments: GCS control, mission upload, GNSS/location input, telemetry feedback, anomaly correlation, and command hold/block response.
+
+## Logical Two-Layer Testbed Architecture
+
+The architecture is best understood as two logical layers: a Simulation Layer that provides operator UI, robot motion, visualization, and odometry; and a Software-Defined UGV Security Layer that validates MAVLink/ROS2 inputs and produces hold/block evidence.
+
+### Simulation Layer
+
+- QGroundControl noVNC provides the GCS screen, Fly View, virtual joystick, and vehicle marker.
+- Gazebo / ROSbot provides simulated UGV movement with a ROSbot-based surrogate platform.
+- RViz visualizes ROS2 topics, TF, scan, and odometry.
+- `/odometry/filtered` provides simulated UGV state feedback.
+
+### Software-Defined UGV Security Layer
+
+- MAVLink Bridge translates QGC-MAVLink messages to ROS2 and sends telemetry back.
+- Mission Audit validates mission uploads with geofence and waypoint jump checks.
+- GNSS Integrity validates `GPS_INPUT` and detects spoof jumps or poor-fix inputs.
+- Correlation Engine combines Mission, GNSS, and Command anomaly signals into a risk score.
+- Command Hold / Block blocks or zeroes command output when risk reaches the configured threshold.
+
+### Inter-Layer Data Flow
 
 ```text
-QGroundControl noVNC
-  -> MAVLink UDP
-  -> dah-bridge
-  -> ROS2 /cmd_vel
-  -> ROSbot Gazebo
-  -> ROS2 /odometry/filtered
-  -> dah-bridge
-  -> MAVLink telemetry
-  -> QGroundControl HUD / map
+QGC joystick input is sent as MAVLink MANUAL_CONTROL to the Bridge.
+The Bridge converts it into ROS2 /cmd_vel for the simulated ROSbot.
+The simulated UGV publishes /odometry/filtered.
+The Bridge uses odometry for telemetry feedback and as a reference for GNSS integrity validation.
+Mission, GNSS, and command anomalies are evaluated in the Software-Defined UGV Security Layer.
+When correlation risk reaches the threshold, Command Hold / Block prevents unsafe command execution.
 ```
 
 ## Components
@@ -251,6 +269,7 @@ Later evidence shows:
 | Document | Purpose |
 | --- | --- |
 | `docs/README.md` | Overview of evidence folders. |
+| `docs/architecture/two_layer_architecture.md` | Logical two-layer architecture, responsibilities, evidence mapping, and limits. |
 | `docs/day1/README.md` | ROSbot simulation baseline evidence. |
 | `docs/day2/README.md` | noVNC web UI integration evidence. |
 | `docs/day3/README.md` | ROS2-MAVLink bridge MVP result. |

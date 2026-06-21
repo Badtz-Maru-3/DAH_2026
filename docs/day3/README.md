@@ -19,6 +19,11 @@ The evidence shows that:
 - `/odometry/filtered` changes after QGroundControl joystick input.
 - The measured planar movement was about `1.078 m`.
 
+## Layer Mapping
+
+- Simulation Layer: QGroundControl noVNC, Gazebo/ROSbot, RViz, `/odometry/filtered`
+- Software-Defined UGV Security Layer: MAVLink Bridge, MANUAL_CONTROL to `/cmd_vel` translation, telemetry feedback
+
 ## Architecture
 
 ```text

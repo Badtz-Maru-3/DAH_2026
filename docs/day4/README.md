@@ -6,6 +6,11 @@ Validate Mission audit mode for the UGV/GCS testbed after Day3's bridge MVP.
 
 Day4 validation passed. The bridge accepted a normal mission, rejected malicious missions, and wrote matching audit logs.
 
+## Layer Mapping
+
+- Simulation Layer: QGC mission upload context and simulated UGV operational boundary
+- Software-Defined UGV Security Layer: Mission Audit, geofence validation, waypoint jump validation, MISSION_ACK accept/reject decision
+
 ## Scope
 
 Mission audit v1 validates uploaded MAVLink mission items before execution. It is implemented in `Bridge/mission_audit.py` and is called from `Bridge/ros2_mavlink_bridge.py` before command handling, without breaking the Day3 `MANUAL_CONTROL -> /cmd_vel` path.

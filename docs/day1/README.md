@@ -24,7 +24,7 @@ Use Day1 evidence to confirm that the simulation itself is not the source of lat
 
 ## Interpretation
 
-This day establishes the physical/simulation layer of the testbed:
+This day establishes the Simulation Layer of the logical two-layer architecture:
 
 ```text
 ROSbot Gazebo
@@ -45,4 +45,4 @@ Baseline assumptions captured by Day1:
 
 ## Limitations
 
-Day1 does not prove QGroundControl connectivity, MAVLink handling, mission upload, attack injection, or defense behavior. It only proves that the simulated UGV layer is available and observable. Those higher layers are added in Day2 through Day6.
+Day1 does not prove QGroundControl connectivity, MAVLink handling, mission upload, attack injection, or defense behavior. It only proves that the simulated UGV layer is available and observable. Those Software-Defined UGV Security Layer behaviors are added in Day2 through Day6.

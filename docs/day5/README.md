@@ -14,6 +14,11 @@ The captured evidence shows:
 - A spoofed coordinate jump of about `2837.65 m` was rejected against `GNSS_MAX_RESIDUAL_M=30`.
 - A poor fix was rejected because `fix_type`, satellite count, and horizontal accuracy violated thresholds.
 
+## Layer Mapping
+
+- Simulation Layer: odometry-derived expected UGV position
+- Software-Defined UGV Security Layer: GNSS Integrity, GPS_INPUT validation, spoof jump detection, poor-fix detection
+
 ## Implementation
 
 | File | Role |

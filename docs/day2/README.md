@@ -47,13 +47,13 @@ This note is not yet a validated replacement for the default Linux/WSL stack. If
 Use Day2 evidence to confirm that the operator-facing surfaces are available before testing bridge control or attack scenarios.
 
 - QGroundControl should be reachable through noVNC and later used for vehicle connection, joystick, and mission upload observations.
-- Gazebo should show the simulated physical world, making movement or abnormal behavior visible.
+- Gazebo should show the simulated world, making movement or abnormal behavior visible.
 - RViz should show ROS-side state such as TF, laser scan, odometry, and command topics.
 - The service logs should help distinguish UI/display startup issues from bridge or ROS2 failures.
 
 ## Interpretation
 
-This day establishes the operator-facing layer:
+This day establishes the operator-facing part of the Simulation Layer:
 
 ```text
 Browser
@@ -65,7 +65,7 @@ Day3 then adds the bridge that lets QGroundControl actively control the ROSbot s
 
 Current runtime note: the bridge has since been folded into the default integrated `compose.webui.yml`, so the full baseline stack now starts from one compose file.
 
-For the attack-defense plan, Day2 is not just UI plumbing. QGroundControl is the place where future mission attacks, waypoint uploads, operator alerts, and connection-state evidence will be observed. Gazebo shows the simulated physical effect, while RViz provides ROS-side confirmation through TF, laser scan, odometry, and command topics.
+For the attack-defense plan, Day2 is not just UI plumbing. QGroundControl is the place where future mission attacks, waypoint uploads, operator alerts, and connection-state evidence will be observed. Gazebo shows the simulated UGV effect, while RViz provides ROS-side confirmation through TF, laser scan, odometry, and command topics.
 
 ## Limitations
 
