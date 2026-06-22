@@ -6,6 +6,7 @@ export QT_X11_NO_MITSHM=1
 export LIBGL_ALWAYS_SOFTWARE="${LIBGL_ALWAYS_SOFTWARE:-1}"
 export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-17}"
 export ROBOT_MODEL="${ROBOT_MODEL:-rosbot}"
+export ROBOT_CONFIGURATION="${ROBOT_CONFIGURATION:-basic}"
 export XDG_RUNTIME_DIR=/tmp/runtime-ugv
 
 mkdir -p "$XDG_RUNTIME_DIR"
@@ -40,5 +41,6 @@ fi
 
 exec ros2 launch rosbot_gazebo simulation.launch.py \
   robot_model:=${ROBOT_MODEL} \
+  configuration:=${ROBOT_CONFIGURATION} \
   gz_headless_mode:=False \
-  use_rviz:=False
+  rviz:=False

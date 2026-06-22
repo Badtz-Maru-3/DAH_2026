@@ -40,4 +40,4 @@ if [ -f /ros2_ws/install/setup.bash ]; then
   source /ros2_ws/install/setup.bash
 fi
 
-exec rviz2
+exec rviz2 -d /opt/dah/rviz/dah_default.rviz --ros-args -p use_sim_time:=true

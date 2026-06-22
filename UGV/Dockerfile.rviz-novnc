@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint-rviz-novnc.sh /entrypoint-rviz-novnc.sh
+COPY rviz/dah_default.rviz /opt/dah/rviz/dah_default.rviz
 RUN chmod +x /entrypoint-rviz-novnc.sh
 
 ENTRYPOINT ["/entrypoint-rviz-novnc.sh"]
