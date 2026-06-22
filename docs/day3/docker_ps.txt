@@ -1,5 +1,0 @@
-NAMES                  STATUS          IMAGE
-dah-bridge             Up 48 seconds   bridge-bridge
-dah-qgc-novnc          Up 28 minutes   gcs-qgroundcontrol_novnc
-dah-rviz-novnc         Up 38 minutes   dah_2026-rviz_novnc
-dah-rosbot-sim-novnc   Up 38 minutes   dah_2026-rosbot_sim_novnc

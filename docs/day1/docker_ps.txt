@@ -1,2 +1,0 @@
-NAMES            STATUS          IMAGE
-dah-rosbot-sim   Up 22 seconds   husarion/rosbot-gazebo:humble
