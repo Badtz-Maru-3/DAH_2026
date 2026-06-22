@@ -15,6 +15,9 @@ RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel \
     && pip3 install --no-cache-dir -r /app/requirements.txt
 
 COPY ros2_mavlink_bridge.py /app/ros2_mavlink_bridge.py
+COPY mission_audit.py /app/mission_audit.py
+COPY gnss_integrity.py /app/gnss_integrity.py
+COPY correlation_engine.py /app/correlation_engine.py
 RUN chmod +x /app/ros2_mavlink_bridge.py
 
 ENTRYPOINT ["/bin/bash", "-lc", "source /opt/ros/humble/setup.bash && exec python3 /app/ros2_mavlink_bridge.py"]
