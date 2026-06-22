@@ -138,7 +138,8 @@ The project uses `.env` or `.env.example` for shared configuration.
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `ROS_DOMAIN_ID` | `17` | Keeps UGV, RViz, and bridge in the same ROS2 DDS domain. |
-| `ROBOT_MODEL` | `rosbot` | Selects the Gazebo robot model. If omitted from `.env`, the stack uses `rosbot`; set `ROBOT_MODEL=rosbot_xl` to launch `rosbot_xl`. |
+| `ROBOT_MODEL` | `rosbot_xl` | Selects the Gazebo robot model. The standard testbed profile uses `rosbot_xl`. |
+| `ROBOT_CONFIGURATION` | `autonomy` | Selects the ROSbot sensor/configuration profile. The standard testbed profile uses `autonomy` for scan and autonomy sensor topics. |
 | `QGC_IP` | `127.0.0.1` | QGroundControl MAVLink receiver address. |
 | `QGC_PORT` | `14550` | QGroundControl MAVLink UDP port. |
 | `BRIDGE_LOCAL_PORT` | `14551` | UDP port where the bridge listens for MAVLink packets. |
@@ -159,6 +160,8 @@ The project uses `.env` or `.env.example` for shared configuration.
 | `GNSS_MAX_HACC_M` | `15` | Maximum accepted horizontal accuracy in meters. |
 | `CORRELATION_RISK_THRESHOLD` | `0.75` | Risk score required to engage hold. |
 | `CORRELATION_HOLD_SECONDS` | `5` | Duration of hold/command blocking after threshold crossing. |
+| `COMMAND_HIGH_LINEAR_MPS` | `0.60` | Linear command threshold used by correlation command guard. |
+| `COMMAND_HIGH_ANGULAR_RADPS` | `1.50` | Angular command threshold used by correlation command guard. |
 
 ## Quick Start
 
@@ -168,13 +171,14 @@ Copy the example environment file if needed:
 cp .env.example .env
 ```
 
-Robot model selection is configured in `.env`. The default model is `rosbot`; to launch `rosbot_xl`, add or edit this line in `.env` before running `docker compose up`:
+Robot model and sensor configuration are configured in `.env`. The standard testbed profile is `rosbot_xl` with the `autonomy` configuration:
 
 ```bash
 ROBOT_MODEL=rosbot_xl
+ROBOT_CONFIGURATION=autonomy
 ```
 
-To switch back to the default model, either set `ROBOT_MODEL=rosbot` or remove the `ROBOT_MODEL` line from `.env`. `.env.example` includes the default line as a template.
+`.env.example` includes this standard profile as a template. If you intentionally switch to another robot model or configuration, re-check `/cmd_vel`, `/odometry/filtered`, `/scan`, `/tf`, and the Day3-Day6 validation flow because available sensor topics can change.
 
 Start the integrated testbed stack. This is the normal path and already includes `dah-bridge`:
 
