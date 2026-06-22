@@ -10,6 +10,8 @@ export XDG_RUNTIME_DIR=/tmp/runtime-qgc
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
+rm -f /tmp/.X1-lock /tmp/.X11-unix/X1
+
 Xvfb :1 -screen 0 1280x800x24 -ac +extension GLX +render -noreset &
 sleep 1
 

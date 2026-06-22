@@ -10,6 +10,8 @@ export XDG_RUNTIME_DIR=/tmp/runtime-rviz
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
+rm -f /tmp/.X3-lock /tmp/.X11-unix/X3
+
 Xvfb :3 -screen 0 1280x800x24 -ac +extension GLX +render -noreset &
 sleep 1
 
