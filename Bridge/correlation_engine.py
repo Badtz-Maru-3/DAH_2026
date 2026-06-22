@@ -46,6 +46,7 @@ class CorrelationEngine:
 
         self.signals: List[Dict[str, Any]] = []
         self.block_until = 0.0
+        self._was_blocked = False
 
         self.audit_log(
             "correlation_engine_started",
@@ -118,9 +119,11 @@ class CorrelationEngine:
     def evaluate_command(self, linear: float, angular: float, source: str) -> Tuple[bool, float, List[str]]:
         reasons = []
 
-        if self.is_blocked():
+        blocked = self.is_blocked()
+        if blocked:
             score = self.risk_score()
             reasons.append("correlation hold active")
+            self._was_blocked = True
             self.audit_log(
                 "command_blocked",
                 source=source,
@@ -130,6 +133,25 @@ class CorrelationEngine:
                 reasons=reasons,
             )
             return False, score, reasons
+
+        if self._was_blocked:
+            score = self.risk_score()
+            self._was_blocked = False
+            self.audit_log(
+                "hold_released",
+                source=source,
+                linear=linear,
+                angular=angular,
+                risk_score=score,
+                active_signals=self.active_signal_summary(),
+            )
+            try:
+                self.node.mav.statustext_send(
+                    mavlink2.MAV_SEVERITY_INFO,
+                    b"Correlation hold released",
+                )
+            except Exception:
+                pass
 
         if abs(linear) >= self.command_high_linear or abs(angular) >= self.command_high_angular:
             reasons.append("high manual command")
@@ -150,6 +172,7 @@ class CorrelationEngine:
 
         if self.is_blocked():
             reasons.append("risk threshold crossed after command evaluation")
+            self._was_blocked = True
             self.audit_log(
                 "command_blocked",
                 source=source,

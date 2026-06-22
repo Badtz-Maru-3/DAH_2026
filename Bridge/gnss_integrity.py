@@ -77,17 +77,39 @@ class GnssIntegrity:
 
         residual_m: Optional[float] = None
 
-        if expected is not None:
-            exp_lat, exp_lon = expected
-            residual_m = haversine_m(exp_lat, exp_lon, lat, lon)
-
-            if residual_m > self.max_residual_m:
-                reasons.append(
-                    f"position residual {residual_m:.2f}m > limit {self.max_residual_m:.2f}m"
-                )
-        else:
+        if expected is None:
             exp_lat, exp_lon = None, None
-            reasons.append("no odometry reference available")
+            result = "no_reference"
+            self.last_status = result
+
+            self.audit_log(
+                "gps_input",
+                result=result,
+                lat=lat,
+                lon=lon,
+                alt=alt,
+                expected_lat=exp_lat,
+                expected_lon=exp_lon,
+                residual_m=residual_m,
+                fix_type=fix_type,
+                satellites_visible=sats,
+                horiz_accuracy=hacc,
+                reasons=["no odometry reference available"],
+            )
+
+            self.node.get_logger().info(
+                "[gnss_integrity] result=no_reference, waiting for odometry"
+            )
+
+            return True
+
+        exp_lat, exp_lon = expected
+        residual_m = haversine_m(exp_lat, exp_lon, lat, lon)
+
+        if residual_m > self.max_residual_m:
+            reasons.append(
+                f"position residual {residual_m:.2f}m > limit {self.max_residual_m:.2f}m"
+            )
 
         if fix_type < self.min_fix_type:
             reasons.append(f"fix_type {fix_type} < required {self.min_fix_type}")
