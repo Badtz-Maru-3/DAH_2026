@@ -42,7 +42,7 @@ if [ -f /ros2_ws/install/setup.bash ]; then
   source /ros2_ws/install/setup.bash
 fi
 
-exec ros2 launch rosbot_gazebo simulation.launch.py \
+exec ros2 launch /app/launch/dah_simulation.launch.py \
   robot_model:=${ROBOT_MODEL} \
   configuration:=${ROBOT_CONFIGURATION} \
   gz_headless_mode:=False \

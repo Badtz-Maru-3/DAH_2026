@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 
+COPY worlds/ /app/worlds/
+COPY launch/ /app/launch/
 COPY entrypoint-ugv-novnc.sh /entrypoint-ugv-novnc.sh
 RUN chmod +x /entrypoint-ugv-novnc.sh
 
