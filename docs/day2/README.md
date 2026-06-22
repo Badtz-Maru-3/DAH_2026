@@ -1,5 +1,7 @@
 # Day2 - noVNC Web UI Stack
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 Day2 captures the web-accessible visual stack for the simulation environment.
 
 The purpose was to confirm that QGroundControl, Gazebo, and RViz can run as Docker services and be accessed through browser-based noVNC sessions. This creates the operator-facing layer needed for later mission upload, abnormal-command observation, and screenshot evidence.

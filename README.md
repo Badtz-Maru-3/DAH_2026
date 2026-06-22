@@ -1,5 +1,7 @@
 # DAH 2026
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 DAH 2026 is a Docker-based software-defined UGV/GCS cybersecurity testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
 
 The current ROSbot UGV scenario now includes the validated command, mission-audit, GNSS-integrity, and correlation-response layers. QGroundControl or MAVLink test tools send control, mission, and GPS_INPUT messages; the bridge converts or audits them; Gazebo/ROS2 provide odometry; and defense decisions are written as evidence logs.

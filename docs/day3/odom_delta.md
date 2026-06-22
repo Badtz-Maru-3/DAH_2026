@@ -1,5 +1,7 @@
 # Day3 Odometry Delta
 
+Korean version: [`odom_delta_KR.md`](odom_delta_KR.md).
+
 ## Before
 
 - x: 2.768542

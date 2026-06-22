@@ -1,5 +1,7 @@
 # Day4 - Mission Audit Evidence
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 ## Goal
 
 Validate Mission audit mode for the UGV/GCS testbed after Day3's bridge MVP.

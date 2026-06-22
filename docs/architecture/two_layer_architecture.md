@@ -1,5 +1,7 @@
 # Logical Two-Layer Testbed Architecture
 
+Korean version: [`two_layer_architecture_KR.md`](two_layer_architecture_KR.md).
+
 ## Purpose
 
 This document explains the DAH 2026 testbed as a logical two-layer architecture for report and evidence alignment.

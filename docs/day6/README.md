@@ -1,5 +1,7 @@
 # Day6 - Correlation Engine Evidence
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 Day6 validates the correlation layer that connects mission audit, GNSS integrity, and command blocking.
 
 The purpose is to move beyond isolated checks. A rejected mission or GNSS spoof is converted into a correlation signal. If the risk score reaches the configured threshold, the bridge engages hold, publishes zero `/cmd_vel`, and blocks subsequent manual-control commands while the hold is active.

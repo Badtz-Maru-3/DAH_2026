@@ -1,5 +1,7 @@
 # Day1 - ROSbot Simulation Baseline
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 Day1 captures the baseline ROSbot Gazebo simulation state.
 
 The purpose was to confirm that the UGV simulation container can run and expose the expected ROS2 topics before adding the web UI, MAVLink bridge, and cyber-defense layers.

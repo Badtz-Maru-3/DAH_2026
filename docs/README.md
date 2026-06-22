@@ -1,5 +1,7 @@
 # DAH 2026 Evidence
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 This directory stores day-by-day evidence for the DAH 2026 Docker software-defined UGV/GCS cybersecurity testbed.
 
 The evidence should be read with the Logical Two-Layer Testbed Architecture in mind: the Simulation Layer provides QGroundControl, Gazebo/ROSbot, RViz, and odometry feedback, while the Software-Defined UGV Security Layer provides the bridge, mission audit, GNSS integrity, correlation, and command hold/block behavior.

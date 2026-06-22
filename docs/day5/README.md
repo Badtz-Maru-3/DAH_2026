@@ -1,5 +1,7 @@
 # Day5 - GNSS Integrity Evidence
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 Day5 validates the GNSS integrity adapter added after mission audit mode.
 
 The purpose is to show that MAVLink `GPS_INPUT` can be treated as a position-input attack surface. The bridge compares incoming GNSS coordinates with the current odometry-derived expected position and rejects implausible jumps or poor-quality fixes.

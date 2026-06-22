@@ -1,5 +1,7 @@
 # Day3 Evidence Summary
 
+Korean version: [`evidence_summary_KR.md`](evidence_summary_KR.md).
+
 Day3 proves that the custom ROS2-MAVLink bridge can connect QGroundControl control input to the ROSbot Gazebo simulation.
 
 For the DAH 2026 plan, this evidence validates the first attack-defense surface: the command channel. Later Day4-Day6 evidence adds mission audit, GNSS integrity, and correlation blocking on top of this baseline.

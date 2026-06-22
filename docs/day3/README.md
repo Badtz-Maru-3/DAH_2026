@@ -1,5 +1,7 @@
 # Day3 - ROS2-MAVLink Bridge MVP
 
+Korean version: [`README_KR.md`](README_KR.md).
+
 Day3 validates the first end-to-end control loop between QGroundControl and the ROSbot Gazebo simulation.
 
 The goal was to prove that a custom bridge can receive MAVLink joystick/control input from QGroundControl, publish ROS2 `/cmd_vel`, move the simulated ROSbot, and send odometry-derived telemetry back to QGroundControl.
