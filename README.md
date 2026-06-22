@@ -1,5 +1,5 @@
 <div align="right">
-  <strong>🇺🇸 English</strong> | <a href="README_KR.md">🇰🇷 한국어</a>
+  <strong>🇺🇸 English</strong> | <a href="docs/project_KR.md">🇰🇷 한국어</a>
 </div>
 
 # DAH 2026

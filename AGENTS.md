@@ -1,5 +1,5 @@
 <div align="right">
-  <strong>🇺🇸 English</strong> | <a href="AGENTS_KR.md">🇰🇷 한국어</a>
+  <strong>🇺🇸 English</strong> | <a href="docs/AGENTS_KR.md">🇰🇷 한국어</a>
 </div>
 
 # AGENTS.md
