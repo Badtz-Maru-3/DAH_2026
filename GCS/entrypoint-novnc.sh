@@ -35,4 +35,15 @@ websockify \
 
 sleep 2
 
-exec /opt/qgc/QGroundControl.AppImage --appimage-extract-and-run
+QGC_EXTRACT_DIR=/tmp/qgc-appimage
+rm -rf "$QGC_EXTRACT_DIR"
+mkdir -p "$QGC_EXTRACT_DIR"
+
+(
+  cd "$QGC_EXTRACT_DIR"
+  /opt/qgc/QGroundControl.AppImage --appimage-extract >/tmp/qgc-appimage-extract.log
+)
+
+rm -f /tmp/qipc_systemsem_*
+
+exec "$QGC_EXTRACT_DIR/squashfs-root/usr/bin/QGroundControl"
