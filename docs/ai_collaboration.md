@@ -1,3 +1,7 @@
+<div align="right">
+  <strong>🇺🇸 English</strong> | <a href="ai_collaboration_KR.md">🇰🇷 한국어</a>
+</div>
+
 # Human-in-the-Loop AI Collaboration
 
 This project was developed as a software-defined UGV/GCS cybersecurity testbed, but its implementation process was also a controlled experiment in human-in-the-loop AI-assisted engineering. The core concept, architecture, and security direction were led by the developer. The developer defined the testbed as a defense UGV-inspired software abstraction rather than a replica of a real military vehicle, and shaped the project around a two-layer architecture: a Simulation Layer for QGroundControl, Gazebo, RViz, ROSbot motion, odometry, and scan feedback, and a Software-Defined UGV Security Layer for command mediation, mission validation, GNSS input validation, correlation, and hold/block response.

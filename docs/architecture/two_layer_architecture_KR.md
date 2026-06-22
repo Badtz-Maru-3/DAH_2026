@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="two_layer_architecture.md">🇺🇸 English</a> | <strong>🇰🇷 한국어</strong>
+</div>
+
 # Logical Two-Layer Testbed Architecture
 
 원본: `docs/architecture/two_layer_architecture.md`

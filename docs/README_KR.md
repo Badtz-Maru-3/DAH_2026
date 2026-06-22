@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="README.md">🇺🇸 English</a> | <strong>🇰🇷 한국어</strong>
+</div>
+
 # DAH 2026 Evidence
 
 원본: `docs/README.md`

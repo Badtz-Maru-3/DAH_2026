@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="AGENTS.md">🇺🇸 English</a> | <strong>🇰🇷 한국어</strong>
+</div>
+
 # AGENTS.md 한국어 참고 요약
 
 원본 실행 지침: `AGENTS.md`

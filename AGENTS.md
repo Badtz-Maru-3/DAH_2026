@@ -1,3 +1,7 @@
+<div align="right">
+  <strong>🇺🇸 English</strong> | <a href="AGENTS_KR.md">🇰🇷 한국어</a>
+</div>
+
 # AGENTS.md
 
 This file defines how Claude Code, Codex, and the user should collaborate inside the DAH_2026 repository.

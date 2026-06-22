@@ -1,6 +1,8 @@
-# Logical Two-Layer Testbed Architecture
+<div align="right">
+  <strong>🇺🇸 English</strong> | <a href="two_layer_architecture_KR.md">🇰🇷 한국어</a>
+</div>
 
-Korean version: [`two_layer_architecture_KR.md`](two_layer_architecture_KR.md).
+# Logical Two-Layer Testbed Architecture
 
 ## Purpose
 

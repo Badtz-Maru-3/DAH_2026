@@ -1,6 +1,8 @@
-# DAH 2026
+<div align="right">
+  <strong>🇺🇸 English</strong> | <a href="README_KR.md">🇰🇷 한국어</a>
+</div>
 
-Korean version: [`README_KR.md`](README_KR.md).
+# DAH 2026
 
 DAH 2026 is a Docker-based software-defined UGV/GCS cybersecurity testbed for the DAH 2026 Defense AI cyber attack-defense hackathon preliminary report package.
 

@@ -1,6 +1,8 @@
-# DAH 2026 Evidence
+<div align="right">
+  <strong>🇺🇸 English</strong> | <a href="README_KR.md">🇰🇷 한국어</a>
+</div>
 
-Korean version: [`README_KR.md`](README_KR.md).
+# DAH 2026 Evidence
 
 This directory stores day-by-day evidence for the DAH 2026 Docker software-defined UGV/GCS cybersecurity testbed.
 

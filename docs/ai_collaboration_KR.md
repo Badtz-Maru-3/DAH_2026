@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="ai_collaboration.md">🇺🇸 English</a> | <strong>🇰🇷 한국어</strong>
+</div>
+
 # Human-in-the-Loop AI 협업
 
 이 프로젝트는 소프트웨어 정의 UGV/GCS 사이버보안 테스트베드로 개발됐지만, 동시에 Human-in-the-Loop AI 보조 개발 방식의 실제 적용 사례이기도 하다. 프로젝트의 핵심 컨셉, 아키텍처, 보안 방향은 모두 개발자가 주도했다. 개발자는 이 테스트베드를 실제 군용 차량의 복제물이 아닌 방어 UGV에서 영감을 받은 소프트웨어 추상 시스템으로 정의하고, 두 계층으로 구성된 아키텍처를 중심으로 프로젝트를 구성했다. 시뮬레이션 레이어는 QGroundControl, Gazebo, RViz, ROSbot 이동, 오도메트리, 스캔 피드백을 포함하며, 소프트웨어 정의 UGV 보안 레이어는 명령 중개, 미션 검증, GNSS 입력 검증, 상관 분석, 홀드/블록 응답을 담당한다.

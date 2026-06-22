@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="README.md">🇺🇸 English</a> | <strong>🇰🇷 한국어</strong>
+</div>
+
 # DAH 2026 Testbed
 
 DAH 2026은 방산 AI 사이버 공방 해커톤 예선 보고서의 부가자료를 구성하기 위한 **software-defined UGV/GCS cybersecurity testbed**입니다.
