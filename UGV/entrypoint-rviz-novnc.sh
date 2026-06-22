@@ -21,6 +21,7 @@ x11vnc \
   -forever \
   -shared \
   -nopw \
+  -noshm \
   -listen 127.0.0.1 \
   -rfbport 5902 \
   -noxdamage \
