@@ -1,5 +1,5 @@
 <div align="right">
-  <strong>🇺🇸 English</strong> | <a href="ai_collaboration_KR.md">🇰🇷 한국어</a>
+  <strong>🇺🇸 English</strong> | <a href="docs/ai_collaboration_KR.md">🇰🇷 한국어</a>
 </div>
 
 # Human-in-the-Loop AI Collaboration
