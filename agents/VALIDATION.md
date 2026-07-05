@@ -135,6 +135,63 @@ C: risk_score=1.0, command_blocked=True
 
 ---
 
+## 2.1 LLM 경로 검증
+
+반복 개발/팀원 검증은 토큰을 쓰지 않도록 항상 `--llm-backend none`을 붙인다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
+```
+
+이 모드는 Anthropic API를 호출하지 않고 deterministic template fallback으로
+`IncidentReport`를 만든다. 즉, 토큰 비용 없이 closed loop와 hold/block verdict를
+재현할 수 있다.
+
+최종 제출 전에는 LLM path도 최소 1회 확인한다. 이 검증은 토큰을 사용할 수 있으므로,
+반복 실행하지 말고 대표 시나리오 1개 또는 A/B/C 각 1회만 실행한다.
+
+사전 조건:
+
+```bash
+python3 -m pip install anthropic
+export ANTHROPIC_API_KEY="<team-api-key>"
+export AGENT_LLM_MODEL="claude-haiku-4-5"
+```
+
+LLM path dry-run 예시:
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A
+```
+
+모델을 명령행에서 명시할 수도 있다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A --llm-backend claude-haiku-4-5
+```
+
+LLM path 확인 포인트:
+
+- stdout 또는 `agents/reports/`의 JSON report에서 `reasoning_source`가 `"llm"`인지 확인한다.
+- `llm_backend`이 사용한 모델명으로 기록되는지 확인한다.
+- `attack_chain`, `root_cause`, `recovery_actions`, `llm_rationale`가 비어 있지 않은지 확인한다.
+- `risk_score`, `hold_engaged`, `command_blocked`는 LLM 실행 전 deterministic verdict와
+  동일해야 한다. LLM은 설명/보고서 문장만 만들고 safety verdict를 override하지 않는다.
+
+API key, SDK, 네트워크, timeout, refusal 문제가 있으면 agent는 template fallback으로
+내려갈 수 있다. 이 경우 `reasoning_source`가 `"template"`로 남으며, 이는 fallback 동작
+검증으로는 정상이다. 하지만 "LLM path를 실제로 검증했다"고 보고하려면
+`reasoning_source="llm"`인 실행 결과를 별도로 확보해야 한다.
+
+live stack에서 LLM path까지 함께 확인하려면 다음처럼 실행할 수 있다. 단, live 효과와
+LLM 비용이 동시에 발생하므로 dry-run LLM path를 먼저 확인한 뒤 필요한 경우에만 실행한다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --scenario-id A --llm-backend claude-haiku-4-5
+```
+
+---
+
 ## 3. Live Stack 준비 확인
 
 live 검증 전, Docker/Compose와 ROS2/MAVLink 접근이 모두 확인되어야 한다.
