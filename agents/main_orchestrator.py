@@ -42,6 +42,12 @@ def build_parser() -> argparse.ArgumentParser:
         description="Batch 6 closed-loop orchestrator for DAH_2026 agents."
     )
     parser.add_argument("--rounds", type=int, default=1)
+    parser.add_argument(
+        "--scenario-id",
+        choices=SCENARIO_ORDER,
+        default="",
+        help="Force a single scenario for every round; default is round-robin/LLM selection.",
+    )
 
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument("--dry-run", dest="dry_run", action="store_true", default=True)
@@ -146,9 +152,20 @@ def select_scenario(
     round_id: int,
     llm_backend: str,
     timeline: list[dict[str, Any]],
+    forced_scenario_id: str = "",
 ) -> str:
     fallback = deterministic_scenario(round_id)
     files = scenario_files()
+
+    if forced_scenario_id:
+        trace_event(
+            timeline,
+            "S1",
+            round_id,
+            "forced_scenario",
+            {"scenario_id": forced_scenario_id, "scenario_files": files},
+        )
+        return forced_scenario_id
 
     if llm_backend == "none":
         trace_event(
@@ -586,6 +603,7 @@ def run_round(
     llm_backend: str,
     confirm_live_testbed_only: bool,
     settle_seconds: float,
+    forced_scenario_id: str = "",
 ) -> tuple[CorrelationVerdict, IncidentReport, list[dict[str, Any]]]:
     timeline: list[dict[str, Any]] = []
     fresh_after = iso_at_round(round_id, 0)
@@ -593,7 +611,7 @@ def run_round(
     replay_agent = ReplayAgent()
 
     trace_event(timeline, "S0", round_id, "static_discovery", static_discovery())
-    scenario_id = select_scenario(round_id, llm_backend, timeline)
+    scenario_id = select_scenario(round_id, llm_backend, timeline, forced_scenario_id)
 
     parameters = plan_parameters(scenario_id, observed_at)
     parameters["fresh_after"] = fresh_after
@@ -748,6 +766,7 @@ def main(argv: list[str] | None = None) -> int:
             llm_backend=args.llm_backend,
             confirm_live_testbed_only=args.confirm_live_testbed_only,
             settle_seconds=args.settle_seconds,
+            forced_scenario_id=args.scenario_id,
         )
         all_events.extend(timeline)
         print(json.dumps(verdict.to_dict(), ensure_ascii=False, sort_keys=True))

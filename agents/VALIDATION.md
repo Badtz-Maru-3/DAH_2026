@@ -110,6 +110,14 @@ python3 -m py_compile agents/*.py agents/attack/*.py agents/defense/*.py
 python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
 ```
 
+특정 시나리오만 검증할 때는 `--scenario-id`를 사용한다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --llm-backend none --scenario-id A
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --llm-backend none --scenario-id B
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --llm-backend none --scenario-id C
+```
+
 기대 stable core:
 
 ```text
@@ -175,6 +183,14 @@ error: --live requires --confirm-live-testbed-only
 
 ```bash
 python3 -m agents.main_orchestrator --rounds 3 --live --confirm-live-testbed-only --llm-backend none
+```
+
+live에서 특정 시나리오만 검증할 때도 `--scenario-id`를 사용한다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --llm-backend none --scenario-id A
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --llm-backend none --scenario-id B
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --llm-backend none --scenario-id C
 ```
 
 ---
