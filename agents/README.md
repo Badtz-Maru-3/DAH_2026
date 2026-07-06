@@ -47,20 +47,20 @@ cybersecurity testbed. It backs report sections **4.2 (Attack-related AI Agent)*
 
 ```
                          ┌───────────────────────── AI AGENT LAYER ─────────────────────────┐
-                         │                                                                   │
-                         │   [Orchestrator]  ── selects scenario, drives closed loop ──►     │
-                         │        │                                                          │
-                         │        ├─► [Attack Replay Agent] ──► scenario adapters A / B / C  │
-                         │        │                                                          │
-                         │        └─► [Defense Orchestration Agents] ─► Command / State /      │
-                         │                     Mission-GNSS / Correlation / Response-Report   │
+                         │                                                                  │
+                         │   [Orchestrator]  ── selects scenario, drives closed loop ──►    │
+                         │        │                                                         │
+                         │        ├─► [Attack Replay Agent] ──► scenario adapters A / B / C │
+                         │        │                                                         │
+                         │        └─► [Defense Orchestration Agents] ─► Command / State /   │
+                         │                     Mission-GNSS / Correlation / Response-Report │
                          └───────────────────┬───────────────────────────┬──────────────────┘
-                                             │ injects                    │ detect · correlate · hold/block
-        ┌───────────── SIMULATION LAYER ─────▼──────┐        ┌────────────▼── SW-DEFINED UGV SECURITY LAYER ──┐
-        │ QGC ─ MAVLink ─ ROS2 /cmd_vel ─ ROSbot/   │        │ MAVLink Bridge ─ Mission Audit ─ GNSS Integrity │
-        │ Gazebo ─ /odometry/filtered ─ /scan ─ /tf │        │ ─ Correlation Engine ─ Command Hold / Block     │
-        │ ─ RViz ─ MAVLink telemetry ─ QGC HUD      │        │ (Bridge/*.py, logs/*.log)                        │
-        └────────────────────────────────────────────┘        └─────────────────────────────────────────────────┘
+                                             │ injects                   │ detect · correlate · hold/block
+        ┌───────────── SIMULATION LAYER ─────▼──────┐       ┌────────────▼── SW-DEFINED UGV SECURITY LAYER ──┐
+        │ QGC ─ MAVLink ─ ROS2 /cmd_vel ─ ROSbot/   │       │ MAVLink Bridge ─ Mission Audit ─ GNSS Integrity│
+        │ Gazebo ─ /odometry/filtered ─ /scan ─ /tf │       │ ─ Correlation Engine ─ Command Hold / Block    │
+        │ ─ RViz ─ MAVLink telemetry ─ QGC HUD      │       │ (Bridge/*.py, logs/*.log)                      │
+        └───────────────────────────────────────────┘       └────────────────────────────────────────────────┘
 ```
 
 The agent layer is a **closed-loop defense orchestration module** layered **on top of** the
@@ -134,12 +134,9 @@ attacks; it replays A/B/C with parameterized inputs.
 | **Scenario C Adapter** | mission / GNSS / manual-control manipulation | `Bridge/tools/send_mission_upload.py`, `send_gps_input.py`, `send_manual_control.py` (existing MAVLink injectors, port 14551) | MAVLink to Bridge |
 
 ### 3.3 Defense Orchestration Agents (defensive-side)
-Five cooperating agents. The first four are the **deterministic grounding layer** — sensors
-that detect and a reflex that decides the real-time hold/block; the fifth is the **LLM
-reasoning core** (root-cause, attack-chain reasoning, mitigation, report). The safety reflex
-(hold/block enforcement) stays deterministic and never depends on the LLM; the LLM reasons
-*over* the grounded signals and verdict — and, in the orchestrator, selects scenarios and runs
-gap analysis — but it can **never override** the deterministic block.
+Five cooperating agents forming an **active defense controller**: the first four detect and
+decide (detection → correlation → hold/block), the fifth reports. Detection, correlation, and
+the hold/block decision are all deterministic agent logic — the LLM never participates.
 
 | Agent | Directly detects / does | Reuses (existing) | Emits |
 | --- | --- | --- | --- |
@@ -147,7 +144,7 @@ gap analysis — but it can **never override** the deterministic block.
 | **State Consistency Agent** | **directly detects** inconsistency among `/odometry/filtered`, `/tf`, `/scan` | ROS2 topic subscriptions | `AnomalySignal`: odom jump vs tf, phantom/hidden `/scan` returns |
 | **Mission-GNSS Guard Agent** | reads Bridge Mission Audit / GNSS Integrity results and builds signals | `Bridge/mission_audit.py`, `Bridge/gnss_integrity.py`; tails `logs/mission_audit.log`, `logs/gnss_integrity.log` | `AnomalySignal`: rejected mission, `spoof_jump`, `poor_fix` |
 | **Correlation Agent** | **combines the collected `AnomalySignal`s** with its own deterministic scoring into a `risk_score` and the `hold_engaged` / `command_blocked` decision | **new agent-layer aggregation logic** (weights/thresholds as module constants); reads `logs/correlation_event.log` as **corroborating evidence** only — does **not** import the node-coupled `Bridge/correlation_engine.py:CorrelationEngine` | `CorrelationVerdict`; produces a deterministic verdict in dry-run **without** the Bridge |
-| **Reasoning & Report Agent** | **LLM-core**: reasons over the grounded verdict + signals to produce an attack-chain hypothesis, root-cause, and mitigation, then assembles the incident report | verdict + timeline + `evidence_refs`; `anthropic` LLM is the **primary** path (deterministic template fallback with `--llm-backend none`); reasoning **never overrides** the deterministic reflex verdict | attack-chain + root-cause reasoning, recovery actions, `IncidentReport` (Markdown/JSON) |
+| **Response & Report Agent** | assembles the incident report | verdict + timeline + `evidence_refs`; **optional** `anthropic` LLM for narrative enrichment only (never changes a verdict) | root-cause summary, recovery actions, `IncidentReport` (Markdown/JSON) |
 
 **Command Hold / Block** is a deterministic function owned by the defense controller, not the
 LLM. The Correlation Agent produces the `hold_engaged` / `command_blocked` **decision** every
@@ -164,14 +161,14 @@ enforcement (which remains the primary real-time guard).
 
 ```
 S0  Discover        : enumerate ROS2 topics/publishers + Bridge ports (map surfaces).
-S1  Select scenario : LLM brain picks A / B / C (team scenario files first, else vuln-driven); deterministic fallback with --llm-backend none.
+S1  Select scenario : pick A / B / C (team scenario files first, else vuln-driven).
 S2  Plan attack     : bind adapter parameters (rate, target topic, spoof value, mission/gps payload).
 S3  Inject          : Attack Replay Agent runs the selected adapter (dry-run = simulate; live = gated).
         │
         ▼  (settle wait ~4s)
-S4  Detect+Correlate: Defense sensors collect AnomalySignals; Correlation reflex combines them into its OWN deterministic risk_score + hold/block verdict (correlation_event.log = corroborating evidence).
-S5  Gap analysis    : LLM brain compares expected_guard/expected_signal vs observed and flags missed detections (deterministic fallback).
-S6  Recommend       : Reasoning & Report Agent (LLM-core) reasons out attack-chain + root-cause and proposes recovery / mitigation (no auto-apply of code).
+S4  Detect+Correlate: Defense agents collect AnomalySignals; Correlation Agent combines them into its OWN deterministic risk_score + hold/block verdict (correlation_event.log = corroborating evidence).
+S5  Gap analysis    : compare expected_guard/expected_signal vs observed; flag missed detections.
+S6  Recommend       : Response & Report Agent proposes recovery / mitigation (no auto-apply of code).
 S7  Verify + Report : dry-run records the hold/block decision; gated live mode issues the active block (zero-Twist hold) and verifies /cmd_vel is held; write incident report.
         │
         └──► interactive confirmation gate → next round
@@ -246,7 +243,7 @@ artifacts (incident reports, run traces) are written as **new JSONL/Markdown** f
 | MAVLink interface | `pymavlink` | reuse `Bridge/tools/send_*.py` injectors (default `--port 14551`, Bridge listens on `BRIDGE_LOCAL_PORT`, default 14551) |
 | Defense logic | Bridge reuse + **new agent-layer detectors/correlation** | Mission Audit / GNSS Integrity **semantics reused** via Bridge modules + logs. Agent-level correlation, `/cmd_vel` external-publisher detection, and state-consistency detection are **new deterministic agent logic** — the agent correlation aggregates multi-source `AnomalySignal`s and is **not** a reimplementation of the node-coupled `CorrelationEngine`; `logs/correlation_event.log` is corroborating evidence. Do not indiscriminately reimplement Bridge logic. |
 | Orchestration | plain Python state machine (`agents/main_orchestrator.py`) | CLI flags: `--rounds`, `--dry-run` / `--live`, `--confirm-live-testbed-only`, `--llm-backend` |
-| LLM backend | `anthropic` Python SDK (`pip install anthropic`), pluggable; **LLM-on is the primary path**, `none` is the deterministic-reflex fallback | `client.messages.create(model=..., max_tokens=..., messages=[...])`. Drives the orchestrator brain (scenario selection, gap analysis) and the Reasoning & Report agent (attack-chain, root-cause, mitigation); the safety reflex must still run fully with `--llm-backend none`. Model id via env `AGENT_LLM_MODEL` — default `claude-haiku-4-5` for cheap local reasoning; `claude-opus-4-8` / `claude-fable-5` for demo quality. On `claude-fable-5`: omit the `thinking` param (always-on), guard `response.stop_reason == "refusal"` before reading content, and opt into server-side fallbacks. Do **not** use the heavier Claude Agent SDK / Managed Agents — the Messages API is the right surface here. |
+| LLM backend | `anthropic` Python SDK (`pip install anthropic`), pluggable, `none` default | `client.messages.create(model=..., max_tokens=..., messages=[...])`. Used by the Response & Report agent (and optional orchestrator reasoning) only; must run fully with `--llm-backend none`. Model id via env `AGENT_LLM_MODEL` — default `claude-haiku-4-5` for cheap local reasoning; `claude-opus-4-8` / `claude-fable-5` for demo quality. On `claude-fable-5`: omit the `thinking` param (always-on), guard `response.stop_reason == "refusal"` before reading content, and opt into server-side fallbacks. Do **not** use the heavier Claude Agent SDK / Managed Agents — the Messages API is the right surface here. |
 | Evidence | JSONL + Markdown under `agents/reports/` | deterministic, reproducible |
 
 ---
@@ -298,13 +295,10 @@ one file, and do not reimplement Bridge logic inside `agents/`.
    environment propagation of the port into the adapters is not yet implemented**. TODO.
 4. **Scenario B** consistency checks (odom↔tf, scan plausibility) are **new logic** with
    no existing Bridge counterpart — scope them as detector heuristics, not learned models.
-5. **Grounding boundary (hard rule).** The **safety reflex** — the real-time `hold_engaged` /
-   `command_blocked` enforcement and every sensor — is deterministic and must **never** depend
-   on an LLM call; `--llm-backend none` must keep the reflex and a reproducible verdict fully
-   working offline. The **LLM is the reasoning core** (scenario selection, correlation
-   reasoning, gap analysis, root-cause, mitigation) and is the primary path, but it reasons
-   *over* the grounded verdict and can **never override** the deterministic block.
-   LLM = brain; deterministic = reflex/oracle.
+5. **Determinism boundary (hard rule).** `--llm-backend none` must be a fully working default
+   path. The `risk_score` / `hold_engaged` / `command_blocked` decision — and every guard —
+   is deterministic and must **never** depend on an LLM call. Claude is used **only** in the
+   Response & Report agent as optional enrichment of the narrative; it cannot change a verdict.
 
 Mark anything uncertain as `Assumption` / `Needs human confirmation` / `TODO` in code and
 docs. Do not invent test results or evidence.
@@ -328,20 +322,12 @@ so the Attack Replay adapters are pushed late (Batch 7). The **Correlation Agent
 before** the ROS2 detectors: it is pure deterministic logic that can be validated offline
 against the real Mission-GNSS signals (Batch 2) plus synthetic `AnomalySignal`s, whereas the
 Command Monitor / State Consistency detectors need a live ROS2 stack to validate. This lands a
-demonstrable detect → correlate → verdict slice early. The deterministic sensors + reflex
-(Batches 1–4) are the **grounding layer**; the **LLM reasoning core lands in Batch 5
-(Reasoning & Report) and Batch 6 (orchestrator brain)** on top of that grounded slice.
+demonstrable detect → correlate → verdict slice early.
 
 > **Prerequisite (contract patch, before Batch 2):** in `agents/contracts.py` only, add
 > `signal_id: str` as the first field of `AnomalySignal`, and change
 > `CorrelationVerdict.contributing_signals` to `list[str]` (it holds `signal_id` values).
 > This lets the Correlation Agent reference the exact signals behind each verdict.
-
-> **Prerequisite (contract patch, before Batch 5):** in `agents/contracts.py` only, add
-> additive reasoning fields to `IncidentReport` (all with defaults, backward-compatible):
-> `attack_chain: list[str]` (LLM/template attack-step hypothesis), `llm_rationale: str`
-> (reasoning narrative), and `reasoning_source: str` (`"llm"` | `"template"`). These carry
-> the LLM reasoning-core output without changing the deterministic reflex verdict.
 
 **Batch 1 — Skeleton + contracts + no-op orchestrator.** Done. See the finalized spec below.
 Expected files: `agents/__init__.py`, `agents/contracts.py`, `agents/main_orchestrator.py`.
@@ -352,9 +338,7 @@ Expected files: `agents/__init__.py`, `agents/contracts.py`, `agents/main_orches
 `Bridge/mission_audit.py` / `Bridge/gnss_integrity.py` validation semantics; do not
 reimplement. Expected file: `agents/defense/mission_gnss_guard.py`.
 
-**Batch 3 — Correlation Agent + Command Hold/Block decision.** Done. Landed pure
-agent-layer risk scoring, `CorrelationVerdict`, signal-id contribution tracking, and the
-deterministic hold/block decision helper. Combine the collected
+**Batch 3 — Correlation Agent + Command Hold/Block decision.** Combine the collected
 `AnomalySignal`s with **new deterministic agent-layer scoring** (weights/thresholds as module
 constants) into a `CorrelationVerdict` (`risk_score`, `hold_engaged`, `command_blocked`,
 `reason`, `contributing_signals` = the driving `signal_id`s, `evidence_refs`). Must produce a
@@ -365,81 +349,39 @@ corroborating evidence. Do **not** import the node-coupled `CorrelationEngine`.
 gated to live mode, wired in Batch 6). Expected files:
 `agents/defense/correlation_agent.py`, `agents/defense/command_hold_block.py`.
 
-**Batch 4 — Command Monitor + State Consistency detectors (new deterministic logic).** Done.
-Landed offline-testable deterministic `/cmd_vel`, odom/tf, and scan anomaly producers with
-guarded ROS2 imports and JSONL `AnomalySignal` output. The
+**Batch 4 — Command Monitor + State Consistency detectors (new deterministic logic).** The
 ROS2 signal producers: Command Monitor directly detects external `/cmd_vel`
 publisher/rate/envelope anomalies (ROS2 graph introspection); State Consistency directly
 detects odom↔tf↔scan inconsistency. Both emit `AnomalySignal` with `signal_id`, consumed by
 the Batch 3 Correlation Agent. Label as deterministic detector heuristics; no learned-model
-claims. Offline demo/fixture paths are available; live ROS2 stack validation is deferred.
-Expected files:
+claims. Validated on the live ROS2 stack (not offline). Expected files:
 `agents/defense/command_monitor.py`, `agents/defense/state_consistency.py`.
 
-**Batch 5 — Reasoning & Report agent (LLM-core).** Done. Landed the `IncidentReport`
-reasoning fields, untrusted-evidence prompt boundary, Anthropic optional path, deterministic
-template fallback, and JSONL/Markdown report writing under `agents/reports/`. Consume verdict + timeline +
-`evidence_refs` and use the `anthropic` LLM as the **primary** path to reason over the
-grounded evidence — attack-chain hypothesis, root-cause, mitigation — then assemble the
-`IncidentReport` (with the new reasoning fields) to `agents/reports/`. A deterministic
-template fallback must still fully work with `--llm-backend none`, and **neither path may
-override the deterministic reflex verdict**. Expected file:
-`agents/defense/response_report.py`.
+**Batch 5 — Response & Report agent (fallback-first).** Consume verdict + timeline +
+`evidence_refs` → root cause, recovery recommendations, `IncidentReport` to `agents/reports/`.
+`--llm-backend none` is the default and must fully work via deterministic templates; the
+`anthropic` SDK path is optional narrative enrichment only and never changes a verdict.
+Expected file: `agents/defense/response_report.py`.
 
-**Batch 6 — Orchestrator wiring (dry-run loop) + LLM brain + gated live active-block.** Done.
-Landed single-command closed-loop dry-run orchestration, LLM/default-model selection with
-deterministic fallback, gap analysis, run traces, and gated live enforcement attempts. 
-Connect the real defense agents into S0–S7; produce a reproducible dry-run trace under
-`agents/reports/`. Wire the **LLM brain**: S1 scenario selection and S5 gap analysis are
-LLM-driven when a backend is set, with a deterministic fallback when `--llm-backend none`.
-Record the **gated live-enforcement decision** every round; in `--live` +
-`--confirm-live-testbed-only` mode the orchestrator logs an enforcement-attempt event (and,
-when `rclpy`/`geometry_msgs` are unavailable, a `deferred` event). **The actual zero-Twist
-`/cmd_vel` publish moves to Batch 7** (it needs the same `rclpy` publisher infra as the
-attack adapters and can only be validated on the live stack). Dry-run records the decision
-without publishing. The deterministic reflex verdict is authoritative — the LLM never
-overrides it. **Flip the orchestrator default `--llm-backend`** from `none` to the
-env-configured model (`AGENT_LLM_MODEL`, default `claude-haiku-4-5`), keeping
-`--llm-backend none` as the explicit deterministic-reflex fallback. **Do not** edit
-`Bridge/logs/*.log`. **Single-command requirement:** after this batch the entire closed loop
-must run from one command — `python3 -m agents.main_orchestrator --rounds N --dry-run` (LLM
-primary) and the offline fallback `--llm-backend none` — with no manual pre-steps. Expected
-files: `agents/main_orchestrator.py` (wiring) and `agents/defense/response_report.py`
-(Batch 5 fixes: remove the misplaced `extra_body` beta flag; `status` mirrors `guard_hit`).
+**Batch 6 — Orchestrator wiring (dry-run loop) + gated live active-block.** Connect the real
+defense agents into S0–S7; produce a reproducible dry-run trace under `agents/reports/`. Add
+the **active hold/block action** (publish a zero-Twist hold on `/cmd_vel`) executed **only**
+when `--live` + `--confirm-live-testbed-only` are set; dry-run records the decision without
+publishing. **Do not** edit `Bridge/logs/*.log`. **Single-command requirement:** after this
+batch the entire closed loop must run from one command —
+`python3 -m agents.main_orchestrator --rounds N --dry-run --llm-backend none` — with no manual
+pre-steps. Expected file: `agents/main_orchestrator.py` (wiring).
 
-**Batch 7 — Thin Attack Replay adapters + active `/cmd_vel` hold publisher.** Done. Landed
-deterministic replay adapters, self-contained dry-run Scenario C evidence, gated live adapter
-paths, safe allowlisted Adapter C subprocess wrapping, and active zero-Twist hold publishing
-behind `--live --confirm-live-testbed-only`. 
-`agents/attack/replay_agent.py` + adapters; Adapter C wraps `Bridge/tools/send_*.py` (dry-run
-simulates, live gated by `--confirm-live-testbed-only`), Adapters A/B are `rclpy` publishers.
-Also implements the **active zero-Twist `/cmd_vel` hold publisher** (`rclpy`) that Batch 6's
-gated live-enforcement path invokes — grouped here because it shares the `rclpy` publisher
-infra and needs live-stack validation. Kept thin because teammates own live attack validation.
+**Batch 7 — Thin Attack Replay adapters.** `agents/attack/replay_agent.py` + adapters;
+Adapter C wraps `Bridge/tools/send_*.py` (dry-run simulates, live gated by
+`--confirm-live-testbed-only`), Adapters A/B are `rclpy` publishers. Kept thin because
+teammates own live attack validation.
 
-**Batch 8 — Docs sync / Korean mirror.** In progress in this documentation batch. Update this README status section and author
-`docs/agents_KR.md` as a Korean mirror carrying the **LLM-brain + deterministic-reflex**
-framing (LLM reasoning core for scenario selection / correlation reasoning / gap analysis /
-root-cause / mitigation, grounded by deterministic sensors + a real-time hold/block reflex the
-LLM never overrides, gated live active-block). Align terminology with AGENTS.md (Simulation
-Layer, Software-Defined UGV Security Layer, Mission Audit, GNSS Integrity, Correlation Engine,
-Command Hold / Block).
-
-### Implementation Status (after Batches 1-7)
-
-The deterministic closed loop and the LLM-brain fallback are demonstrated in dry-run from one
-command: `python3 -m agents.main_orchestrator --rounds N --dry-run` and the offline fallback
-`--llm-backend none`. The stable dry-run core is:
-**A(1.0, block) · B(0.48, none) · C(1.0, block)**.
-
-Live ROS2/MAVLink injection paths and the active zero-Twist `/cmd_vel` hold are implemented
-only behind `--live --confirm-live-testbed-only`, with `rclpy`/message-package dependency
-guards and safe subprocess wrapping for the existing Bridge MAVLink tools. They are pending
-validation on the team's live stack and are not claimed as validated in this environment.
-This status preserves the **Logical Two-Layer Testbed Architecture**: Simulation Layer
-signals are observed and replayed, while the Software-Defined UGV Security Layer owns
-Mission Audit, GNSS Integrity, Correlation Engine semantics, and Command Hold / Block
-decisions.
+**Batch 8 — Docs sync / Korean mirror.** Update this README status section and author
+`docs/agents_KR.md` as a Korean mirror carrying the **closed-loop defense orchestration**
+framing (active control layer, deterministic guards, LLM-narration-only, gated live
+active-block). Align terminology with AGENTS.md (Simulation Layer, Software-Defined UGV
+Security Layer, Mission Audit, GNSS Integrity, Correlation Engine, Command Hold / Block).
 
 ### Batch 1 — finalized spec
 
@@ -469,15 +411,10 @@ python3 -m agents.main_orchestrator --rounds 1 --dry-run --llm-backend none
 - Agent **roles**, **cooperation structure**, **tech stack**, and **diagram** are documented
   (this README) and reflected in report §4.2 / §4.3.
 - Attack ↔ Defense traceability table (§5) is backed by real evidence artifacts.
-- A **prototype** runs end-to-end in dry-run: the **LLM reasoning core** (scenario selection,
-  gap analysis, attack-chain/root-cause report) is demonstrated on the primary path, and the
-  deterministic `--llm-backend none` fallback still produces the reflex verdict offline.
-  Live ROS2/MAVLink injection and active `/cmd_vel` hold are gated and dependency-guarded,
-  with live-stack validation deferred.
-- **Single-command execution:** the whole closed-loop pipeline runs from one command
-  (`python3 -m agents.main_orchestrator …`) with no manual pre-steps — LLM-driven by default,
-  deterministic reflex via `--llm-backend none`; live enforcement only behind
-  `--live --confirm-live-testbed-only`.
-- No overclaiming: the **LLM is the reasoning core** grounded by a deterministic sensor/reflex
-  layer (rule + risk-scoring), not a learned model; the safety reflex enforces the block and
-  the LLM never overrides it; testbed described as software-defined and simulation-bound.
+- A **prototype** runs end-to-end in dry-run with `--llm-backend none`; at least the live
+  GNSS/manual-control path is demonstrated and captured as evidence.
+- **Single-command execution:** the whole closed-loop defense pipeline runs from one command
+  (`python3 -m agents.main_orchestrator …`) with no manual pre-steps — dry-run + `--llm-backend
+  none` by default; live enforcement only behind `--live --confirm-live-testbed-only`.
+- No overclaiming: correlation/risk-scoring described as AI-assisted orchestration, not a
+  learned model; testbed described as software-defined and simulation-bound.

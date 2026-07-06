@@ -47,20 +47,20 @@
 
 ```text
                          ┌───────────────────────── AI AGENT LAYER ─────────────────────────┐
-                         │                                                                   │
-                         │   [Orchestrator]  ── selects scenario, drives closed loop ──►     │
-                         │        │                                                          │
-                         │        ├─► [Attack Replay Agent] ──► scenario adapters A / B / C  │
-                         │        │                                                          │
-                         │        └─► [Defense Orchestration Agents] ─► Command / State /      │
-                         │                     Mission-GNSS / Correlation / Response-Report   │
+                         │                                                                  │
+                         │   [Orchestrator]  ── selects scenario, drives closed loop ──►    │
+                         │        │                                                         │
+                         │        ├─► [Attack Replay Agent] ──► scenario adapters A / B / C │
+                         │        │                                                         │
+                         │        └─► [Defense Orchestration Agents] ─► Command / State /   │
+                         │                     Mission-GNSS / Correlation / Response-Report │
                          └───────────────────┬───────────────────────────┬──────────────────┘
-                                             │ injects                    │ detect · correlate · hold/block
-        ┌───────────── SIMULATION LAYER ─────▼──────┐        ┌────────────▼── SW-DEFINED UGV SECURITY LAYER ──┐
-        │ QGC ─ MAVLink ─ ROS2 /cmd_vel ─ ROSbot/   │        │ MAVLink Bridge ─ Mission Audit ─ GNSS Integrity │
-        │ Gazebo ─ /odometry/filtered ─ /scan ─ /tf │        │ ─ Correlation Engine ─ Command Hold / Block     │
-        │ ─ RViz ─ MAVLink telemetry ─ QGC HUD      │        │ (Bridge/*.py, logs/*.log)                        │
-        └────────────────────────────────────────────┘        └─────────────────────────────────────────────────┘
+                                             │ injects                   │ detect · correlate · hold/block
+        ┌───────────── SIMULATION LAYER ─────▼──────┐       ┌────────────▼── SW-DEFINED UGV SECURITY LAYER ──┐
+        │ QGC ─ MAVLink ─ ROS2 /cmd_vel ─ ROSbot/   │       │ MAVLink Bridge ─ Mission Audit ─ GNSS Integrity│
+        │ Gazebo ─ /odometry/filtered ─ /scan ─ /tf │       │ ─ Correlation Engine ─ Command Hold / Block    │
+        │ ─ RViz ─ MAVLink telemetry ─ QGC HUD      │       │ (Bridge/*.py, logs/*.log)                      │
+        └───────────────────────────────────────────┘       └────────────────────────────────────────────────┘
 ```
 
 에이전트 계층은 **Logical Two-Layer Testbed Architecture** 위에 놓이는
