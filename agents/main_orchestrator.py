@@ -622,8 +622,15 @@ def run_round(
     forced_scenario_id: str = "",
 ) -> tuple[CorrelationVerdict, IncidentReport, list[dict[str, Any]]]:
     timeline: list[dict[str, Any]] = []
-    fresh_after = iso_at_round(round_id, 0)
-    observed_at = iso_at_round(round_id, 1)
+    if mode == "live":
+        # Bridge log fresh_after filtering (mission_gnss_guard) must anchor on wall-clock
+        # time in live mode -- the deterministic 2026-01-01 base used for dry-run would
+        # make every historical log line since forever count as "fresh".
+        fresh_after = utc_now()
+        observed_at = utc_now()
+    else:
+        fresh_after = iso_at_round(round_id, 0)
+        observed_at = iso_at_round(round_id, 1)
     replay_agent = ReplayAgent()
 
     discovery = static_discovery()

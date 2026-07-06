@@ -223,6 +223,13 @@ def collect_signals(
     if threshold is None:
         return []
 
+    # Bridge log timestamps (mission_audit.py / gnss_integrity.py) are written at
+    # whole-second precision via time.strftime("%Y-%m-%dT%H:%M:%SZ", ...), while
+    # fresh_after carries microseconds. Without flooring, a log line written a few
+    # hundred ms into the same second as fresh_after was captured compares as
+    # earlier under strict "<", even though it happened causally after.
+    threshold = threshold.replace(microsecond=0)
+
     signals = []
     signals.extend(
         collect_mission_signals(

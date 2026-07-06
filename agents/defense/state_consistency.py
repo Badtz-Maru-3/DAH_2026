@@ -444,6 +444,95 @@ def collect_live_snapshot(
     }
 
 
+def collect_live_signals(
+    run_id: str,
+    round_id: int,
+    fresh_after: str,
+    scenario_id: str = "B",
+    odom_frame: str = DEFAULT_ODOM_FRAME,
+    base_frame: str = DEFAULT_BASE_FRAME,
+    odom_topic: str = "/odometry/filtered",
+    scan_topic: str = "/scan",
+    tf_topic: str = "/tf",
+    sample_seconds: float = 1.0,
+) -> list[AnomalySignal]:
+    """Stream the live topics and latch any anomaly seen during the window.
+
+    A transient injection (Adapter B publishes ~20 messages over ~1s) competes
+    with the simulation's continuous legitimate traffic on the same topics. A
+    single last-write-wins snapshot at window end almost always lands on a
+    legitimate message and misses the injection. Instead, evaluate every spin
+    and keep the first anomalous sample per signal_type, so any anomalous frame
+    within the window is detected regardless of what arrives last.
+    """
+    if rclpy is None:
+        print("rclpy is unavailable; use --demo or provide a JSON snapshot fixture.", file=sys.stderr)
+        return []
+
+    try:
+        from nav_msgs.msg import Odometry  # type: ignore[import-not-found]
+        from sensor_msgs.msg import LaserScan  # type: ignore[import-not-found]
+        from tf2_msgs.msg import TFMessage  # type: ignore[import-not-found]
+    except ImportError as exc:
+        print(f"ROS2 message package unavailable: {exc}", file=sys.stderr)
+        return []
+
+    latest_odom: dict[str, Any] = {}
+    latest_scan: dict[str, Any] = {}
+    transforms: list[dict[str, Any]] = []
+
+    def on_odom(msg: Any) -> None:
+        latest_odom.clear()
+        latest_odom.update({"ts": utc_now(), "position": ros_position(msg.pose.pose.position)})
+
+    def on_scan(msg: Any) -> None:
+        latest_scan.clear()
+        latest_scan.update(
+            {
+                "ts": utc_now(),
+                "range_max": float(getattr(msg, "range_max", 0.0)),
+                "ranges": [float(value) for value in list(getattr(msg, "ranges", []))],
+            }
+        )
+
+    def on_tf(msg: Any) -> None:
+        now = utc_now()
+        transforms[:] = [transform_record(item, now) for item in msg.transforms]
+
+    latched: dict[str, AnomalySignal] = {}
+
+    rclpy.init(args=None)
+    node = rclpy.create_node("dah_state_consistency_stream")
+    started = time.monotonic()
+    try:
+        node.create_subscription(Odometry, odom_topic, on_odom, 10)
+        node.create_subscription(LaserScan, scan_topic, on_scan, 10)
+        node.create_subscription(TFMessage, tf_topic, on_tf, 10)
+        while time.monotonic() - started < max(0.05, sample_seconds):
+            rclpy.spin_once(node, timeout_sec=0.05)
+            snapshot = {
+                "observed_at": utc_now(),
+                "odom": dict(latest_odom),
+                "tf": list(transforms),
+                "scan": dict(latest_scan),
+            }
+            for signal in detect_state_anomalies(
+                snapshot=snapshot,
+                run_id=run_id,
+                round_id=round_id,
+                fresh_after=fresh_after,
+                scenario_id=scenario_id,
+                odom_frame=odom_frame,
+                base_frame=base_frame,
+            ):
+                latched.setdefault(signal.signal_type, signal)
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+    return list(latched.values())
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Detect deterministic state consistency anomaly signals."
@@ -467,18 +556,32 @@ def main() -> int:
         snapshot = demo_snapshot()
     else:
         snapshot = load_snapshot(args.snapshot)
-        if not snapshot:
-            snapshot = collect_live_snapshot(sample_seconds=args.sample_seconds)
 
-    for signal in detect_state_anomalies(
-        snapshot=snapshot,
-        run_id=args.run_id,
-        round_id=args.round_id,
-        fresh_after=args.fresh_after,
-        scenario_id=args.scenario_id,
-        odom_frame=args.odom_frame,
-        base_frame=args.base_frame,
-    ):
+    if args.demo or snapshot:
+        # Deterministic fixture/demo path: evaluate the single provided snapshot.
+        signals = detect_state_anomalies(
+            snapshot=snapshot,
+            run_id=args.run_id,
+            round_id=args.round_id,
+            fresh_after=args.fresh_after,
+            scenario_id=args.scenario_id,
+            odom_frame=args.odom_frame,
+            base_frame=args.base_frame,
+        )
+    else:
+        # Live path: stream the topics and latch any anomaly seen in the window,
+        # so a transient injection is not overwritten by legitimate traffic.
+        signals = collect_live_signals(
+            run_id=args.run_id,
+            round_id=args.round_id,
+            fresh_after=args.fresh_after,
+            scenario_id=args.scenario_id,
+            odom_frame=args.odom_frame,
+            base_frame=args.base_frame,
+            sample_seconds=args.sample_seconds,
+        )
+
+    for signal in signals:
         print(json.dumps(signal.to_dict(), ensure_ascii=False, sort_keys=True))
 
     return 0
