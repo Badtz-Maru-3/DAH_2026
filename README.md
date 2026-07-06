@@ -265,7 +265,7 @@ The Day3 evidence currently shows:
 - The bridge publishes non-zero `/cmd_vel`.
 - ROSbot odometry changes by about `1.078 m` after QGC joystick input.
 
-See `docs/day3/README.md` and `docs/day3/evidence_summary.md` for the detailed MVP evidence.
+See `docs/evidence/` for the captured Day3-Day6 evidence (regenerate with `bash Bridge/tools/run_evidence.sh`); `docs/evidence/README.md` indexes the capture directories.
 
 Later evidence shows:
 
@@ -377,16 +377,10 @@ the expected signals.
 | --- | --- |
 | `agents/README.md` | AI agent layer architecture (attack replay + closed-loop defense orchestration). |
 | `agents/VALIDATION.md` | Dry-run and live validation checklist for the AI agent layer. |
-| `docs/README.md` | Overview of evidence folders. |
+| `docs/README.md` | Overview of the evidence directory and reading order. |
 | `docs/architecture/two_layer_architecture.md` | Logical two-layer architecture, responsibilities, evidence mapping, and limits. |
-| `docs/day1/README.md` | ROSbot simulation baseline evidence. |
-| `docs/day2/README.md` | noVNC web UI integration evidence. |
-| `docs/day3/README.md` | ROS2-MAVLink bridge MVP result. |
-| `docs/day3/evidence_summary.md` | File-by-file Day3 evidence interpretation. |
-| `docs/day3/odom_delta.md` | Odometry movement calculation proving the command path. |
-| `docs/day4/README.md` | Mission audit implementation and accepted/rejected evidence. |
-| `docs/day5/README.md` | GNSS integrity implementation and GPS_INPUT evidence. |
-| `docs/day6/README.md` | Correlation engine hold/blocking evidence. |
+| `docs/evidence/README.md` | Evidence directory index — Day3-Day6 captures (environment, manual control, mission audit, GNSS integrity, correlation hold). |
+| `Bridge/tools/run_evidence.sh` | Regenerates the Day3-Day6 evidence captures under `docs/evidence/`. |
 
 ## References
 
@@ -408,15 +402,11 @@ Project internal materials:
 - Badtz-Maru-3/DAH_2026, `Bridge/mission_audit.py`.
 - Badtz-Maru-3/DAH_2026, `Bridge/gnss_integrity.py`.
 - Badtz-Maru-3/DAH_2026, `Bridge/correlation_engine.py`.
-- Badtz-Maru-3/DAH_2026, `docs/day3/evidence_summary.md`.
-- Badtz-Maru-3/DAH_2026, `docs/day3/odom_delta.md`.
-- Badtz-Maru-3/DAH_2026, `docs/day3/bridge_clean.log`.
-- Badtz-Maru-3/DAH_2026, `docs/day3/cmd_vel_info.txt`.
-- Badtz-Maru-3/DAH_2026, `docs/day3/ros2_topics.txt`.
-- Badtz-Maru-3/DAH_2026, `docs/day4/mission_audit.log`.
-- Badtz-Maru-3/DAH_2026, `docs/day5/gnss_integrity.log`.
-- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_mission_malicious.log`.
-- Badtz-Maru-3/DAH_2026, `docs/day6/correlation_gnss_spoof.log`.
+- Badtz-Maru-3/DAH_2026, `docs/evidence/README.md`.
+- Badtz-Maru-3/DAH_2026, `Bridge/tools/run_evidence.sh`.
+- Badtz-Maru-3/DAH_2026, `Bridge/logs/mission_audit.log`.
+- Badtz-Maru-3/DAH_2026, `Bridge/logs/gnss_integrity.log`.
+- Badtz-Maru-3/DAH_2026, `Bridge/logs/correlation_event.log`.
 
 Research literature:
 

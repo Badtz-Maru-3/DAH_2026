@@ -17,12 +17,14 @@
   - `kill_switch_sentinel.py`: `MAX_LINEAR=0.5`, `MAX_ANGULAR=1.2`,
     `TIMEOUT_DURATION=15.0`, 2000Hz(0.0005s) 무효화 루프 — 이 값들은
     `.env.example`/`Bridge/ros2_mavlink_bridge.py`의 실제 값과 우연히 일치한다.
-  - `mavlink_sentinel.py`: `MAX_GPS_JUMP=100.0`, `MAX_GEOFENCE_RADIUS=500.0` —
-    이 값들은 **의도적으로 리포트 §4.1.4 표(geofence 300m, jump 120m) 및 실제
-    `Bridge/mission_audit.py`/`gnss_integrity.py` 값과 다르다.** 데모용 illustrative
-    수치이며, `agents/defense/` 계층의 threshold(hold 0.5 / block 0.8)와도 다르다.
-    세 계층 간 불일치에 대한 진단은 별도 리뷰 기록을 참고할 것 — 이 README는
-    그 불일치를 정정하지 않고 사실만 기록한다.
+  - `mavlink_sentinel.py`: `MAX_GPS_JUMP=100.0`, `MAX_GEOFENCE_RADIUS=300.0` —
+    geofence 반경은 **실제 `Bridge`의 `MISSION_GEOFENCE_RADIUS_M=300` 및 리포트
+    §4.1.4 표(geofence 300m)와 정합**하도록 맞춰져 있다(코드 주석에도 그렇게
+    명시되어 있다). 반면 `MAX_GPS_JUMP=100.0`은 데모용 GPS 점프 임계값으로, 리포트의
+    mission waypoint jump 값(120m)이나 Bridge GNSS residual 검사
+    (`GNSS_MAX_RESIDUAL_M=30`)와는 다른 별개의 illustrative 수치다. `agents/defense/`
+    계층의 correlation threshold(hold 0.5 / block 0.8)는 또 다른 scoring 계층의
+    값이라 위 두 수치와 직접 비교 대상이 아니다.
 - **이 스크립트들은 `agents/` 오케스트레이션의 일부가 아니다.** `agents/attack/`,
   `agents/defense/`와 이름·구조·클래스가 겹치지 않는 완전히 별개의 단일 파일
   ROS2/MAVLink 노드다. `agents/main_orchestrator.py`는 이 파일들을 import하거나

@@ -20,14 +20,16 @@ Evidence는 Logical Two-Layer Testbed Architecture 기준으로 읽어야 합니
 
 ## Index
 
-| Day | Focus | Status |
+Evidence 캡처는 `evidence/` 아래에 있으며 `Bridge/tools/run_evidence.sh`로 생성됩니다
+(`evidence/README.md`가 정식 index). `bash Bridge/tools/run_evidence.sh`로 재생성합니다.
+
+| Directory | Day | Focus |
 | --- | --- | --- |
-| `day1/` | ROSbot Gazebo simulation baseline | container, ROS2 topic, simulation log captured |
-| `day2/` | QGC, Gazebo, RViz noVNC web UI stack | service log 및 ROS2 topic state captured |
-| `day3/` | ROS2-MAVLink bridge MVP | QGC-to-ROSbot control evidence captured |
-| `day4/` | Mission audit mode | normal mission accepted, malicious mission rejected evidence captured |
-| `day5/` | GNSS integrity adapter | normal GPS_INPUT accepted, spoof/poor-fix rejected evidence captured |
-| `day6/` | Correlation engine | hold engagement 및 MANUAL_CONTROL blocking evidence captured |
+| `evidence/00_environment/` | — | Docker stack 상태, Bridge env vars |
+| `evidence/03_manual_control/` | Day3 | MANUAL_CONTROL → /cmd_vel → odometry (bridge MVP control path) |
+| `evidence/04_mission_audit/` | Day4 | Mission upload: normal accepted, malicious far/jump rejected |
+| `evidence/05_gnss_integrity/` | Day5 | GPS_INPUT: normal accepted, spoof_jump / poor_fix rejected |
+| `evidence/06_correlation_hold/` | Day6 | Correlation hold engaged, command blocked, hold released |
 
 ## Day 역할
 
@@ -55,13 +57,9 @@ Evidence는 Logical Two-Layer Testbed Architecture 기준으로 읽어야 합니
 
 1. root `README_KR.md`
 2. `architecture/two_layer_architecture_KR.md`
-3. `day1/README_KR.md`
-4. `day2/README_KR.md`
-5. `day3/README_KR.md`
-6. `day3/evidence_summary_KR.md`
-7. `day4/README_KR.md`
-8. `day5/README_KR.md`
-9. `day6/README_KR.md`
+3. `evidence/README.md` (evidence directory index)
+4. `bash Bridge/tools/run_evidence.sh`로 캡처를 재생성한 뒤 `evidence/03_manual_control/` (bridge MVP control path), `evidence/04_mission_audit/`, `evidence/05_gnss_integrity/`, `evidence/06_correlation_hold/` 순서로 확인
+5. 원시 Bridge 로그 대조: `Bridge/logs/mission_audit.log`, `Bridge/logs/gnss_integrity.log`, `Bridge/logs/correlation_event.log`
 
 ## Evidence Policy
 

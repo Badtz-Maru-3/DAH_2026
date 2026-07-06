@@ -71,14 +71,17 @@ Mission/GNSS/Command anomaly signal
 
 ## 현재 구현 상태
 
+Evidence 캡처는 `Bridge/tools/run_evidence.sh`로 `docs/evidence/` 아래에 생성됩니다
+(`docs/evidence/README.md`가 index).
+
 | Day | 검증 내용 | Evidence |
 | --- | --- | --- |
-| Day1 | ROSbot Gazebo simulation baseline | `docs/day1/README_KR.md` |
-| Day2 | QGC/Gazebo/RViz noVNC web UI stack | `docs/day2/README_KR.md` |
-| Day3 | `MANUAL_CONTROL -> /cmd_vel -> odometry` bridge MVP | `docs/day3/README_KR.md` |
-| Day4 | mission upload audit accept/reject | `docs/day4/README_KR.md` |
-| Day5 | `GPS_INPUT` normal/spoof/poor-fix validation | `docs/day5/README_KR.md` |
-| Day6 | correlation risk scoring, hold, command block | `docs/day6/README_KR.md` |
+| Day1 | ROSbot Gazebo simulation baseline | `docs/evidence/00_environment/` |
+| Day2 | QGC/Gazebo/RViz noVNC web UI stack | `docs/evidence/00_environment/` |
+| Day3 | `MANUAL_CONTROL -> /cmd_vel -> odometry` bridge MVP | `docs/evidence/03_manual_control/` |
+| Day4 | mission upload audit accept/reject | `docs/evidence/04_mission_audit/` |
+| Day5 | `GPS_INPUT` normal/spoof/poor-fix validation | `docs/evidence/05_gnss_integrity/` |
+| Day6 | correlation risk scoring, hold, command block | `docs/evidence/06_correlation_hold/` |
 
 ## 런타임 서비스
 
@@ -222,14 +225,8 @@ verdict가 hold/block을 걸면 `/cmd_vel`의 zero-Twist hold가 웹 UI에서 �
 | `agents/README.md` | `docs/agents_architecture_KR.md` |
 | `docs/README.md` | `docs/README_KR.md` |
 | `docs/architecture/two_layer_architecture.md` | `docs/architecture/two_layer_architecture_KR.md` |
-| `docs/day1/README.md` | `docs/day1/README_KR.md` |
-| `docs/day2/README.md` | `docs/day2/README_KR.md` |
-| `docs/day3/README.md` | `docs/day3/README_KR.md` |
-| `docs/day3/evidence_summary.md` | `docs/day3/evidence_summary_KR.md` |
-| `docs/day3/odom_delta.md` | `docs/day3/odom_delta_KR.md` |
-| `docs/day4/README.md` | `docs/day4/README_KR.md` |
-| `docs/day5/README.md` | `docs/day5/README_KR.md` |
-| `docs/day6/README.md` | `docs/day6/README_KR.md` |
+| `ai_collaboration.md` | `docs/ai_collaboration_KR.md` |
+| `docs/evidence/README.md` | (자동 생성 캡처; 한국어 evidence index는 `docs/README_KR.md`) |
 
 ## 현재 상태
 
