@@ -22,10 +22,13 @@ DEFAULT_EXPECTED_PUBLISHERS = {"ros2_mavlink_bridge"}
 
 # Assumption / TODO: confirm against live stack.
 CMD_VEL_RATE_MAX_HZ = 20.0
-# Assumption / TODO: confirm against live stack.
-CMD_VEL_LINEAR_MAX = 1.0
-# Assumption / TODO: confirm against live stack.
-CMD_VEL_ANGULAR_MAX = 1.5
+# Mirror the Bridge correlation "high command" detection thresholds
+# (COMMAND_HIGH_LINEAR_MPS / COMMAND_HIGH_ANGULAR_RADPS in .env / compose) so the
+# agent-layer envelope detector and the Bridge command guard flag the same
+# over-limit /cmd_vel commands. Legit Bridge output is clamped to MAX_LINEAR=0.5 /
+# MAX_ANGULAR=1.2, so these detection thresholds sit just above the clamp.
+CMD_VEL_LINEAR_MAX = 0.60
+CMD_VEL_ANGULAR_MAX = 1.50
 
 # Contract: these (surface, signal_type) values must match correlation_agent.SIGNAL_WEIGHTS.
 SIGNAL_PROFILE = {

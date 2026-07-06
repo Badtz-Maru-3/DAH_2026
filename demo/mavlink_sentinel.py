@@ -8,7 +8,8 @@ BASE_LAT = 37.5665
 BASE_LON = 126.9780
 
 MAX_GPS_JUMP = 100.0         # GPS가 한 번에 100m 이상 점프하면 스푸핑으로 간주
-MAX_GEOFENCE_RADIUS = 500.0  # 미션 목적지가 500m 반경을 벗어나면 악성 미션으로 간주
+MAX_GEOFENCE_RADIUS = 300.0  # 미션 목적지가 300m 반경을 벗어나면 악성 미션으로 간주
+                             # (Bridge MISSION_GEOFENCE_RADIUS_M=300과 정합)
 
 
 class MavlinkSentinel:
