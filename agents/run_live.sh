@@ -29,6 +29,16 @@ if [ "$#" -gt 0 ] && [[ "$1" != -* ]]; then
   shift
 fi
 
+# Scenario A drives the robot to the attacker target (3, 2). Both the Gazebo pose
+# and the EKF estimate persist across runs, so a re-run finds the robot already
+# there and the hijack does nothing (defender sees only the 'hold', not the
+# envelope-breach 'block'). Reset the robot to the origin first so every A run
+# reproduces the full block + visible hijack. Set DAH_SKIP_RESET=1 to opt out.
+if [ "$SCENARIO" = "A" ] && [ "${DAH_SKIP_RESET:-0}" != "1" ]; then
+  "$(dirname "$0")/../demo/reset_robot_pose.sh" \
+    || echo "[run_live] pose reset skipped (reset failed; continuing)" >&2
+fi
+
 exec docker exec -e PYTHONDONTWRITEBYTECODE=1 -w /workspace "$CONTAINER" bash -lc \
   "source /opt/ros/humble/setup.bash && \
    python3 -m agents.main_orchestrator \
