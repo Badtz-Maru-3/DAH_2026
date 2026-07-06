@@ -95,8 +95,10 @@ services:
       # agent package imports cleanly and Adapter C finds Bridge/tools/*.py
       # (agents/attack/adapter_c_mavlink.py resolves REPO_ROOT = parents[2]).
       # agents is rw so run traces / incident reports land back on the host.
+      # demo holds the standalone attack PoCs that the live A/B adapters invoke.
       - ./agents:/workspace/agents:rw
       - ./Bridge:/workspace/Bridge:ro
+      - ./demo:/workspace/demo:ro
     depends_on:
       - qgroundcontrol_novnc
       - rosbot_sim_novnc

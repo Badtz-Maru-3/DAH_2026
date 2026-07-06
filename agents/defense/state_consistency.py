@@ -392,6 +392,7 @@ def collect_live_snapshot(
         from nav_msgs.msg import Odometry  # type: ignore[import-not-found]
         from sensor_msgs.msg import LaserScan  # type: ignore[import-not-found]
         from tf2_msgs.msg import TFMessage  # type: ignore[import-not-found]
+        from rclpy.qos import qos_profile_sensor_data  # type: ignore[import-not-found]
     except ImportError as exc:
         print(f"ROS2 message package unavailable: {exc}", file=sys.stderr)
         return {}
@@ -428,7 +429,10 @@ def collect_live_snapshot(
     started = time.monotonic()
     try:
         node.create_subscription(Odometry, odom_topic, on_odom, 10)
-        node.create_subscription(LaserScan, scan_topic, on_scan, 10)
+        # /scan is conventionally BEST_EFFORT sensor data; subscribing best-effort
+        # receives both the reliable simulator scan and a best-effort spoof publisher
+        # (demo/spoof_scan.py) — a reliable subscription would miss the spoof.
+        node.create_subscription(LaserScan, scan_topic, on_scan, qos_profile_sensor_data)
         node.create_subscription(TFMessage, tf_topic, on_tf, 10)
         while time.monotonic() - started < max(0.05, sample_seconds):
             rclpy.spin_once(node, timeout_sec=0.05)
@@ -473,6 +477,7 @@ def collect_live_signals(
         from nav_msgs.msg import Odometry  # type: ignore[import-not-found]
         from sensor_msgs.msg import LaserScan  # type: ignore[import-not-found]
         from tf2_msgs.msg import TFMessage  # type: ignore[import-not-found]
+        from rclpy.qos import qos_profile_sensor_data  # type: ignore[import-not-found]
     except ImportError as exc:
         print(f"ROS2 message package unavailable: {exc}", file=sys.stderr)
         return []
@@ -506,7 +511,10 @@ def collect_live_signals(
     started = time.monotonic()
     try:
         node.create_subscription(Odometry, odom_topic, on_odom, 10)
-        node.create_subscription(LaserScan, scan_topic, on_scan, 10)
+        # /scan is conventionally BEST_EFFORT sensor data; subscribing best-effort
+        # receives both the reliable simulator scan and a best-effort spoof publisher
+        # (demo/spoof_scan.py) — a reliable subscription would miss the spoof.
+        node.create_subscription(LaserScan, scan_topic, on_scan, qos_profile_sensor_data)
         node.create_subscription(TFMessage, tf_topic, on_tf, 10)
         while time.monotonic() - started < max(0.05, sample_seconds):
             rclpy.spin_once(node, timeout_sec=0.05)

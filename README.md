@@ -342,22 +342,34 @@ behind `--confirm-live-testbed-only` (an ungated `--live` is rejected); the wrap
 for you and writes run traces / incident reports to `./agents/reports/`. Extra flags pass
 through, e.g. `./agents/run_live.sh C --llm-backend openai:gpt-4o-mini`.
 
-Confirm the run-trace markers per scenario:
+The live A and B adapters launch the report's own standalone attack PoCs, so the closed loop
+exercises the real attacks. Confirm the run-trace markers per scenario:
 
-- A → `live_command_observed` (independent `/cmd_vel` detector signal) → `risk=1.0`, blocked
-- B → `live_state_observed` (independent `/odometry/filtered` + `/scan` signals) → `risk≈0.48`
-- C → fresh Mission/GNSS signals from the Bridge logs and a `MAV_MISSION_DENIED` ack → `risk=1.0`, blocked
+- A → `live_command_observed`. The adapter runs the closed-loop hijack (`demo/hijack_nav.py`),
+  which drives the robot toward the attacker target while an unauthorized `/cmd_vel` publisher
+  is detected → `hold_engaged` (and `command_blocked` when the hijack is actively driving at
+  high velocity). The active zero-Twist hold then stops the robot.
+- B → `live_state_observed`. The adapter runs the `/scan` spoofer (`demo/spoof_scan.py`, a fake
+  0.5 m obstacle ring); the detector flags `scan_anomaly` (`risk≈0.24`) — perception deception
+  is detected but, as in the report, engages no hold.
+- C → fresh Mission/GNSS signals from the Bridge logs and a `MAV_MISSION_DENIED` ack →
+  `risk=1.0`, command blocked.
+
+On a freshly started stack, run A first to see the robot visibly hijacked and then stopped;
+because the robot's pose persists between runs, re-running A without resetting it leaves the
+robot already at the target, so A then reports `hold` without the envelope breach.
 
 When a verdict engages hold/block, the active zero-Twist hold on `/cmd_vel` is observable in
 the web UIs: the QGC joystick has no effect and the ROSbot stops in Gazebo/RViz. See
 `agents/VALIDATION.md` §3–§8 for the per-scenario live checklist, the safety-gate test, and
 the expected signals.
 
-> **Two ways to run the attacks.** The `agents/` layer above runs **attack replay and
-> defense together as one closed loop**. The standalone `demo/` scripts instead run the
-> attacker and defender in **separate terminals** (`demo/hijack_nav.py`, `demo/spoof_scan.py`
-> vs `demo/kill_switch_sentinel.py`, `demo/scan_sentinel_secure.py`, `demo/mavlink_sentinel.py`),
-> matching the report's per-scenario attack/defense walkthrough.
+> **`agents/` vs `demo/`.** The live A/B adapters invoke the report's standalone attack PoCs
+> (`demo/hijack_nav.py`, `demo/spoof_scan.py`) **inside the closed loop** (attack + defense in
+> one command). The same `demo/` scripts can also be run **standalone** against their matching
+> sentinel defenders (`demo/kill_switch_sentinel.py`, `demo/scan_sentinel_secure.py`,
+> `demo/mavlink_sentinel.py`) in separate terminals, matching the report's per-scenario
+> attack/defense walkthrough.
 
 ## Documentation Map
 

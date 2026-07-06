@@ -188,21 +188,30 @@ python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A \
 대신 붙이고 run trace/incident report를 `./agents/reports/`에 씁니다. 추가 플래그는 그대로
 전달됩니다(예: `./agents/run_live.sh C --llm-backend openai:gpt-4o-mini`).
 
+Live A·B adapter는 리포트의 독립 공격 PoC를 직접 실행하므로, 폐루프가 실제 공격을 구동합니다.
 시나리오별 run-trace 마커:
 
-- A → `live_command_observed` (독립 `/cmd_vel` detector signal) → `risk=1.0`, blocked
-- B → `live_state_observed` (독립 `/odometry/filtered` + `/scan` signal) → `risk≈0.48`
+- A → `live_command_observed`. adapter가 폐루프 hijack(`demo/hijack_nav.py`)을 실행해 로봇을
+  공격자 목표로 몰고 가며, 비인가 `/cmd_vel` publisher가 탐지됨 → `hold_engaged`(고속 주행
+  중이면 `command_blocked`도). 이어서 active zero-Twist hold가 로봇을 정지시킴.
+- B → `live_state_observed`. adapter가 `/scan` 스푸퍼(`demo/spoof_scan.py`, 가짜 0.5m 장애물
+  링)를 실행 → `scan_anomaly` 탐지(`risk≈0.24`). 인지 기만은 탐지되지만 리포트대로 hold는
+  걸지 않음.
 - C → Bridge 로그의 fresh Mission/GNSS signal 및 `MAV_MISSION_DENIED` ack → `risk=1.0`, blocked
+
+fresh 스택에서는 A를 먼저 실행하면 로봇이 실제로 hijack됐다가 정지하는 것을 볼 수 있습니다.
+로봇 pose가 실행 간 유지되므로, 리셋 없이 A를 재실행하면 로봇이 이미 목표에 있어 envelope
+breach 없이 `hold`만 보고됩니다.
 
 verdict가 hold/block을 걸면 `/cmd_vel`의 zero-Twist hold가 웹 UI에서 관찰됩니다(QGC 조이스틱
 무효, Gazebo/RViz에서 ROSbot 정지). 시나리오별 live 체크리스트와 safety-gate 테스트는
 `agents/VALIDATION.md` §3–§8을 참조하세요.
 
-> **공격 실행 방식 2가지.** 위 `agents/` 계층은 **공격 replay와 방어를 하나의 폐루프로**
-> 함께 실행합니다. 반면 독립 `demo/` 스크립트는 공격자와 방어자를 **별도 터미널**에서 띄우는
-> 방식입니다(`demo/hijack_nav.py`, `demo/spoof_scan.py` vs `demo/kill_switch_sentinel.py`,
-> `demo/scan_sentinel_secure.py`, `demo/mavlink_sentinel.py`) — 리포트의 시나리오별 공격/방어
-> 설명과 대응됩니다.
+> **`agents/` vs `demo/`.** Live A/B adapter는 리포트의 독립 공격 PoC(`demo/hijack_nav.py`,
+> `demo/spoof_scan.py`)를 **폐루프 안에서**(공격+방어를 한 명령으로) 실행합니다. 같은 `demo/`
+> 스크립트는 대응 sentinel 방어자(`demo/kill_switch_sentinel.py`, `demo/scan_sentinel_secure.py`,
+> `demo/mavlink_sentinel.py`)와 함께 **별도 터미널**에서 독립 실행할 수도 있으며, 리포트의
+> 시나리오별 공격/방어 설명과 대응됩니다.
 
 ## 문서 구조
 

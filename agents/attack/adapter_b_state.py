@@ -1,7 +1,11 @@
 """Scenario B replay adapter for odometry and scan spoofing."""
 
 import os
+import signal
+import subprocess
+import sys
 import time
+from pathlib import Path
 from typing import Any
 
 from agents.contracts import AttackAction
@@ -11,6 +15,12 @@ ADAPTER_NAME = "adapter_b_state"
 DEFAULT_ROS_DOMAIN_ID = "17"
 DEFAULT_MESSAGE_COUNT = 3
 DEFAULT_DELAY_S = 0.05
+
+# The report's standalone Scenario B attack PoC (§6.2.3): a /scan spoofer that
+# injects a fake 0.5 m obstacle ring at 50 Hz to distort the operator's view.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEMO_ATTACK = (REPO_ROOT / "demo" / "spoof_scan.py").resolve()
+DEFAULT_ATTACK_WINDOW_S = 3.0
 
 
 def result(status: str, action: AttackAction, detail: dict[str, Any]) -> dict[str, Any]:
@@ -51,6 +61,42 @@ def simulate(action: AttackAction) -> dict[str, Any]:
     return result("simulated", action, {"snapshot": snapshot})
 
 
+def run_demo_attack(window_s: float) -> dict[str, Any] | None:
+    """Run the report's standalone /scan spoofer (demo/spoof_scan.py) as a
+    bounded, allowlisted subprocess so the live State Consistency detector
+    observes the real fake-obstacle-ring injection, then terminate it. Returns
+    None when the script is absent so the caller can fall back to the rclpy
+    replay. Never uses shell=True and never runs a caller-supplied path."""
+    if not DEMO_ATTACK.is_file():
+        return None
+
+    proc = subprocess.Popen(
+        [sys.executable, str(DEMO_ATTACK)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        cwd=str(REPO_ROOT),
+    )
+    time.sleep(max(0.5, window_s))
+    # SIGINT so spoof_scan.py's KeyboardInterrupt handler exits cleanly instead of
+    # being hard-killed.
+    proc.send_signal(signal.SIGINT)
+    try:
+        out, err = proc.communicate(timeout=3.0)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        out, err = proc.communicate()
+
+    return {
+        "via": "demo/spoof_scan.py",
+        "fake_obstacle_ring_m": 0.5,
+        "attack_window_s": window_s,
+        "returncode": proc.returncode,
+        "stdout": (out or "").strip()[-500:],
+        "stderr": (err or "").strip()[-300:],
+    }
+
+
 def inject(action: AttackAction) -> dict[str, Any]:
     if action.mode != "live" or not action.confirm_live_testbed_only:
         return result(
@@ -59,6 +105,17 @@ def inject(action: AttackAction) -> dict[str, Any]:
             {"reason": "live injection requires --live --confirm-live-testbed-only"},
         )
 
+    # Prefer the report's faithful /scan spoofer; fall back to the rclpy replay
+    # (odom + scan) if demo/spoof_scan.py is unavailable.
+    window_s = float(action.parameters.get("attack_window_s", DEFAULT_ATTACK_WINDOW_S))
+    demo = run_demo_attack(window_s)
+    if demo is not None:
+        return result("injected", action, {"scan_topic": "/scan", "attack": demo})
+
+    return _inject_replay(action)
+
+
+def _inject_replay(action: AttackAction) -> dict[str, Any]:
     try:
         import rclpy  # type: ignore[import-not-found]
         from nav_msgs.msg import Odometry  # type: ignore[import-not-found]

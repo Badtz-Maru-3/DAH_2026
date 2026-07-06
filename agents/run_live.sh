@@ -29,7 +29,7 @@ if [ "$#" -gt 0 ] && [[ "$1" != -* ]]; then
   shift
 fi
 
-exec docker exec -w /workspace "$CONTAINER" bash -lc \
+exec docker exec -e PYTHONDONTWRITEBYTECODE=1 -w /workspace "$CONTAINER" bash -lc \
   "source /opt/ros/humble/setup.bash && \
    python3 -m agents.main_orchestrator \
      --live --confirm-live-testbed-only \
