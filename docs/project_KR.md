@@ -120,12 +120,88 @@ ros2 topic echo /odometry/filtered --once
 docker logs dah-bridge
 ```
 
+## AI 에이전트 계층 (폐루프 방어)
+
+`agents/` 패키지는 테스트베드 위에 AI 에이전트 계층을 얹어, **공격 replay → deterministic
+탐지 → correlation → hold/block verdict → incident report**로 이어지는 폐루프를 한 명령으로
+실행합니다. LLM이 추론 코어(시나리오 선택, gap analysis, root-cause, mitigation)를 맡고,
+deterministic reflex가 안전상 중요한 hold/block을 소유합니다. 아키텍처는 `agents/README.md`,
+전체 검증 체크리스트는 `agents/VALIDATION.md`를 참조하세요.
+
+세 가지 시나리오를 replay합니다.
+
+| 시나리오 | 공격 표면 | 기대 verdict |
+| --- | --- | --- |
+| A | ROS2 `/cmd_vel` command injection | `risk=1.0`, command blocked |
+| B | ROS2 `/odometry/filtered` + `/scan` 상태·인지 교란 | `risk≈0.48`, 탐지되나 hold 없음 |
+| C | MAVLink Mission / GNSS 입력 조작 | `risk=1.0`, command blocked |
+
+### Dry-run (오프라인 재현, Docker·ROS2 불필요)
+
+토큰과 ROS2/MAVLink 없이 전체 루프를 deterministic하게 실행합니다.
+
+```bash
+python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
+```
+
+기대 core verdict:
+
+```text
+A: risk=1.0  hold=True  block=True
+B: risk=0.48 hold=False block=False
+C: risk=1.0  hold=True  block=True
+```
+
+매 실행마다 JSONL run trace와 round별 JSON/Markdown incident report가 `agents/reports/`
+(gitignore된 runtime artifact)에 생성됩니다.
+
+### LLM 추론 경로 (선택)
+
+reasoning/report 에이전트는 LLM 백엔드(Anthropic 또는 OpenAI)를 쓸 수 있습니다. 백엔드는
+`provider:model` 형식으로 지정하며, prefix 없는 값은 Anthropic로 처리됩니다.
+
+```bash
+pip install openai            # 또는: pip install anthropic
+export OPENAI_API_KEY=...      # 또는: export ANTHROPIC_API_KEY=...
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A \
+  --llm-backend openai:gpt-4o-mini
+```
+
+출력 report 또는 `agents/reports/`의 JSON에서 `reasoning_source`가 `"template"`이 아닌
+`"llm"`인지 확인합니다. LLM은 서술만 보강할 뿐 deterministic한 `risk_score` /
+`hold_engaged` / `command_blocked` verdict를 바꾸지 않습니다. `--llm-backend none`에서도
+루프는 deterministic template으로 완전히 동작합니다.
+
+### Live run (실행 중인 스택 대상)
+
+Live 모드는 실제 ROS2 그래프와 MAVLink bridge를 구동하며, 명시적 확인 플래그 뒤에서만
+동작합니다(게이트 없는 `--live`는 거부됩니다).
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only \
+  --llm-backend none --scenario-id A
+```
+
+ROS2(`rclpy`)와 bridge에 접근 가능한 환경, 즉 `dah-bridge` 컨테이너 안
+(`ROS_DOMAIN_ID=17`, MAVLink `BRIDGE_LOCAL_PORT=14551`)에서 실행합니다. 해당 환경에
+`agents/` 패키지가 있어야 합니다(`./agents`를 bridge 컨테이너에 bind-mount 하거나 동일
+`ROS_DOMAIN_ID`의 ROS2 호스트에서 실행). 시나리오별 run-trace 마커를 확인합니다.
+
+- A → `live_command_observed` (독립 `/cmd_vel` detector signal)
+- B → `live_state_observed` (독립 `/odometry/filtered` + `/scan` signal)
+- C → Bridge 로그의 fresh Mission/GNSS signal 및 `MAV_MISSION_DENIED` ack
+
+Live 모드에서 verdict가 hold/block을 걸면 `/cmd_vel`의 zero-Twist hold가 웹 UI에서
+관찰됩니다(QGC 조이스틱 무효, Gazebo/RViz에서 ROSbot 정지). 시나리오별 live 체크리스트와
+safety-gate 테스트는 `agents/VALIDATION.md` §3–§8을 참조하세요.
+
 ## 문서 구조
 
 | English | Korean |
 | --- | --- |
 | `README.md` | `README_KR.md` |
 | `AGENTS.md` | `AGENTS_KR.md` |
+| `agents/README.md` | `docs/agents_architecture_KR.md` |
 | `docs/README.md` | `docs/README_KR.md` |
 | `docs/architecture/two_layer_architecture.md` | `docs/architecture/two_layer_architecture_KR.md` |
 | `docs/day1/README.md` | `docs/day1/README_KR.md` |

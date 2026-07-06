@@ -49,6 +49,7 @@ When correlation risk reaches the threshold, Command Hold / Block prevents unsaf
 | UGV simulation | `UGV/` | Runs the ROSbot Gazebo simulation and publishes ROS2 sensor/odometry topics. |
 | GCS | `GCS/` | Runs QGroundControl through noVNC. |
 | Bridge | `Bridge/` | Translates between MAVLink UDP and ROS2 topics. |
+| AI Agent Layer | `agents/` | Runs the closed-loop attack replay → detect → correlate → hold/block → report pipeline. |
 | Evidence | `docs/` | Stores day-by-day test logs, topic snapshots, and MVP validation notes. |
 
 ## Testbed Goals
@@ -272,10 +273,90 @@ Later evidence shows:
 - Day5: normal `GPS_INPUT` accepted, spoof jump and poor fix rejected.
 - Day6: mission/GNSS rejection converted into correlation risk, hold engaged, and `MANUAL_CONTROL` blocked during hold.
 
+## AI Agent Layer (Closed-Loop Defense)
+
+The `agents/` package adds an AI agent layer on top of the testbed and runs the full
+attack-defense loop as a single command: **attack replay → deterministic detection →
+correlation → hold/block verdict → incident report**. An LLM is the reasoning core
+(scenario selection, gap analysis, root-cause, mitigation) while a deterministic reflex
+owns the safety-critical hold/block. See `agents/README.md` for the architecture and
+`agents/VALIDATION.md` for the full validation checklist.
+
+Three scenarios are replayed:
+
+| Scenario | Surface | Expected verdict |
+| --- | --- | --- |
+| A | ROS2 `/cmd_vel` command injection | `risk=1.0`, command blocked |
+| B | ROS2 `/odometry/filtered` + `/scan` state/perception deception | `risk≈0.48`, detected, no hold |
+| C | MAVLink Mission / GNSS input manipulation | `risk=1.0`, command blocked |
+
+### Dry-run (reproducible offline, no Docker or ROS2 required)
+
+Runs the whole loop deterministically, with no tokens and no ROS2/MAVLink:
+
+```bash
+python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
+```
+
+Expected core verdicts:
+
+```text
+A: risk=1.0  hold=True  block=True
+B: risk=0.48 hold=False block=False
+C: risk=1.0  hold=True  block=True
+```
+
+Each run writes a JSONL run trace and per-round JSON/Markdown incident reports under
+`agents/reports/` (gitignored runtime artifacts).
+
+### LLM reasoning path (optional)
+
+The reasoning/report agent can use an LLM backend (Anthropic or OpenAI). Select the
+provider with a `provider:model` string; a bare value defaults to Anthropic:
+
+```bash
+pip install openai            # or: pip install anthropic
+export OPENAI_API_KEY=...      # or: export ANTHROPIC_API_KEY=...
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A \
+  --llm-backend openai:gpt-4o-mini
+```
+
+Confirm `reasoning_source` is `"llm"` (not `"template"`) in the printed report / the JSON
+under `agents/reports/`. The LLM only enriches the narrative — it never changes the
+deterministic `risk_score` / `hold_engaged` / `command_blocked` verdict. With
+`--llm-backend none` the loop still runs fully via deterministic templates.
+
+### Live run (against the running stack)
+
+Live mode drives the real ROS2 graph and MAVLink bridge, and is gated behind an explicit
+confirmation flag (an ungated `--live` is rejected):
+
+```bash
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only \
+  --llm-backend none --scenario-id A
+```
+
+Run this where ROS2 (`rclpy`) and the bridge are reachable — i.e. inside the `dah-bridge`
+container (`ROS_DOMAIN_ID=17`, MAVLink `BRIDGE_LOCAL_PORT=14551`). The `agents/` package
+must be present in that environment (bind-mount `./agents` into the bridge container, or
+run from a ROS2-enabled host on the same `ROS_DOMAIN_ID`). Confirm the run-trace markers
+per scenario:
+
+- A → `live_command_observed` (independent `/cmd_vel` detector signal)
+- B → `live_state_observed` (independent `/odometry/filtered` + `/scan` signals)
+- C → fresh Mission/GNSS signals from the Bridge logs and a `MAV_MISSION_DENIED` ack
+
+When a verdict engages hold/block in live mode, the active zero-Twist hold on `/cmd_vel`
+is observable in the web UIs: the QGC joystick has no effect and the ROSbot stops in
+Gazebo/RViz. See `agents/VALIDATION.md` §3–§8 for the per-scenario live checklist, the
+safety-gate test, and the expected signals.
+
 ## Documentation Map
 
 | Document | Purpose |
 | --- | --- |
+| `agents/README.md` | AI agent layer architecture (attack replay + closed-loop defense orchestration). |
+| `agents/VALIDATION.md` | Dry-run and live validation checklist for the AI agent layer. |
 | `docs/README.md` | Overview of evidence folders. |
 | `docs/architecture/two_layer_architecture.md` | Logical two-layer architecture, responsibilities, evidence mapping, and limits. |
 | `docs/day1/README.md` | ROSbot simulation baseline evidence. |
