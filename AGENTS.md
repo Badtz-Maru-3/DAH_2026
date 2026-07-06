@@ -4,9 +4,9 @@
 
 # AGENTS.md
 
-This file defines how Claude Code, Codex, and the user should collaborate inside the DAH_2026 repository.
+This file defines the development workflow, conventions, and guardrails for contributors working in the DAH_2026 repository.
 
-The workflow adapts the Claude-GPT collaboration model from `longranger2/claude-gpt-workflow`: Claude orchestrates and reviews, Codex critiques plans and executes implementation batches, and major work moves through iterative plan review, batch execution, code review, and fix loops.
+Major work moves through iterative plan review, batch execution, code review, and fix loops: a plan is reviewed adversarially before any code is written, changes are made in small reviewable batches, and each batch's diff is reviewed before the next begins.
 
 ## 1. Project Purpose
 
@@ -87,15 +87,15 @@ Mission/GNSS/Command anomaly signal -> Correlation Engine -> risk score
 
 Do not rewrite implementation status unless source code, runtime logs, or documented evidence confirm the change.
 
-## 3. Claude and Codex Roles
+## 3. Roles
 
-| Agent | Responsibilities |
+| Role | Responsibilities |
 | --- | --- |
-| Claude | Owns planning, breaks work into batches, checks architectural consistency, reviews diffs, checks documentation alignment, and decides whether a batch is approved or needs fixes. |
-| Codex | Performs adversarial plan review, identifies missing assumptions, unsafe changes, weak tests, vague requirements, and architectural inconsistencies; implements assigned batches; fixes issues found during Claude review; does not silently expand scope. |
+| Planning & Review | Owns planning, breaks work into batches, checks architectural consistency, reviews diffs, checks documentation alignment, and decides whether a batch is approved or needs fixes. |
+| Implementation | Performs adversarial plan review, identifies missing assumptions, unsafe changes, weak tests, vague requirements, and architectural inconsistencies; implements assigned batches; fixes issues found during review; does not silently expand scope. |
 | User | Defines the goal, approves major direction, and provides project intent when ambiguity remains. |
 
-Claude is the orchestrator, reviewer, and planner. Codex is the implementation executor and adversarial reviewer. The workflow must not be one-shot for major changes.
+The planning and review role owns orchestration, review, and planning; the implementation role executes changes and performs adversarial plan review. The workflow must not be one-shot for major changes.
 
 ## 4. Workflow
 
@@ -104,24 +104,24 @@ Major work should use two phases.
 ### Phase 1: Plan Review
 
 ```text
-User or Claude writes a plan
--> Claude sends the plan to Codex for adversarial review
--> Codex returns issues ranked by severity
--> Claude refines the plan
+A plan is written
+-> the plan is sent for adversarial review
+-> issues are returned ranked by severity
+-> the plan is refined
 -> if the plan still needs revision, repeat
 -> if approved or mostly good, proceed to execution
 ```
 
-Codex should review as a critical nitpicker, not as a rubber stamp. Reviews should call out missing assumptions, risky file scope, weak validation, unsupported claims, and mismatches with the two-layer architecture.
+Plan review should be a critical nitpick, not a rubber stamp. Reviews should call out missing assumptions, risky file scope, weak validation, unsupported claims, and mismatches with the two-layer architecture.
 
 ### Phase 2: Plan Execute
 
 ```text
-Claude dispatches one implementation batch to Codex
--> Codex modifies code/docs
--> Claude reviews the diff in read-only mode
--> Claude writes a review
--> if issues exist, Codex fixes them
+one implementation batch is dispatched
+-> code/docs are modified
+-> the diff is reviewed in read-only mode
+-> a review is written
+-> if issues exist, they are fixed
 -> if approved, move to the next batch
 -> repeat until all batches are complete
 ```
@@ -133,16 +133,16 @@ Each batch should be small enough to review. Do not combine Docker, compose, bri
 ### Loop A: Plan Refinement
 
 - Plan review finds issues.
-- Claude revises the plan.
-- Codex reviews again.
+- The plan is revised.
+- The plan is reviewed again.
 - Repeat until the plan is approved or the remaining risks are explicitly accepted.
 
 ### Loop B: Code Fixing
 
-- Codex implements a batch.
-- Claude reviews the diff.
-- Codex fixes review findings.
-- Claude re-reviews.
+- A batch is implemented.
+- The diff is reviewed.
+- Review findings are fixed.
+- The diff is re-reviewed.
 - Repeat until the batch is approved.
 
 ### Loop C: Batch Processing
@@ -249,7 +249,7 @@ Evidence files are important. Do not edit `*.log`, raw `*.txt` evidence, JSONL r
 
 ## 10. Review Checklist
 
-Claude should use this checklist after Codex modifies files:
+Use this checklist after a batch modifies files:
 
 - Does the change match the requested batch?
 - Were unrelated files modified?

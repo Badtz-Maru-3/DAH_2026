@@ -87,7 +87,7 @@ C: MAVLink Mission/GNSS input manipulation replay and hold/block correlation
 커밋/공유 대상:
 
 - `agents/` source files
-- `docs/agents_KR.md`
+- `docs/agents_architecture_KR.md`
 - `.gitignore`
 
 공유하지 않을 runtime artifact:
@@ -143,7 +143,7 @@ C: risk_score=1.0, command_blocked=True
 python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
 ```
 
-이 모드는 Anthropic API를 호출하지 않고 deterministic template fallback으로
+이 모드는 외부 LLM API를 호출하지 않고 deterministic template fallback으로
 `IncidentReport`를 만든다. 즉, 토큰 비용 없이 closed loop와 hold/block verdict를
 재현할 수 있다.
 
@@ -153,9 +153,12 @@ python3 -m agents.main_orchestrator --rounds 3 --dry-run --llm-backend none
 사전 조건:
 
 ```bash
-python3 -m pip install anthropic
-export ANTHROPIC_API_KEY="<team-api-key>"
-export AGENT_LLM_MODEL="claude-haiku-4-5"
+# 백엔드는 Anthropic 또는 OpenAI 중 선택해서 SDK와 API key를 준비한다.
+python3 -m pip install anthropic openai
+export ANTHROPIC_API_KEY="<team-api-key>"   # Anthropic 사용 시
+export OPENAI_API_KEY="<team-api-key>"      # OpenAI 사용 시
+# 사용할 백엔드는 provider:model 형식으로 지정한다(prefix 없는 값은 Anthropic로 처리).
+export AGENT_LLM_MODEL="openai:gpt-4o-mini"
 ```
 
 LLM path dry-run 예시:
@@ -167,7 +170,7 @@ python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A
 모델을 명령행에서 명시할 수도 있다.
 
 ```bash
-python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A --llm-backend claude-haiku-4-5
+python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A --llm-backend openai:gpt-4o-mini
 ```
 
 LLM path 확인 포인트:
@@ -187,7 +190,7 @@ live stack에서 LLM path까지 함께 확인하려면 다음처럼 실행할 �
 LLM 비용이 동시에 발생하므로 dry-run LLM path를 먼저 확인한 뒤 필요한 경우에만 실행한다.
 
 ```bash
-python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --scenario-id A --llm-backend claude-haiku-4-5
+python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only --scenario-id A --llm-backend openai:gpt-4o-mini
 ```
 
 ---

@@ -9,10 +9,9 @@
 **4.2 공격 관련 AI 에이전트**와 **4.3 방어 관련 AI 에이전트**를 뒷받침하며,
 예선 평가 항목 **"AI 에이전트 아키텍처 (25점)"**을 지원한다.
 
-> **설계 문서 전용.** 이 README는 아키텍처, 오케스트레이션, 인터페이스 명세다.
-> 오케스트레이터(Claude)가 작성하고 실행자(Codex)가 구현 배치의 기준으로 삼는
-> 구현 브리프다. 에이전트 코드는 이 문서에 작성하지 않는다. 자세한 구현 배치는
-> [§10 Codex 구현 배치](#10-codex-구현-배치)를 참조한다.
+> **설계 문서 전용.** 이 README는 아키텍처, 오케스트레이션, 인터페이스 명세이자
+> 에이전트 계층의 구현 브리프다. 에이전트 코드는 이 문서에 작성하지 않는다. 자세한
+> 구현 배치는 [§10 구현 배치](#10-구현-배치)를 참조한다.
 
 ---
 
@@ -30,7 +29,7 @@
 - 결정론적 detector를 learned/trained AI model로 설명하지 않는다. **센서와 안전
   reflex는 rule + risk-score logic**이며, learned model이 아니라 결정론적 grounding
   layer로 설명한다.
-- 아키텍처는 **LLM-brain + deterministic reflex**다. LLM(`anthropic` SDK)은
+- 아키텍처는 **LLM-brain + deterministic reflex**다. LLM(설정된 백엔드 — Anthropic 또는 OpenAI SDK)은
   **추론 코어**로서 시나리오 선택, multi-signal correlation reasoning, gap analysis,
   root-cause investigation, mitigation, closed-loop adaptive replanning을 담당한다.
   반면 **deterministic reflex**는 안전상 중요한 단 하나의 실시간 행동인 `/cmd_vel`
@@ -103,14 +102,14 @@ grounds and verifies**와 같다.
 
 | Tier | Agent | Backing |
 | --- | --- | --- |
-| **Main (brain)** | Orchestrator / Supervisor | **LLM-core** (`anthropic` SDK) - scenario selection, gap analysis, adaptive closed-loop control; `--llm-backend none` deterministic fallback |
+| **Main (brain)** | Orchestrator / Supervisor | **LLM-core** (Anthropic/OpenAI SDK) - scenario selection, gap analysis, adaptive closed-loop control; `--llm-backend none` deterministic fallback |
 | Sub 1 | Recon / Discovery (S0) | Deterministic sensor |
 | Sub 2 | Attack Replay (A/B/C adapters) | Deterministic; attacks validated live by teammates, thin replay harness |
 | Sub 3 | Command Monitor | Deterministic sensor, safety-critical |
 | Sub 4 | State Consistency | Deterministic sensor, safety-critical |
 | Sub 5 | Mission-GNSS Guard | Deterministic sensor, safety-critical |
 | Sub 6 | Correlation + Reflex | Deterministic reflex, safety-critical; 실시간 `hold_engaged` / `command_blocked` 소유 |
-| Sub 7 | Reasoning & Report | **LLM-core** (`anthropic` SDK); attack-chain reasoning, root-cause, mitigation, incident report; deterministic template fallback |
+| Sub 7 | Reasoning & Report | **LLM-core** (Anthropic/OpenAI SDK); attack-chain reasoning, root-cause, mitigation, incident report; deterministic template fallback |
 
 > **보고서 프레이밍(§4.2/§4.3):** **LLM은 추론 코어**이고, deterministic
 > sensor/reflex layer(rule + risk-score detection 및 실시간 hold/block)가 이를
@@ -151,7 +150,7 @@ deterministic block을 **절대 override하지 않는다**.
 | **State Consistency Agent** | `/odometry/filtered`, `/tf`, `/scan` 사이의 inconsistency를 직접 탐지 | ROS2 topic subscriptions | `AnomalySignal`: odom jump vs tf, phantom/hidden `/scan` returns |
 | **Mission-GNSS Guard Agent** | Bridge Mission Audit / GNSS Integrity 결과를 읽고 signal 생성 | `Bridge/mission_audit.py`, `Bridge/gnss_integrity.py`; `logs/mission_audit.log`, `logs/gnss_integrity.log` tail | `AnomalySignal`: rejected mission, `spoof_jump`, `poor_fix` |
 | **Correlation Agent** | 수집된 `AnomalySignal`을 자체 deterministic scoring으로 결합하여 `risk_score`와 `hold_engaged` / `command_blocked` decision 생성 | **new agent-layer aggregation logic**; `logs/correlation_event.log`는 corroborating evidence로만 읽으며 node-coupled `Bridge/correlation_engine.py:CorrelationEngine`을 import하지 않음 | `CorrelationVerdict`; Bridge 없이 dry-run에서 deterministic verdict 생성 |
-| **Reasoning & Report Agent** | **LLM-core**: grounded verdict + signals를 바탕으로 attack-chain hypothesis, root-cause, mitigation을 추론하고 incident report 조립 | verdict + timeline + `evidence_refs`; `anthropic` LLM primary path, `--llm-backend none` deterministic template fallback | attack-chain + root-cause reasoning, recovery actions, `IncidentReport` (Markdown/JSON) |
+| **Reasoning & Report Agent** | **LLM-core**: grounded verdict + signals를 바탕으로 attack-chain hypothesis, root-cause, mitigation을 추론하고 incident report 조립 | verdict + timeline + `evidence_refs`; LLM(Anthropic/OpenAI) primary path, `--llm-backend none` deterministic template fallback | attack-chain + root-cause reasoning, recovery actions, `IncidentReport` (Markdown/JSON) |
 
 **Command Hold / Block**은 LLM이 아니라 defense controller가 소유하는 deterministic
 function이다. Correlation Agent는 매 round마다 `hold_engaged` / `command_blocked`
@@ -206,7 +205,7 @@ concrete evidence artifact에 연결된다. **agent-layer Correlation Agent**가
 
 ---
 
-## 6. Agent Interface Contract (개념 - Codex가 코드로 채움)
+## 6. Agent Interface Contract (개념)
 
 모든 agent는 orchestrator가 조합할 수 있도록 공통 message shape를 사용한다. 아래는
 **Batch 1 dataclass contracts**(`agents/contracts.py`)의 schema 설명이다.
@@ -252,12 +251,12 @@ artifacts(incident reports, run traces)는 `agents/reports/` 아래 새 JSONL/Ma
 | MAVLink interface | `pymavlink` | `Bridge/tools/send_*.py` injector 재사용(default `--port 14551`, Bridge listens on `BRIDGE_LOCAL_PORT`, default 14551) |
 | Defense logic | Bridge reuse + **new agent-layer detectors/correlation** | Mission Audit / GNSS Integrity semantics는 Bridge modules + logs로 재사용. Agent-level correlation, `/cmd_vel` external-publisher detection, state-consistency detection은 **new deterministic agent logic**이며 node-coupled `CorrelationEngine` 재구현이 아님. `logs/correlation_event.log`는 corroborating evidence다. Bridge logic을 무분별하게 재구현하지 않는다. |
 | Orchestration | plain Python state machine (`agents/main_orchestrator.py`) | CLI flags: `--rounds`, `--dry-run` / `--live`, `--confirm-live-testbed-only`, `--llm-backend` |
-| LLM backend | `anthropic` Python SDK(`pip install anthropic`), pluggable; **LLM-on primary path**, `none`은 deterministic-reflex fallback | `client.messages.create(model=..., max_tokens=..., messages=[...])`. Orchestrator brain(scenario selection, gap analysis)과 Reasoning & Report agent(attack-chain, root-cause, mitigation)를 구동한다. safety reflex는 `--llm-backend none`에서도 완전히 동작해야 한다. Model id는 env `AGENT_LLM_MODEL`, default `claude-haiku-4-5`; demo quality에는 `claude-opus-4-8` / `claude-fable-5`. `claude-fable-5`에서는 `thinking` param을 생략하고, `response.stop_reason == "refusal"`을 content read 전에 guard하며 server-side fallback을 opt-in한다. 무거운 Claude Agent SDK / Managed Agents는 사용하지 않는다. |
+| LLM backend | pluggable LLM SDK(Anthropic 또는 OpenAI; `pip install anthropic` / `openai`), `none` default | 백엔드는 `provider:model` 형식(예: `openai:gpt-4o-mini`)으로 선택하며, prefix 없는 값은 Anthropic로 처리한다. Orchestrator brain(scenario selection, gap analysis)과 Reasoning & Report agent(attack-chain, root-cause, mitigation)를 구동한다. safety reflex는 `--llm-backend none`에서도 완전히 동작해야 한다. Model id는 env `AGENT_LLM_MODEL`; 저비용 로컬 추론에는 작은 모델, demo quality에는 큰 모델을 쓴다. content read 전에 refusal / `content_filter`를 guard한다. 무거운 managed-agent SDK 대신 표준 Messages / Chat Completions API를 사용한다. |
 | Evidence | JSONL + Markdown under `agents/reports/` | deterministic, reproducible |
 
 ---
 
-## 8. Planned Directory Layout (Codex target)
+## 8. Planned Directory Layout
 
 ```text
 agents/
@@ -319,16 +318,16 @@ agents/
 
 ---
 
-## 10. Codex 구현 배치
+## 10. 구현 배치
 
 **AGENTS.md two-phase workflow**(Plan Review → Plan Execute)를 따른다. 아래 각 batch는
 작고 독립적으로 review 가능해야 한다. **batch를 합치지 않는다.** 각 batch는 수정 전
 expected files를 나열하고, 변경 파일에 대해 `python3 -m py_compile`을 실행하며, 기존
 env/port/topic behavior를 보존한다.
 
-> **Phase 1(Plan Review) first:** 코드를 작성하기 전에 Codex는 이 설계를 adversarial
-> review한다. missing assumptions, unsafe scope, weak detection heuristics, two-layer
-> mismatch를 severity 순으로 반환한다. Claude가 보완한 뒤 execution을 시작한다.
+> **Phase 1(Plan Review) first:** 코드를 작성하기 전에 이 설계를 adversarial review에
+> 부친다. missing assumptions, unsafe scope, weak detection heuristics, two-layer
+> mismatch를 severity 순으로 반환하고, 설계를 보완한 뒤 execution을 시작한다.
 
 Batch order는 **defense-first**다. 시나리오 A/B/C는 teammates가 live validation 중이므로
 Attack Replay adapters는 뒤쪽(Batch 7)으로 밀었다. **Correlation Agent는 ROS2 detector보다
@@ -382,9 +381,9 @@ ROS2 stack validation은 deferred 상태다. Expected files:
 `agents/defense/command_monitor.py`, `agents/defense/state_consistency.py`.
 
 **Batch 5 - Reasoning & Report agent (LLM-core).** Done. `IncidentReport` reasoning fields,
-untrusted-evidence prompt boundary, Anthropic optional path, deterministic template fallback,
+untrusted-evidence prompt boundary, optional LLM path, deterministic template fallback,
 `agents/reports/` JSONL/Markdown report writing이 landed. verdict + timeline +
-`evidence_refs`를 consume하고, grounded evidence 위에서 `anthropic` LLM을 **primary** path로
+`evidence_refs`를 consume하고, grounded evidence 위에서 LLM(Anthropic/OpenAI)을 **primary** path로
 사용해 attack-chain hypothesis, root-cause, mitigation을 추론한 뒤 `IncidentReport`를
 조립한다. `--llm-backend none`에서도 deterministic template fallback은 완전히 동작해야
 하고, 어떤 path도 deterministic reflex verdict를 override할 수 없다. Expected file:
@@ -401,7 +400,7 @@ analysis를 LLM-driven으로 수행하고, `--llm-backend none`에서는 determi
 기록하고, `rclpy`/`geometry_msgs`가 없으면 `deferred` event를 남긴다. 실제 zero-Twist
 `/cmd_vel` publish는 Batch 7로 이동했다. Dry-run은 publish 없이 decision만 기록한다.
 Deterministic reflex verdict가 authoritative이며 LLM은 이를 override하지 않는다. Default
-`--llm-backend`는 env-configured model(`AGENT_LLM_MODEL`, default `claude-haiku-4-5`)이고,
+`--llm-backend`는 env-configured model(`AGENT_LLM_MODEL`, `provider:model` 형식)이고,
 `--llm-backend none`은 explicit deterministic-reflex fallback이다. `Bridge/logs/*.log`는
 편집하지 않는다. **Single-command requirement:** `python3 -m agents.main_orchestrator
 --rounds N --dry-run`(LLM primary) 및 offline fallback `--llm-backend none`으로 전체 closed
@@ -419,7 +418,7 @@ stack validation이 필요하므로 Batch 7에 묶었다. Teammates가 live atta
 소유하므로 thin하게 유지한다.
 
 **Batch 8 - Docs sync / Korean mirror.** 이 documentation batch에서 진행 중이다. 이
-README status section을 갱신하고 `docs/agents_KR.md`를 Korean mirror로 작성한다.
+README status section을 갱신하고 `docs/agents_architecture_KR.md`를 Korean mirror로 작성한다.
 Mirror는 **LLM-brain + deterministic-reflex** framing을 유지한다. LLM reasoning core는
 scenario selection / correlation reasoning / gap analysis / root-cause / mitigation을
 담당하고, deterministic sensors + real-time hold/block reflex가 safety-critical decision을
@@ -449,7 +448,7 @@ Engine semantics, Command Hold / Block decisions를 소유한다.
 **Expected files:** `agents/__init__.py`, `agents/contracts.py`, `agents/main_orchestrator.py`.
 
 **Constraints:**
-- **`Bridge` import, `rclpy`/ROS2 import, `pymavlink` import, `anthropic` import 금지.**
+- **`Bridge` import, `rclpy`/ROS2 import, `pymavlink` import, LLM SDK import 금지.**
 - live injection 없음; `Bridge/logs/*.log` read/write 없음.
 - `contracts.py`는 §6의 네 dataclass를 정확히 정의한다.
 - `main_orchestrator.py`는 **S0-S7 with stubs**를 걷고 deterministic **no-op**
