@@ -90,6 +90,13 @@ services:
     volumes:
       - ./Bridge:/app:ro
       - ./Bridge/logs:/logs:rw
+      # AI agent layer, run on demand via agents/run_live.sh (docker exec).
+      # ./agents and ./Bridge are mounted as siblings under /workspace so the
+      # agent package imports cleanly and Adapter C finds Bridge/tools/*.py
+      # (agents/attack/adapter_c_mavlink.py resolves REPO_ROOT = parents[2]).
+      # agents is rw so run traces / incident reports land back on the host.
+      - ./agents:/workspace/agents:rw
+      - ./Bridge:/workspace/Bridge:ro
     depends_on:
       - qgroundcontrol_novnc
       - rosbot_sim_novnc

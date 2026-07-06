@@ -174,26 +174,35 @@ python3 -m agents.main_orchestrator --rounds 1 --dry-run --scenario-id A \
 
 ### Live run (실행 중인 스택 대상)
 
-Live 모드는 실제 ROS2 그래프와 MAVLink bridge를 구동하며, 명시적 확인 플래그 뒤에서만
-동작합니다(게이트 없는 `--live`는 거부됩니다).
+통합 스택이 떠 있으면(`docker compose ... up -d`), `compose.webui.yml`이 `./agents`를
+`dah-bridge` 컨테이너에 bind-mount 하므로 전체 폐루프를 **한 명령**으로 실행합니다 —
+시나리오 A/B/C 중 선택:
 
 ```bash
-python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only \
-  --llm-backend none --scenario-id A
+./agents/run_live.sh A     # 또는 B, C
 ```
 
-ROS2(`rclpy`)와 bridge에 접근 가능한 환경, 즉 `dah-bridge` 컨테이너 안
-(`ROS_DOMAIN_ID=17`, MAVLink `BRIDGE_LOCAL_PORT=14551`)에서 실행합니다. 해당 환경에
-`agents/` 패키지가 있어야 합니다(`./agents`를 bridge 컨테이너에 bind-mount 하거나 동일
-`ROS_DOMAIN_ID`의 ROS2 호스트에서 실행). 시나리오별 run-trace 마커를 확인합니다.
+이 명령은 **선택한 공격을 라이브 ROS2/MAVLink 그래프에 replay하고, 같은 명령으로 방어
+루프(탐지 → correlation → hold/block → report)까지 실행**합니다. Live 모드는
+`--confirm-live-testbed-only` 뒤에서만 동작하며(게이트 없는 `--live`는 거부), 래퍼가 이를
+대신 붙이고 run trace/incident report를 `./agents/reports/`에 씁니다. 추가 플래그는 그대로
+전달됩니다(예: `./agents/run_live.sh C --llm-backend openai:gpt-4o-mini`).
 
-- A → `live_command_observed` (독립 `/cmd_vel` detector signal)
-- B → `live_state_observed` (독립 `/odometry/filtered` + `/scan` signal)
-- C → Bridge 로그의 fresh Mission/GNSS signal 및 `MAV_MISSION_DENIED` ack
+시나리오별 run-trace 마커:
 
-Live 모드에서 verdict가 hold/block을 걸면 `/cmd_vel`의 zero-Twist hold가 웹 UI에서
-관찰됩니다(QGC 조이스틱 무효, Gazebo/RViz에서 ROSbot 정지). 시나리오별 live 체크리스트와
-safety-gate 테스트는 `agents/VALIDATION.md` §3–§8을 참조하세요.
+- A → `live_command_observed` (독립 `/cmd_vel` detector signal) → `risk=1.0`, blocked
+- B → `live_state_observed` (독립 `/odometry/filtered` + `/scan` signal) → `risk≈0.48`
+- C → Bridge 로그의 fresh Mission/GNSS signal 및 `MAV_MISSION_DENIED` ack → `risk=1.0`, blocked
+
+verdict가 hold/block을 걸면 `/cmd_vel`의 zero-Twist hold가 웹 UI에서 관찰됩니다(QGC 조이스틱
+무효, Gazebo/RViz에서 ROSbot 정지). 시나리오별 live 체크리스트와 safety-gate 테스트는
+`agents/VALIDATION.md` §3–§8을 참조하세요.
+
+> **공격 실행 방식 2가지.** 위 `agents/` 계층은 **공격 replay와 방어를 하나의 폐루프로**
+> 함께 실행합니다. 반면 독립 `demo/` 스크립트는 공격자와 방어자를 **별도 터미널**에서 띄우는
+> 방식입니다(`demo/hijack_nav.py`, `demo/spoof_scan.py` vs `demo/kill_switch_sentinel.py`,
+> `demo/scan_sentinel_secure.py`, `demo/mavlink_sentinel.py`) — 리포트의 시나리오별 공격/방어
+> 설명과 대응됩니다.
 
 ## 문서 구조
 

@@ -328,28 +328,36 @@ deterministic `risk_score` / `hold_engaged` / `command_blocked` verdict. With
 
 ### Live run (against the running stack)
 
-Live mode drives the real ROS2 graph and MAVLink bridge, and is gated behind an explicit
-confirmation flag (an ungated `--live` is rejected):
+With the integrated stack up (`docker compose ... up -d`), `compose.webui.yml` bind-mounts
+`./agents` into the `dah-bridge` container, so the whole closed loop runs live with one
+command — pick the scenario A, B, or C:
 
 ```bash
-python3 -m agents.main_orchestrator --rounds 1 --live --confirm-live-testbed-only \
-  --llm-backend none --scenario-id A
+./agents/run_live.sh A     # or B, or C
 ```
 
-Run this where ROS2 (`rclpy`) and the bridge are reachable — i.e. inside the `dah-bridge`
-container (`ROS_DOMAIN_ID=17`, MAVLink `BRIDGE_LOCAL_PORT=14551`). The `agents/` package
-must be present in that environment (bind-mount `./agents` into the bridge container, or
-run from a ROS2-enabled host on the same `ROS_DOMAIN_ID`). Confirm the run-trace markers
-per scenario:
+This **replays the selected attack into the live ROS2/MAVLink graph and runs the defense
+loop (detect → correlate → hold/block → report) in the same command.** Live mode is gated
+behind `--confirm-live-testbed-only` (an ungated `--live` is rejected); the wrapper sets it
+for you and writes run traces / incident reports to `./agents/reports/`. Extra flags pass
+through, e.g. `./agents/run_live.sh C --llm-backend openai:gpt-4o-mini`.
 
-- A → `live_command_observed` (independent `/cmd_vel` detector signal)
-- B → `live_state_observed` (independent `/odometry/filtered` + `/scan` signals)
-- C → fresh Mission/GNSS signals from the Bridge logs and a `MAV_MISSION_DENIED` ack
+Confirm the run-trace markers per scenario:
 
-When a verdict engages hold/block in live mode, the active zero-Twist hold on `/cmd_vel`
-is observable in the web UIs: the QGC joystick has no effect and the ROSbot stops in
-Gazebo/RViz. See `agents/VALIDATION.md` §3–§8 for the per-scenario live checklist, the
-safety-gate test, and the expected signals.
+- A → `live_command_observed` (independent `/cmd_vel` detector signal) → `risk=1.0`, blocked
+- B → `live_state_observed` (independent `/odometry/filtered` + `/scan` signals) → `risk≈0.48`
+- C → fresh Mission/GNSS signals from the Bridge logs and a `MAV_MISSION_DENIED` ack → `risk=1.0`, blocked
+
+When a verdict engages hold/block, the active zero-Twist hold on `/cmd_vel` is observable in
+the web UIs: the QGC joystick has no effect and the ROSbot stops in Gazebo/RViz. See
+`agents/VALIDATION.md` §3–§8 for the per-scenario live checklist, the safety-gate test, and
+the expected signals.
+
+> **Two ways to run the attacks.** The `agents/` layer above runs **attack replay and
+> defense together as one closed loop**. The standalone `demo/` scripts instead run the
+> attacker and defender in **separate terminals** (`demo/hijack_nav.py`, `demo/spoof_scan.py`
+> vs `demo/kill_switch_sentinel.py`, `demo/scan_sentinel_secure.py`, `demo/mavlink_sentinel.py`),
+> matching the report's per-scenario attack/defense walkthrough.
 
 ## Documentation Map
 
