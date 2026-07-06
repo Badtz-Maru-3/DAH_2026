@@ -81,6 +81,12 @@ services:
       - MISSION_GEOFENCE_RADIUS_M=${MISSION_GEOFENCE_RADIUS_M:-300}
       - MISSION_MAX_ITEMS=${MISSION_MAX_ITEMS:-20}
       - MISSION_AUDIT_LOG=${MISSION_AUDIT_LOG:-/logs/mission_audit.log}
+      # LLM reasoning backend for the agent layer. Compose interpolates these from
+      # the project .env (gitignored); empty defaults keep the bridge working when
+      # no key is set (agent falls back to the deterministic template).
+      - AGENT_LLM_MODEL=${AGENT_LLM_MODEL:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     volumes:
       - ./Bridge:/app:ro
       - ./Bridge/logs:/logs:rw

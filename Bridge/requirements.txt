@@ -1,1 +1,7 @@
 pymavlink
+# LLM reasoning backends for the agent layer (agents/defense/response_report.py).
+# Optional at runtime: the agent falls back to a deterministic template when the
+# SDK or its API key is absent, but installing them lets live runs exercise the
+# real LLM path inside the bridge container.
+anthropic
+openai
